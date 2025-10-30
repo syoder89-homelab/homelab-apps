@@ -1,0 +1,7 @@
+apiVersion: v2
+name: kargo-config
+description: An Umbrella Helm chart for configuring Kargo for the homelab-apps project
+type: application
+version: "0.0.1"
+appVersion: "0.0.1"
+namespace: homelab-apps
