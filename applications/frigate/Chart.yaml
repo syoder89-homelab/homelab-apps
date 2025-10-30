@@ -1,0 +1,10 @@
+apiVersion: v2
+name: frigate
+description: An Umbrella Helm chart for deploying Frigate Video NVR
+type: application
+version: "0.0.1"
+appVersion: "0.14.1"
+dependencies:
+  - name: frigate
+    version: "7.0.3"
+    repository: "file://charts/frigate"
