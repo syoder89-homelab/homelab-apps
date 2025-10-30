@@ -34,3 +34,39 @@ spec:
       - applications/kargo-config
       # Alternate config strategy
       #- stages/**/kargo-config-values.yaml
+---
+# Source: application-generator/templates/warehouse.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: mosquitto-taylor
+  namespace: homelab-apps
+spec:
+  subscriptions:
+  - git:
+      branch: main
+      commitSelectionStrategy: NewestFromBranch
+      discoveryLimit: 10
+      repoURL: https://github.com/syoder89-homelab/homelab-apps.git
+      includePaths:
+      - applications/mosquitto-taylor
+      # Alternate config strategy
+      #- stages/**/mosquitto-taylor-values.yaml
+---
+# Source: application-generator/templates/warehouse.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: mosquitto
+  namespace: homelab-apps
+spec:
+  subscriptions:
+  - git:
+      branch: main
+      commitSelectionStrategy: NewestFromBranch
+      discoveryLimit: 10
+      repoURL: https://github.com/syoder89-homelab/homelab-apps.git
+      includePaths:
+      - applications/mosquitto
+      # Alternate config strategy
+      #- stages/**/mosquitto-values.yaml

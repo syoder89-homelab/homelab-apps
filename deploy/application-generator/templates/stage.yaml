@@ -142,3 +142,147 @@ spec:
           value: "true"
         - name: targetBranch
           value: env/prod/kargo-config
+---
+# Source: application-generator/templates/stage.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod-mosquitto-taylor
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: mosquitto-taylor
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/prod/mosquitto-taylor
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/mosquitto-taylor/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: prod
+            - key: envType
+              value: prod
+            - key: appName
+              value: mosquitto-taylor
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/prod/mosquitto-taylor-values.yaml
+          #- ${{ vars.path_src }}/applications/mosquitto-taylor/values/prod.yaml
+      - uses: helm-template
+        config:
+          releaseName: mosquitto
+          namespace: taylor-monitoring
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/mosquitto-taylor
+          outPath: ${{ vars.path_out }}/deploy/mosquitto-taylor
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        vars:
+        - name: asPR
+          value: "true"
+        - name: targetBranch
+          value: env/prod/mosquitto-taylor
+---
+# Source: application-generator/templates/stage.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod-mosquitto
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: mosquitto
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/prod/mosquitto
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/mosquitto/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: prod
+            - key: envType
+              value: prod
+            - key: appName
+              value: mosquitto
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/prod/mosquitto-values.yaml
+          #- ${{ vars.path_src }}/applications/mosquitto/values/prod.yaml
+      - uses: helm-template
+        config:
+          releaseName: mosquitto
+          namespace: mosquitto
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/mosquitto
+          outPath: ${{ vars.path_out }}/deploy/mosquitto
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        vars:
+        - name: asPR
+          value: "true"
+        - name: targetBranch
+          value: env/prod/mosquitto
