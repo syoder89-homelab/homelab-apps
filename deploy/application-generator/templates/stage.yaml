@@ -70,3 +70,75 @@ spec:
           value: "true"
         - name: targetBranch
           value: env/prod/frigate
+---
+# Source: application-generator/templates/stage.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod-kargo-config
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: kargo-config
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/prod/kargo-config
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/kargo-config/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: prod
+            - key: envType
+              value: prod
+            - key: appName
+              value: kargo-config
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/prod/kargo-config-values.yaml
+          #- ${{ vars.path_src }}/applications/kargo-config/values/prod.yaml
+      - uses: helm-template
+        config:
+          releaseName: kargo-config
+          namespace: homelab-apps
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/kargo-config
+          outPath: ${{ vars.path_out }}/deploy/kargo-config
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        vars:
+        - name: asPR
+          value: "true"
+        - name: targetBranch
+          value: env/prod/kargo-config
