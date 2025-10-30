@@ -1,0 +1,11 @@
+---
+# Source: kargo-config/templates/kargo-github-pat.yaml
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: kargo-github-pat
+  namespace: homelab-apps
+  labels:
+    kargo.akuity.io/cred-type: git
+spec:
+  itemPath: "vaults/homelab/items/kargo-github-pat"
