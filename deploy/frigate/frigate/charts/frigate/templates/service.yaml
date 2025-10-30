@@ -1,0 +1,45 @@
+---
+# Source: frigate/charts/frigate/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: frigate
+  labels:
+    app.kubernetes.io/name: frigate
+    helm.sh/chart: frigate-7.0.3
+    app.kubernetes.io/instance: frigate
+    app.kubernetes.io/version: "0.12.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+#    - name: http
+#      port: 5000
+#      protocol: TCP
+#      targetPort: http
+#
+    - name: http-auth
+      port: 8971
+      protocol: TCP
+      targetPort: http-auth
+    - name: rtmp
+      port: 1935
+      protocol: TCP
+      targetPort: rtmp
+
+    - name: rtsp
+      port: 8554
+      protocol: TCP
+      targetPort: rtsp
+      
+    - name: webrtc-tcp
+      port: 8555
+      protocol: TCP
+      targetPort: webrtc-tcp
+    - name: webrtc-udp
+      port: 8555
+      protocol: UDP
+      targetPort: webrtc-udp
+  selector:
+    app.kubernetes.io/name: frigate
+    app.kubernetes.io/instance: frigate
