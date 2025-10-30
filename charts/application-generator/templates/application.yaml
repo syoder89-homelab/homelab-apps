@@ -1,0 +1,28 @@
+{{- range $path, $_ := .Files.Glob "applications/*/Chart.yaml" }}
+{{- $app := $.Files.Get $path | fromYaml }}
+{{- range $stage_name, $stage := $.Values.stages }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ $stage_name }}-{{ $app.name }}
+  namespace: argocd
+spec:
+  destination:
+    name: in-cluster
+    namespace: {{ $app.namespace | default $app.name }}
+  project: apps
+  source:
+    directory:
+      recurse: true
+    path: deploy/
+    repoURL: https://github.com/syoder89-homelab/homelab-apps
+    targetRevision: {{ $stage.targetBranch }}/{{ $app.name }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+{{- end }}
+{{- end }}

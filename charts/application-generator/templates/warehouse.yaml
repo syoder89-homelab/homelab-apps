@@ -1,0 +1,20 @@
+{{- range $path, $_ := .Files.Glob "applications/*/Chart.yaml" }}
+{{- $app := $.Files.Get $path | fromYaml }}
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: {{ $app.name }}
+  namespace: homelab-apps
+spec:
+  subscriptions:
+  - git:
+      branch: main
+      commitSelectionStrategy: NewestFromBranch
+      discoveryLimit: 10
+      repoURL: https://github.com/syoder89-homelab/homelab-apps.git
+      includePaths:
+      - {{ dir $path }}
+      # Alternate config strategy
+      #- stages/**/{{ $app.name }}-values.yaml
+{{- end }}

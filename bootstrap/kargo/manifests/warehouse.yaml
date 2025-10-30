@@ -1,0 +1,15 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: application-generator
+  namespace: homelab-apps
+spec:
+  subscriptions:
+  - git:
+      branch: main
+      commitSelectionStrategy: NewestFromBranch
+      discoveryLimit: 10
+      repoURL: https://github.com/syoder89-homelab/homelab-apps.git
+      includePaths:
+      - glob:applications/*/Chart.yaml
+      - glob:charts/application-generator/**

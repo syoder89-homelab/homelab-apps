@@ -1,0 +1,9 @@
+stages:
+  prod:
+    sources:
+      direct: true
+      # stages:
+      # - staging
+    asPR: true
+    targetBranch: env/prod
+    envType: prod

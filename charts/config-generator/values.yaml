@@ -1,0 +1,7 @@
+configPaths:
+  - config/platform/global/**.yaml
+  - config/platform/env-types/{{ .Values.envType }}/**.yaml
+  - config/platform/stages/{{ .Values.stageName }}/**.yaml
+  - config/application/global/**.yaml
+  - config/application/env-types/{{ .Values.envType }}/**.yaml
+  - config/application/stages/{{ .Values.stageName }}/**.yaml

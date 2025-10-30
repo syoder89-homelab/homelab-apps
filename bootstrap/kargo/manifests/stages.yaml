@@ -1,0 +1,42 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod-application-generator
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: application-generator
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/prod/application-generator
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      - task:
+          name: prepare-workdir 
+      # The application-generator chart needs access to the application manifests
+      # Copy application manifests into application-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications
+          outPath: ${{ vars.path_src }}/charts/application-generator/applications
+      - uses: helm-template
+        config:
+          releaseName: application-generator
+          path: ${{ vars.path_src }}/charts/application-generator
+          outPath: ${{ vars.path_out }}/deploy
+      - task:
+          name: push-manifests
+        vars:
+        - name: asPR
+          value: "false"

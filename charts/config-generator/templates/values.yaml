@@ -1,0 +1,20 @@
+{{- /* 
+  Aggregate all config files from specified paths into a single values.yaml structure.
+  This allows the config-generator chart to access all necessary configuration data.
+*/ -}}
+{{- $values := dict }}
+{{- range $configFile := .Values.configPaths }}
+{{- /* Even the configPaths may contain templates, so we process them first */ -}}
+{{- $configFile := include "better-tpl" (list $configFile $) }}
+{{- /* Create the values map giving precedence to later files just as Helm does */ -}}
+{{- range $path, $_ := $.Files.Glob $configFile }}
+{{- $values := merge $values ($.Files.Get $path | fromYaml) }}
+{{- end }}
+{{- end }}
+{{- /* Create a new context with the aggregated values merged into the original Values.  */ -}}
+{{- $ctx := (dict "Values" (merge $.Values $values)) }}
+{{- /*
+  Render the aggregated values using the recursive better-tpl helper and our context.
+  We're effectively using $values to render $values.
+*/ -}}
+{{ include "better-tpl" (list $values $ctx) }}
