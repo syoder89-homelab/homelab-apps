@@ -4,7 +4,7 @@ frigate:
   service:
     type: LoadBalancer
   # -- set environment variables from Secret(s)
-  envFromSecrets: []
+  envFromSecrets:
     - frigate-rtsp-credentials
   resources:
     requests:
