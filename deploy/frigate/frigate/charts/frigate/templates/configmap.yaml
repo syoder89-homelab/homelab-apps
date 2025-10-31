@@ -41,7 +41,7 @@ data:
           - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.204:554/cam/realmonitor?channel=1&subtype=0
           #- "ffmpeg:barn_front#video=vp9"
         barn_front_sub2:
-          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.FRIGATE_RTSP_USERNAME0.204:554/cam/realmonitor?channel=1&subtype=2
+          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.204:554/cam/realmonitor?channel=1&subtype=2
         house_front:
           - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.109:554/cam/realmonitor?channel=1&subtype=0
         house_front_sub2:
