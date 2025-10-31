@@ -1,0 +1,324 @@
+---
+# Source: frigate/charts/frigate/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frigate
+  namespace: frigate
+  labels:
+    app.kubernetes.io/name: frigate
+    helm.sh/chart: frigate-7.0.3
+    app.kubernetes.io/instance: frigate
+    app.kubernetes.io/managed-by: Helm
+data:
+  config.yml: |
+    #auth:
+    #  reset_admin_password: true
+    mqtt:
+      host: mosquitto.mosquitto
+      port: 1883
+    detectors:
+      #ov:
+      #  type: openvino
+      #  device: AUTO
+      #  model:
+      #    path: /openvino-model/ssdlite_mobilenet_v2.xml
+      coral:
+        type: edgetpu
+        device: usb
+    #model:
+    #  width: 300
+    #  height: 300
+    #  input_tensor: nhwc
+    #  input_pixel_format: bgr
+    #  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+    go2rtc:
+      # -threads 2 -hwaccel_flags allow_profile_mismatch -hwaccel vaapi -hwaccel_device /dev/dri/renderD128 -hwaccel_output_format vaapi
+      #ffmpeg:
+      #  vp9: "-c:v libvpx-vp9 -lossless 1"
+      streams:
+        barn_front:
+          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.204:554/cam/realmonitor?channel=1&subtype=0
+          #- "ffmpeg:barn_front#video=vp9"
+        barn_front_sub2:
+          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.FRIGATE_RTSP_USERNAME0.204:554/cam/realmonitor?channel=1&subtype=2
+        house_front:
+          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.109:554/cam/realmonitor?channel=1&subtype=0
+        house_front_sub2:
+          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.109:554/cam/realmonitor?channel=1&subtype=2
+        house_south:
+          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.101:554/cam/realmonitor?channel=1&subtype=0
+        house_south_sub2:
+          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.101:554/cam/realmonitor?channel=1&subtype=2
+        house_west:
+          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.163:554/cam/realmonitor?channel=1&subtype=0
+        house_west_sub2:
+          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.163:554/cam/realmonitor?channel=1&subtype=2
+        indoor1:
+          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.171:554/cam/realmonitor?channel=1&subtype=0
+        indoor1_sub2:
+          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.171:554/cam/realmonitor?channel=1&subtype=1
+    objects:
+      #mask:
+      #  - 0,336,808,285,827,343,0,509
+      #  - 977,536,1251,536,1229,364,985,309
+      track:
+        - person
+        - car
+        - cat
+        - dog
+    record:
+      enabled: true
+      retain:
+        days: 30
+        mode: all
+      alerts:
+        pre_capture: 15
+        post_capture: 30
+        retain:
+          days: 30
+          mode: motion
+      detections:
+        pre_capture: 15
+        post_capture: 30
+        retain:
+          days: 30
+          mode: motion
+    #ffmpeg:
+    #  hwaccel_args: preset-vaapi
+    birdseye:
+      enabled: false
+      mode: continuous
+      restream: true
+    cameras:
+      # Define at least one camera
+      barn_front:
+        enabled: true
+        ui:
+          order: 0
+          dashboard: true
+        # objects:
+        #   mask:
+        #     - 0,336,808,285,827,343,0,509
+        #     - 977,536,1251,536,1229,364,985,309
+        mqtt:
+          enabled: true
+          required_zones:
+            - driveway
+            - old_entrance
+            - everything
+        zones:
+          road:
+            inertia: 3
+            coordinates: 761,147,744,0,0,240,0,527
+            objects:
+              - car
+              - person
+              - dog
+          driveway:
+            inertia: 3
+            coordinates: 942,245,908,162,837,162,816,198,590,227,531,274
+            objects:
+              - person
+              - car
+              - dog
+          old_entrance:
+            inertia: 3
+            coordinates: 0,550,153,458,229,504,0,641
+            objects:
+              - person
+              - car
+              - dog
+          everything:
+            inertia: 3
+            coordinates: 0,832,1920,832,1920,0,0,0
+            objects:
+              - person
+              - dog
+        motion:
+          # mask:
+          #  - 0,336,808,285,827,343,0,509
+          #  - 977,536,1251,536,1229,364,985,309
+          mask:
+            - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
+          threshold: 60
+          contour_area: 60
+        ffmpeg:
+          inputs:
+            - path: rtsp://127.0.0.1:8554/barn_front
+              input_args: preset-rtsp-generic
+              roles:
+                - record
+            - path: rtsp://127.0.0.1:8554/barn_front_sub2
+              input_args: preset-rtsp-generic
+              roles:
+                - detect
+        detect:
+          width: 1920
+          height: 832
+        review:
+          alerts:
+            required_zones:
+              - driveway
+              - old_entrance
+              - everything
+      house_front:
+        enabled: true
+        ui:
+          order: 10
+          dashboard: true
+        motion:
+          # mask:
+          #   - 1920,220,1920,379,421,150,506,61
+          mask:
+            - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
+          threshold: 60
+          contour_area: 60
+        mqtt:
+          enabled: true
+          required_zones:
+            - driveway
+            - front_yard
+            - front_porch
+        zones:
+          road:
+            inertia: 3
+            coordinates: 1920,0,1920,309,264,57,262,0
+            objects:
+              - car
+              - person
+              - dog
+          driveway:
+            inertia: 3
+            coordinates: 0,225,65,296,701,582,1409,293,1140,250,811,309,425,251,390,160
+            objects:
+              - car
+              - person
+              - dog
+          front_yard:
+            inertia: 3
+            coordinates: 
+              1920,357,1920,1080,0,1080,0,901,1424,265,1201,227,1025,288,804,323,554,302,325,227,536,154,500,138,0,235,0,0
+            objects:
+              - person
+              - dog
+          front_porch:
+            inertia: 3
+            coordinates: 767,596,0,888,0,276
+            objects:
+              - person
+              - dog
+        # objects:
+        #   mask:
+        #     - 1920,220,1920,379,421,150,506,61
+        ffmpeg:
+          inputs:
+            - path: rtsp://127.0.0.1:8554/house_front
+              input_args: preset-rtsp-generic
+              roles:
+                - record
+            - path: rtsp://127.0.0.1:8554/house_front_sub2
+              input_args: preset-rtsp-generic
+              roles:
+                - detect
+        detect:
+          width: 1280
+          height: 720
+        review:
+          alerts:
+            required_zones:
+              - driveway
+              - front_yard
+              - front_porch
+      house_south:
+        enabled: true
+        ui:
+          order: 2
+          dashboard: true
+        motion:
+          # mask:
+          #   - 1920,220,1920,379,421,150,506,61
+          mask:
+            - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
+          threshold: 60
+          contour_area: 60
+        objects:
+          filters:
+            car:
+              mask:
+                - 642,473,1094,432,1093,730,640,732
+        mqtt:
+          enabled: true
+        ffmpeg:
+          inputs:
+            - path: rtsp://127.0.0.1:8554/house_south
+              input_args: preset-rtsp-generic
+              roles:
+                - record
+            - path: rtsp://127.0.0.1:8554/house_south_sub2
+              input_args: preset-rtsp-generic
+              roles:
+                - detect
+        detect:
+          width: 1920
+          height: 832
+      house_west:
+        enabled: true
+        ui:
+          order: 1
+          dashboard: true
+        motion:
+          # mask:
+          #   - 1920,220,1920,379,421,150,506,61
+          mask:
+            - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
+          threshold: 60
+          contour_area: 60
+        mqtt:
+          enabled: true
+        ffmpeg:
+          inputs:
+            - path: rtsp://127.0.0.1:8554/house_west
+              input_args: preset-rtsp-generic
+              roles:
+                - record
+            - path: rtsp://127.0.0.1:8554/house_west_sub2
+              input_args: preset-rtsp-generic
+              roles:
+                - detect
+        detect:
+          width: 1920
+          height: 832
+      indoor1:
+        enabled: true
+        ui:
+          order: 4
+          dashboard: true
+        onvif:
+          host: 172.20.0.171
+          port: 80
+          user: ""
+          password: ""
+        motion:
+          # mask:
+          #   - 1920,220,1920,379,421,150,506,61
+          mask:
+            - 0.7,0.029,0.972,0.029,0.969,0.079,0.697,0.081
+          threshold: 60
+          contour_area: 60
+        mqtt:
+          enabled: true
+        ffmpeg:
+          inputs:
+            - path: rtsp://127.0.0.1:8554/indoor1
+              input_args: preset-rtsp-generic
+              roles:
+                - record
+            - path: rtsp://127.0.0.1:8554/indoor1_sub2
+              input_args: preset-rtsp-generic
+              roles:
+                - detect
+        detect:
+          width: 640
+          height: 480
+    version: 0.14
