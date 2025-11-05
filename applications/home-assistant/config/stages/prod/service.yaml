@@ -1,3 +1,7 @@
 home-assistant:
   service:
     type: LoadBalancer 
+  addons:
+    codeserver:
+      service:
+        type: LoadBalancer
