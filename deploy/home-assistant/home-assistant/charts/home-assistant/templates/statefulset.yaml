@@ -1,0 +1,99 @@
+---
+# Source: home-assistant/charts/home-assistant/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: home-assistant
+  labels:
+    helm.sh/chart: home-assistant-0.3.28
+    app.kubernetes.io/name: home-assistant
+    app.kubernetes.io/instance: home-assistant
+    app.kubernetes.io/version: "2025.10.4"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  serviceName: home-assistant
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: home-assistant
+      app.kubernetes.io/instance: home-assistant
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: home-assistant
+        app.kubernetes.io/instance: home-assistant
+      annotations:
+    spec:
+      serviceAccountName: home-assistant
+      securityContext:
+        {}
+      containers:
+        - name: home-assistant
+          securityContext:
+            {}
+          image: "ghcr.io/home-assistant/home-assistant:2025.10.4"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8123
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            periodSeconds: 20
+            successThreshold: 1
+            timeoutSeconds: 2
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          volumeMounts:
+          - mountPath: /config
+            name: home-assistant
+        - name: codeserver
+          securityContext:
+            {}
+          args:
+          - --auth
+          - password
+          - --user-data-dir
+          - "/config/.vscode"
+          - --extensions-dir
+          - "/config/.vscode"
+          - --port
+          - "12321"
+          - "/config"
+          env:
+          - name: PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: home-assistant-codeserver-credentials
+                key: password
+          image: "ghcr.io/coder/code-server:4.105.1"
+          imagePullPolicy: "IfNotPresent"
+          ports:
+          - containerPort: 12321
+            name: codeserver
+            protocol: TCP
+          volumeMounts:
+          - mountPath: /config
+            name: home-assistant
+      volumes:
+  volumeClaimTemplates:
+  - metadata:
+      name: home-assistant
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+      storageClassName: openebs-storage-persist
