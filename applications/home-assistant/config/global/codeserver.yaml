@@ -1,0 +1,7 @@
+home-assistant:
+  addons:
+    codeserver:
+      enabled: true
+      auth:
+        enabled: true
+        existingSecret: "home-assistant-codeserver-credentials"

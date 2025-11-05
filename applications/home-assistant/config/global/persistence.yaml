@@ -1,0 +1,8 @@
+home-assistant:
+  controller:
+    type: StatefulSet
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 5Gi
+    storageClass: openebs-storage-persist
