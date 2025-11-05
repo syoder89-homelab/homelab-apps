@@ -27,6 +27,30 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  name: prod-home-assistant
+  namespace: argocd
+spec:
+  destination:
+    name: in-cluster
+    namespace: home-assistant
+  project: apps
+  source:
+    directory:
+      recurse: true
+    path: deploy/
+    repoURL: https://github.com/syoder89-homelab/homelab-apps
+    targetRevision: env/prod/home-assistant
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+# Source: application-generator/templates/application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
   name: prod-kargo-config
   namespace: argocd
 spec:
