@@ -1,0 +1,77 @@
+---
+# Source: victoria-metrics-taylor/charts/victoria-metrics-single/templates/server-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: server
+    app.kubernetes.io/name: victoria-metrics-single
+    app.kubernetes.io/instance: victoria-metrics
+    helm.sh/chart: victoria-metrics-single-0.9.3
+    app.kubernetes.io/managed-by: Helm
+  name: victoria-metrics-victoria-metrics-single-server
+  namespace: taylor-monitoring
+spec:
+  selector:
+    matchLabels:
+      app: server
+      app.kubernetes.io/name: victoria-metrics-single
+      app.kubernetes.io/instance: victoria-metrics
+  replicas: 1
+  strategy:
+    # Must be "Recreate" when we have a persistent volume
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: server
+        app.kubernetes.io/name: victoria-metrics-single
+        app.kubernetes.io/instance: victoria-metrics
+        helm.sh/chart: victoria-metrics-single-0.9.3
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      automountServiceAccountToken: true
+      containers:
+        - name: victoria-metrics-single-server
+          securityContext:
+            {}
+          image: "victoriametrics/victoria-metrics:v1.93.0"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - "--retentionPeriod=72"
+            - "--storageDataPath=/storage"
+            - --envflag.enable=true
+            - --envflag.prefix=VM_
+            - --loggerFormat=json
+          ports:
+            - name: http
+              containerPort: 8428
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /health
+              port: 8428
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 5
+          resources:
+            {}
+          volumeMounts:
+            - name: server-volume
+              mountPath: /storage
+              subPath: 
+      serviceAccountName: victoria-metrics-victoria-metrics-single
+      terminationGracePeriodSeconds: 60
+      volumes:
+      - name: server-volume
+        persistentVolumeClaim:
+          claimName: victoria-metrics-victoria-metrics-single-server
