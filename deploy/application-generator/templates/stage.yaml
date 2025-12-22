@@ -83,6 +83,86 @@ spec:
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
+  name: prod-grafana-scott
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: grafana-scott
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/prod/grafana-scott
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/grafana-scott/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: prod
+            - key: envType
+              value: prod
+            - key: appName
+              value: grafana-scott
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/prod/grafana-scott-values.yaml
+          #- ${{ vars.path_src }}/applications/grafana-scott/values/prod.yaml
+      - uses: helm-template
+        config:
+          releaseName: grafana-scott
+          namespace: scott-monitoring
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/grafana-scott
+          outPath: ${{ vars.path_out }}/deploy/grafana-scott
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: targetBranch
+          value: env/prod/grafana-scott
+      - uses: argocd-update
+        config:
+          apps:
+          - name: prod-grafana-scott
+            sources:
+            - repoURL: ${{ vars.gitRepo }}
+              desiredRevision: ${{ outputs.promotion.commit }}
+---
+# Source: application-generator/templates/stage.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
   name: prod-home-assistant
   namespace: homelab-apps
 spec:
