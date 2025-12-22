@@ -1,0 +1,11 @@
+apiVersion: v2
+name: grafana
+description: An Umbrella Helm chart for deploying grafana
+namespace: scott-monitoring
+type: application
+version: "0.0.1"
+appVersion: "10.1.0"
+dependencies:
+  - name: grafana
+    version: "10.1.0"
+    repository: "https://grafana.github.io/helm-charts"
