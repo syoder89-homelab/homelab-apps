@@ -1,5 +1,5 @@
 apiVersion: v2
-name: grafana
+name: grafana-scott
 description: An Umbrella Helm chart for deploying grafana
 namespace: scott-monitoring
 type: application
