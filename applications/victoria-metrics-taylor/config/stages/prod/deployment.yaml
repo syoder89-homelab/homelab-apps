@@ -1,4 +1,4 @@
-victoria-metrics:
+victoria-metrics-single:
   server:         
     # New flag
     mode: deployment
