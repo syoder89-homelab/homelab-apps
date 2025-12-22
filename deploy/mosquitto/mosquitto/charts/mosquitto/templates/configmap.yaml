@@ -10,7 +10,6 @@ metadata:
     app.kubernetes.io/instance: mosquitto
     app.kubernetes.io/version: "2.0.14"
     app.kubernetes.io/managed-by: Helm
-    scottTest: "false"
 data:
   mosquitto.conf: |
     per_listener_settings false
