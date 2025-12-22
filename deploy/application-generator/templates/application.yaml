@@ -180,3 +180,29 @@ spec:
       selfHeal: true
     syncOptions:
     - CreateNamespace=true
+---
+# Source: application-generator/templates/application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prod-victoria-metrics-taylor
+  namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: homelab-apps:prod-victoria-metrics-taylor
+spec:
+  destination:
+    name: in-cluster
+    namespace: taylor-monitoring
+  project: apps
+  source:
+    directory:
+      recurse: true
+    path: deploy/
+    repoURL: https://github.com/syoder89-homelab/homelab-apps
+    targetRevision: env/prod/victoria-metrics-taylor
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
