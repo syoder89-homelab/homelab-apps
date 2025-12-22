@@ -1,0 +1,24 @@
+---
+# Source: victoria-metrics-taylor/charts/victoria-metrics-single/templates/server-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: taylor-monitoring
+  labels:
+    app: server
+    app.kubernetes.io/name: victoria-metrics-single
+    app.kubernetes.io/instance: victoria-metrics
+    helm.sh/chart: victoria-metrics-single-0.9.3
+    app.kubernetes.io/managed-by: Helm
+  name: victoria-metrics-victoria-metrics-single-server
+spec:
+  ports:
+    - name: http
+      port: 8428
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: server
+    app.kubernetes.io/name: victoria-metrics-single
+    app.kubernetes.io/instance: victoria-metrics
+  type: "LoadBalancer"
