@@ -78,7 +78,7 @@ spec:
           apps:
           - name: {{ $stage_name }}-{{ $app.name }}
             sources:
-            - repoURL: ${{ vars.gitRepo }}
-              desiredRevision: ${{ outputs.promotion.commit }}
+            - repoURL: {{`${{ vars.gitRepo }}`}}
+              desiredRevision: {{`${{ outputs.promotion.commit }}`}}
 {{- end }}
 {{- end }}
