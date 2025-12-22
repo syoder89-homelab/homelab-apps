@@ -1,0 +1,14 @@
+apiVersion: v2
+name: victoria-metrics-scott
+description: An Umbrella Helm chart for deploying victoria-metrics
+# Custom field for application-generator
+namespace: scott-monitoring
+# Custom field for application-generator - compatibility with the old victoria-metrics helm deployment
+releaseName: victoria-metrics
+type: application
+version: "0.0.1"
+appVersion: "0.9.3"
+dependencies:
+  - name: victoria-metrics-single
+    version: "0.9.3"
+    repository: "https://victoriametrics.github.io/helm-charts/"

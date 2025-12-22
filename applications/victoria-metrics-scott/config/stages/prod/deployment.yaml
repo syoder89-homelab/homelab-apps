@@ -1,0 +1,9 @@
+victoria-metrics-single:
+  server:         
+    # New flag
+    mode: deployment
+    # Old flag
+    statefulSet:
+      enabled: false
+    # Wasn't set in original config
+    # retentionPeriod: 72
