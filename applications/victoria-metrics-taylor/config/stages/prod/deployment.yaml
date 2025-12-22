@@ -1,0 +1,8 @@
+victoria-metrics:
+  server:         
+    # New flag
+    mode: deployment
+    # Old flag
+    statefulSet:
+      enabled: false
+    retentionPeriod: 72

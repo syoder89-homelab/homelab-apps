@@ -1,0 +1,4 @@
+victoria-metrics: 
+  server:         
+    service:    
+      type: LoadBalancer 
