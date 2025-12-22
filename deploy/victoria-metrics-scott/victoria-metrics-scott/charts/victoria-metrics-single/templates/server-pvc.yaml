@@ -1,0 +1,19 @@
+---
+# Source: victoria-metrics-scott/charts/victoria-metrics-single/templates/server-pvc.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: victoria-metrics-scott-victoria-metrics-single-server
+  namespace: scott-monitoring
+  labels:
+    app: server
+    app.kubernetes.io/name: victoria-metrics-single
+    app.kubernetes.io/instance: victoria-metrics-scott
+    helm.sh/chart: victoria-metrics-single-0.9.3
+    app.kubernetes.io/managed-by: Helm
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "16Gi"
