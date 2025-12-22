@@ -18,7 +18,7 @@ spec:
       app.kubernetes.io/name: grafana
       app.kubernetes.io/instance: grafana-scott
   strategy:
-    type: RollingUpdate
+    type: Recreate
   template:
     metadata:
       labels:
