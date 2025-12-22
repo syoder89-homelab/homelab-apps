@@ -10,7 +10,6 @@ metadata:
     app.kubernetes.io/name: mosquitto
     app.kubernetes.io/version: 2.0.14
     helm.sh/chart: mosquitto-4.8.2
-    scottTest: "false"
   annotations:
 spec:
   type: LoadBalancer
@@ -34,7 +33,6 @@ metadata:
     app.kubernetes.io/name: mosquitto
     app.kubernetes.io/version: 2.0.14
     helm.sh/chart: mosquitto-4.8.2
-    scottTest: "false"
 spec:
   revisionHistoryLimit: 3
   replicas: 1
