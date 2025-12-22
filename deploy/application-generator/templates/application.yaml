@@ -5,6 +5,8 @@ kind: Application
 metadata:
   name: prod-frigate
   namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: prod-frigate
 spec:
   destination:
     name: in-cluster
@@ -29,6 +31,8 @@ kind: Application
 metadata:
   name: prod-home-assistant
   namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: prod-home-assistant
 spec:
   destination:
     name: in-cluster
@@ -53,6 +57,8 @@ kind: Application
 metadata:
   name: prod-kargo-config
   namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: prod-kargo-config
 spec:
   destination:
     name: in-cluster
@@ -77,6 +83,8 @@ kind: Application
 metadata:
   name: prod-mosquitto-taylor
   namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: prod-mosquitto-taylor
 spec:
   destination:
     name: in-cluster
@@ -101,6 +109,8 @@ kind: Application
 metadata:
   name: prod-mosquitto
   namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: prod-mosquitto
 spec:
   destination:
     name: in-cluster

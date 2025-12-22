@@ -65,11 +65,19 @@ spec:
           - /tmp/values.yaml
       - task:
           name: push-manifests
+        as: promotion
         vars:
         - name: asPR
           value: "true"
         - name: targetBranch
           value: env/prod/frigate
+      - uses: argocd-update
+        config:
+          apps:
+          - name: prod-frigate
+            sources:
+            - repoURL: ${{ vars.gitRepo }}
+              desiredRevision: ${{ outputs.promotion.commit }}
 ---
 # Source: application-generator/templates/stage.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -137,11 +145,19 @@ spec:
           - /tmp/values.yaml
       - task:
           name: push-manifests
+        as: promotion
         vars:
         - name: asPR
           value: "true"
         - name: targetBranch
           value: env/prod/home-assistant
+      - uses: argocd-update
+        config:
+          apps:
+          - name: prod-home-assistant
+            sources:
+            - repoURL: ${{ vars.gitRepo }}
+              desiredRevision: ${{ outputs.promotion.commit }}
 ---
 # Source: application-generator/templates/stage.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -209,11 +225,19 @@ spec:
           - /tmp/values.yaml
       - task:
           name: push-manifests
+        as: promotion
         vars:
         - name: asPR
           value: "true"
         - name: targetBranch
           value: env/prod/kargo-config
+      - uses: argocd-update
+        config:
+          apps:
+          - name: prod-kargo-config
+            sources:
+            - repoURL: ${{ vars.gitRepo }}
+              desiredRevision: ${{ outputs.promotion.commit }}
 ---
 # Source: application-generator/templates/stage.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -281,11 +305,19 @@ spec:
           - /tmp/values.yaml
       - task:
           name: push-manifests
+        as: promotion
         vars:
         - name: asPR
           value: "true"
         - name: targetBranch
           value: env/prod/mosquitto-taylor
+      - uses: argocd-update
+        config:
+          apps:
+          - name: prod-mosquitto-taylor
+            sources:
+            - repoURL: ${{ vars.gitRepo }}
+              desiredRevision: ${{ outputs.promotion.commit }}
 ---
 # Source: application-generator/templates/stage.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -353,8 +385,16 @@ spec:
           - /tmp/values.yaml
       - task:
           name: push-manifests
+        as: promotion
         vars:
         - name: asPR
           value: "true"
         - name: targetBranch
           value: env/prod/mosquitto
+      - uses: argocd-update
+        config:
+          apps:
+          - name: prod-mosquitto
+            sources:
+            - repoURL: ${{ vars.gitRepo }}
+              desiredRevision: ${{ outputs.promotion.commit }}
