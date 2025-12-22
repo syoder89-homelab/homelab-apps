@@ -67,10 +67,18 @@ spec:
           - /tmp/values.yaml
       - task:
           name: push-manifests
+        as: promotion
         vars:
         - name: asPR
           value: "{{ $stage.asPR }}"
         - name: targetBranch
           value: {{ $stage.targetBranch }}/{{ $app.name }}
+      - uses: argocd-update
+        config:
+          apps:
+          - name: {{ $stage_name }}-{{ $app.name }}
+            sources:
+            - repoURL: ${{ vars.gitRepo }}
+              desiredRevision: ${{ outputs.promotion.commit }}
 {{- end }}
 {{- end }}

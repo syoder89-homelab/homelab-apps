@@ -37,6 +37,14 @@ spec:
           outPath: ${{ vars.path_out }}/deploy
       - task:
           name: push-manifests
+        as: promotion
         vars:
         - name: asPR
           value: "false"
+      - uses: argocd-update
+        config:
+          apps:
+          - name: prod-apps
+            sources:
+            - repoURL: ${{ vars.gitRepo }}
+              desiredRevision: ${{ outputs.promotion.commit }}
