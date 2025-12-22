@@ -86,5 +86,5 @@ spec:
     - uses: compose-output
       as: output
       config:
-        commit: ${{ task.outputs['wait-for-pr'].commit }}
+        commit: ${{ task.outputs['commit'].commit }}
         branch: ${{ vars.targetBranch }}
