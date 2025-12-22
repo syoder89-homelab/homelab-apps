@@ -615,7 +615,7 @@ spec:
           #- ${{ vars.path_src }}/applications/victoria-metrics-scott/values/prod.yaml
       - uses: helm-template
         config:
-          releaseName: victoria-metrics
+          releaseName: victoria-metrics-scott
           namespace: scott-monitoring
           buildDependencies: true
           includeCRDs: true
