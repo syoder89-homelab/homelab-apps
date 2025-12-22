@@ -4,7 +4,7 @@ metadata:
   name: prod-apps
   namespace: argocd
   annotations:
-    kargo.akuity.io/authorized-stage: prod-application-generator
+    kargo.akuity.io/authorized-stage: homelab-apps:prod-application-generator
 spec:
   destination:
     name: in-cluster
