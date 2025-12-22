@@ -1,0 +1,4 @@
+# Deployment with 1 replica and persistent storage - we must terminate the original replica so the new one can mount the PVC
+grafana:
+  deploymentStrategy:
+    type: Recreate

@@ -1,0 +1,14 @@
+apiVersion: v2
+name: grafana-taylor
+description: An Umbrella Helm chart for deploying grafana
+# Custom field for application-generator
+namespace: taylor-monitoring
+# Custom field for application-generator - compatibility with the old grafana helm deployment
+releaseName: grafana
+type: application
+version: "0.0.1"
+appVersion: "10.4.0"
+dependencies:
+  - name: grafana
+    version: "10.4.0"
+    repository: "https://grafana.github.io/helm-charts"
