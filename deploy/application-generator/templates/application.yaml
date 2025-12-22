@@ -6,7 +6,7 @@ metadata:
   name: prod-frigate
   namespace: argocd
   annotations:
-    kargo.akuity.io/authorized-stage: prod-frigate
+    kargo.akuity.io/authorized-stage: homelab-apps:prod-frigate
 spec:
   destination:
     name: in-cluster
@@ -32,7 +32,7 @@ metadata:
   name: prod-home-assistant
   namespace: argocd
   annotations:
-    kargo.akuity.io/authorized-stage: prod-home-assistant
+    kargo.akuity.io/authorized-stage: homelab-apps:prod-home-assistant
 spec:
   destination:
     name: in-cluster
@@ -58,7 +58,7 @@ metadata:
   name: prod-kargo-config
   namespace: argocd
   annotations:
-    kargo.akuity.io/authorized-stage: prod-kargo-config
+    kargo.akuity.io/authorized-stage: homelab-apps:prod-kargo-config
 spec:
   destination:
     name: in-cluster
@@ -84,7 +84,7 @@ metadata:
   name: prod-mosquitto-taylor
   namespace: argocd
   annotations:
-    kargo.akuity.io/authorized-stage: prod-mosquitto-taylor
+    kargo.akuity.io/authorized-stage: homelab-apps:prod-mosquitto-taylor
 spec:
   destination:
     name: in-cluster
@@ -110,7 +110,7 @@ metadata:
   name: prod-mosquitto
   namespace: argocd
   annotations:
-    kargo.akuity.io/authorized-stage: prod-mosquitto
+    kargo.akuity.io/authorized-stage: homelab-apps:prod-mosquitto
 spec:
   destination:
     name: in-cluster
