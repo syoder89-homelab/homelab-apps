@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: influxdb-types-db
 data:
-  types.db: |- {{ .Files.Get "types.db" | nindent 4 }}
+  types.db: |- {{ .Files.Get "files/types.db" | nindent 4 }}
