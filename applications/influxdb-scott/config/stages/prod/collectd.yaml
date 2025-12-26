@@ -1,0 +1,5 @@
+influxdb:
+  config:
+    collectd:
+      enabled: true
+      typesdb: /influxdb-collectd/types.db

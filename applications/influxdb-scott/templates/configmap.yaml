@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: influxdb-types-db
+data:
+  types.db: |- {{ .Files.Get "types.db" | nindent 4 }}

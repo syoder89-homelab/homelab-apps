@@ -1,0 +1,14 @@
+apiVersion: v2
+name: influxdb-scott
+description: An Umbrella Helm chart for deploying influxdb
+# Custom field for application-generator
+namespace: scott-monitoring
+# Custom field for application-generator - compatibility with the old influxdb helm deployment
+releaseName: influxdb
+type: application
+version: "0.0.1"
+appVersion: "4.12.0"
+dependencies:
+  - name: influxdb
+    version: "4.12.0"
+    repository: "https://helm.influxdata.com/"

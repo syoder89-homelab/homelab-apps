@@ -1,0 +1,12 @@
+influxdb:
+  persistence:
+    enabled: true
+    storageClass: openebs-storage-persist
+    size: 256Gi
+  volumes:
+    - name: types-db
+      configMap:
+        name: influxdb-types-db
+  mountPoints:
+    - name: types-db
+      mountPath: /influxdb-collectd
