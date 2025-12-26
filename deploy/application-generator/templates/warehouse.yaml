@@ -75,6 +75,24 @@ spec:
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
+  name: influxdb-scott
+  namespace: homelab-apps
+spec:
+  subscriptions:
+  - git:
+      branch: main
+      commitSelectionStrategy: NewestFromBranch
+      discoveryLimit: 10
+      repoURL: https://github.com/syoder89-homelab/homelab-apps.git
+      includePaths:
+      - applications/influxdb-scott
+      # Alternate config strategy
+      #- stages/**/influxdb-scott-values.yaml
+---
+# Source: application-generator/templates/warehouse.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
   name: kargo-config
   namespace: homelab-apps
 spec:

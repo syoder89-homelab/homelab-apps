@@ -323,6 +323,86 @@ spec:
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
+  name: prod-influxdb-scott
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: influxdb-scott
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/prod/influxdb-scott
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/influxdb-scott/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: prod
+            - key: envType
+              value: prod
+            - key: appName
+              value: influxdb-scott
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/prod/influxdb-scott-values.yaml
+          #- ${{ vars.path_src }}/applications/influxdb-scott/values/prod.yaml
+      - uses: helm-template
+        config:
+          releaseName: influxdb
+          namespace: scott-monitoring
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/influxdb-scott
+          outPath: ${{ vars.path_out }}/deploy/influxdb-scott
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: targetBranch
+          value: env/prod/influxdb-scott
+      - uses: argocd-update
+        config:
+          apps:
+          - name: prod-influxdb-scott
+            sources:
+            - repoURL: ${{ vars.gitRepo }}
+              desiredRevision: ${{ outputs.promotion.commit }}
+---
+# Source: application-generator/templates/stage.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
   name: prod-kargo-config
   namespace: homelab-apps
 spec:
