@@ -20,8 +20,8 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
-        filters:
-        - targetBranchMatch: "^{{ $stage.targetBranch }}/{{ $app.name }}$"
+      filters:
+      - targetBranchMatch: "^{{ $stage.targetBranch }}/{{ $app.name }}$"
       requeueAfterSeconds: 1800
   template:
     metadata:
