@@ -81,7 +81,7 @@ spec:
           #- {{`${{ vars.path_src }}`}}/{{ dir $path }}/values/{{ $stage_name }}.yaml
       - uses: helm-template
         config:
-          releaseName: "{{ $app.releaseName | default $app.name }}"
+          releaseName: "{{ $stage_name }}-{{ $app.releaseName | default $app.name }}"
           namespace: "{{ $app.namespace | default $app.name }}"
           buildDependencies: true
           includeCRDs: true
