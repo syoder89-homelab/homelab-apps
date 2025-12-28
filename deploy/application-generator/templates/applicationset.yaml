@@ -19,7 +19,7 @@ spec:
         repo: homelab-apps
       filters:
       - targetBranchMatch: "^env/test/frigate$"
-      requeueAfterSeconds: 1800
+      requeueAfterSeconds: 180
   template:
     metadata:
       name: PR-{{ .number }}-test-frigate
@@ -64,7 +64,7 @@ spec:
         repo: homelab-apps
       filters:
       - targetBranchMatch: "^env/test/grafana-scott$"
-      requeueAfterSeconds: 1800
+      requeueAfterSeconds: 180
   template:
     metadata:
       name: PR-{{ .number }}-test-grafana-scott
@@ -109,7 +109,7 @@ spec:
         repo: homelab-apps
       filters:
       - targetBranchMatch: "^env/test/grafana-taylor$"
-      requeueAfterSeconds: 1800
+      requeueAfterSeconds: 180
   template:
     metadata:
       name: PR-{{ .number }}-test-grafana-taylor
@@ -154,7 +154,7 @@ spec:
         repo: homelab-apps
       filters:
       - targetBranchMatch: "^env/test/home-assistant$"
-      requeueAfterSeconds: 1800
+      requeueAfterSeconds: 180
   template:
     metadata:
       name: PR-{{ .number }}-test-home-assistant
@@ -199,7 +199,7 @@ spec:
         repo: homelab-apps
       filters:
       - targetBranchMatch: "^env/test/influxdb-scott$"
-      requeueAfterSeconds: 1800
+      requeueAfterSeconds: 180
   template:
     metadata:
       name: PR-{{ .number }}-test-influxdb-scott
@@ -244,7 +244,7 @@ spec:
         repo: homelab-apps
       filters:
       - targetBranchMatch: "^env/test/kargo-config$"
-      requeueAfterSeconds: 1800
+      requeueAfterSeconds: 180
   template:
     metadata:
       name: PR-{{ .number }}-test-kargo-config
@@ -289,7 +289,7 @@ spec:
         repo: homelab-apps
       filters:
       - targetBranchMatch: "^env/test/mosquitto-taylor$"
-      requeueAfterSeconds: 1800
+      requeueAfterSeconds: 180
   template:
     metadata:
       name: PR-{{ .number }}-test-mosquitto-taylor
@@ -334,7 +334,7 @@ spec:
         repo: homelab-apps
       filters:
       - targetBranchMatch: "^env/test/mosquitto$"
-      requeueAfterSeconds: 1800
+      requeueAfterSeconds: 180
   template:
     metadata:
       name: PR-{{ .number }}-test-mosquitto
@@ -379,7 +379,7 @@ spec:
         repo: homelab-apps
       filters:
       - targetBranchMatch: "^env/test/victoria-metrics-scott$"
-      requeueAfterSeconds: 1800
+      requeueAfterSeconds: 180
   template:
     metadata:
       name: PR-{{ .number }}-test-victoria-metrics-scott
@@ -424,7 +424,7 @@ spec:
         repo: homelab-apps
       filters:
       - targetBranchMatch: "^env/test/victoria-metrics-taylor$"
-      requeueAfterSeconds: 1800
+      requeueAfterSeconds: 180
   template:
     metadata:
       name: PR-{{ .number }}-test-victoria-metrics-taylor
