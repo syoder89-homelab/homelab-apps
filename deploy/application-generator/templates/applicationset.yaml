@@ -17,8 +17,8 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
-        filters:
-        - targetBranchMatch: "env/test/frigate"
+      filters:
+      - targetBranchMatch: "^env/test/frigate$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -62,8 +62,8 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
-        filters:
-        - targetBranchMatch: "env/test/grafana-scott"
+      filters:
+      - targetBranchMatch: "^env/test/grafana-scott$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -107,8 +107,8 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
-        filters:
-        - targetBranchMatch: "env/test/grafana-taylor"
+      filters:
+      - targetBranchMatch: "^env/test/grafana-taylor$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -152,8 +152,8 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
-        filters:
-        - targetBranchMatch: "env/test/home-assistant"
+      filters:
+      - targetBranchMatch: "^env/test/home-assistant$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -197,8 +197,8 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
-        filters:
-        - targetBranchMatch: "env/test/influxdb-scott"
+      filters:
+      - targetBranchMatch: "^env/test/influxdb-scott$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -242,8 +242,8 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
-        filters:
-        - targetBranchMatch: "env/test/kargo-config"
+      filters:
+      - targetBranchMatch: "^env/test/kargo-config$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -287,8 +287,8 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
-        filters:
-        - targetBranchMatch: "env/test/mosquitto-taylor"
+      filters:
+      - targetBranchMatch: "^env/test/mosquitto-taylor$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -332,8 +332,8 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
-        filters:
-        - targetBranchMatch: "env/test/mosquitto"
+      filters:
+      - targetBranchMatch: "^env/test/mosquitto$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -377,8 +377,8 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
-        filters:
-        - targetBranchMatch: "env/test/victoria-metrics-scott"
+      filters:
+      - targetBranchMatch: "^env/test/victoria-metrics-scott$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -422,8 +422,8 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
-        filters:
-        - targetBranchMatch: "env/test/victoria-metrics-taylor"
+      filters:
+      - targetBranchMatch: "^env/test/victoria-metrics-taylor$"
       requeueAfterSeconds: 1800
   template:
     metadata:
