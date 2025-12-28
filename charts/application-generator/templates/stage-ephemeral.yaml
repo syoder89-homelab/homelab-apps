@@ -82,8 +82,7 @@ spec:
       - uses: helm-template
         config:
           releaseName: "{{ $stage_name }}-{{ $app.releaseName | default $app.name }}"
-          # Cannot set the namespace here as it is dynamic based on PR number
-          #namespace: "{{ $app.namespace | default $app.name }}"
+          namespace: "{{ $stage_name }}-{{ $app.namespace | default $app.name }}"
           buildDependencies: true
           includeCRDs: true
           path: "{{`${{ vars.path_src }}`}}/{{ dir $path }}"

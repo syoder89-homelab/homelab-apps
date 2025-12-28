@@ -28,7 +28,9 @@ spec:
       requeueAfterSeconds: 60
       values:
         appName: "pr-{{`{{ .number }}`}}-{{ $stage_name }}-{{ $app.name }}"
-        appNamespace: "pr-{{`{{ .number }}`}}-{{ $app.namespace | default $app.name }}"
+        #appNamespace: "pr-{{`{{ .number }}`}}-{{ $app.namespace | default $app.name }}"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "{{ $stage_name }}-{{ $app.namespace | default $app.name }}"
   template:
     metadata:
       name: "{{`{{ .values.appName }}`}}"
