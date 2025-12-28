@@ -56,17 +56,17 @@ spec:
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: {{`${{ vars.path_src }}`}}/config
-          outPath: {{`${{ vars.path_src }}`}}/charts/config-generator/config/platform
+          inPath: "{{`${{ vars.path_src }}`}}/config"
+          outPath: "{{`${{ vars.path_src }}`}}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: {{`${{ vars.path_src }}`}}/{{ dir $path }}/config
-          outPath: {{`${{ vars.path_src }}`}}/charts/config-generator/config/application
+          inPath: "{{`${{ vars.path_src }}`}}/{{ dir $path }}/config"
+          outPath: "{{`${{ vars.path_src }}`}}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: {{`${{ vars.path_src }}`}}/charts/config-generator
+          path: "{{`${{ vars.path_src }}`}}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -81,12 +81,12 @@ spec:
           #- {{`${{ vars.path_src }}`}}/{{ dir $path }}/values/{{ $stage_name }}.yaml
       - uses: helm-template
         config:
-          releaseName: {{ $app.releaseName | default $app.name }}
-          namespace: {{ $app.namespace | default $app.name }}
+          releaseName: "{{ $app.releaseName | default $app.name }}"
+          namespace: "{{ $app.namespace | default $app.name }}
           buildDependencies: true
           includeCRDs: true
-          path: {{`${{ vars.path_src }}`}}/{{ dir $path }}
-          outPath: {{`${{ vars.path_out }}`}}/deploy/{{ $app.name }}
+          path: "{{`${{ vars.path_src }}`}}/{{ dir $path }}"
+          outPath: "{{`${{ vars.path_out }}`}}/deploy/{{ $app.name }}"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -96,17 +96,21 @@ spec:
         - name: asPR
           value: "{{ $stage.asPR }}"
         - name: waitForPR
-          value: "true"
+          value: "false"
         - name: targetBranch
-          value: {{ $stage.targetBranch }}/{{ $app.name }}
-      # No easy way to update an application that's generated from an ApplicationSet
-      # - uses: argocd-update
-      #   config:
-      #     apps:
-      #     - name: PR-{{`${{ outputs.promotion.prNumber }}`}}-{{ $stage_name }}-{{ $app.name }}
-      #       sources:
-      #       - repoURL: {{`${{ vars.gitRepo }}`}}
-      #         desiredRevision: {{`${{ outputs.promotion.commit }}`}}
+          value: "{{ $stage.targetBranch }}/{{ $app.name }}"
+      - uses: argocd-update
+        config:
+          apps:
+          - name: "pr-{{`${{ outputs.promotion.prNumber }}`}}-{{ $stage_name }}-{{ $app.name }}"
+            sources:
+            - repoURL: "{{`${{ vars.gitRepo }}`}}"
+              desiredRevision: "{{`${{ outputs.promotion.commit }}`}}"
+      - uses: git-wait-for-pr
+        as: wait-for-pr
+        config:
+          repoURL: "{{`${{ vars.gitRepo }}`}}"
+          prNumber: "{{`${{ outputs.promotion.prNumber }}`}}"
 {{- end }}
 {{- end }}
 {{- end }}
