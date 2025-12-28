@@ -26,22 +26,23 @@ spec:
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-frigate
-    destination:
-      name: in-cluster
-      namespace: PR-{{ .number }}-frigate
-    project: apps
-    source:
-      directory:
-        recurse: true
-      path: deploy/
-      repoURL: https://github.com/syoder89-homelab/homelab-apps
-      targetRevision: "{{ .head_sha }}"
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-      - CreateNamespace=true
+    spec:
+      destination:
+        name: in-cluster
+        namespace: PR-{{ .number }}-frigate
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
 ---
 # Source: application-generator/templates/applicationset.yaml
 apiVersion: argoproj.io/v1alpha1
@@ -70,22 +71,23 @@ spec:
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-grafana-scott
-    destination:
-      name: in-cluster
-      namespace: PR-{{ .number }}-scott-monitoring
-    project: apps
-    source:
-      directory:
-        recurse: true
-      path: deploy/
-      repoURL: https://github.com/syoder89-homelab/homelab-apps
-      targetRevision: "{{ .head_sha }}"
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-      - CreateNamespace=true
+    spec:
+      destination:
+        name: in-cluster
+        namespace: PR-{{ .number }}-scott-monitoring
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
 ---
 # Source: application-generator/templates/applicationset.yaml
 apiVersion: argoproj.io/v1alpha1
@@ -114,22 +116,23 @@ spec:
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-grafana-taylor
-    destination:
-      name: in-cluster
-      namespace: PR-{{ .number }}-taylor-monitoring
-    project: apps
-    source:
-      directory:
-        recurse: true
-      path: deploy/
-      repoURL: https://github.com/syoder89-homelab/homelab-apps
-      targetRevision: "{{ .head_sha }}"
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-      - CreateNamespace=true
+    spec:
+      destination:
+        name: in-cluster
+        namespace: PR-{{ .number }}-taylor-monitoring
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
 ---
 # Source: application-generator/templates/applicationset.yaml
 apiVersion: argoproj.io/v1alpha1
@@ -158,22 +161,23 @@ spec:
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-home-assistant
-    destination:
-      name: in-cluster
-      namespace: PR-{{ .number }}-home-assistant
-    project: apps
-    source:
-      directory:
-        recurse: true
-      path: deploy/
-      repoURL: https://github.com/syoder89-homelab/homelab-apps
-      targetRevision: "{{ .head_sha }}"
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-      - CreateNamespace=true
+    spec:
+      destination:
+        name: in-cluster
+        namespace: PR-{{ .number }}-home-assistant
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
 ---
 # Source: application-generator/templates/applicationset.yaml
 apiVersion: argoproj.io/v1alpha1
@@ -202,22 +206,23 @@ spec:
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-influxdb-scott
-    destination:
-      name: in-cluster
-      namespace: PR-{{ .number }}-scott-monitoring
-    project: apps
-    source:
-      directory:
-        recurse: true
-      path: deploy/
-      repoURL: https://github.com/syoder89-homelab/homelab-apps
-      targetRevision: "{{ .head_sha }}"
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-      - CreateNamespace=true
+    spec:
+      destination:
+        name: in-cluster
+        namespace: PR-{{ .number }}-scott-monitoring
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
 ---
 # Source: application-generator/templates/applicationset.yaml
 apiVersion: argoproj.io/v1alpha1
@@ -246,22 +251,23 @@ spec:
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-kargo-config
-    destination:
-      name: in-cluster
-      namespace: PR-{{ .number }}-homelab-apps
-    project: apps
-    source:
-      directory:
-        recurse: true
-      path: deploy/
-      repoURL: https://github.com/syoder89-homelab/homelab-apps
-      targetRevision: "{{ .head_sha }}"
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-      - CreateNamespace=true
+    spec:
+      destination:
+        name: in-cluster
+        namespace: PR-{{ .number }}-homelab-apps
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
 ---
 # Source: application-generator/templates/applicationset.yaml
 apiVersion: argoproj.io/v1alpha1
@@ -290,22 +296,23 @@ spec:
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-mosquitto-taylor
-    destination:
-      name: in-cluster
-      namespace: PR-{{ .number }}-taylor-monitoring
-    project: apps
-    source:
-      directory:
-        recurse: true
-      path: deploy/
-      repoURL: https://github.com/syoder89-homelab/homelab-apps
-      targetRevision: "{{ .head_sha }}"
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-      - CreateNamespace=true
+    spec:
+      destination:
+        name: in-cluster
+        namespace: PR-{{ .number }}-taylor-monitoring
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
 ---
 # Source: application-generator/templates/applicationset.yaml
 apiVersion: argoproj.io/v1alpha1
@@ -334,22 +341,23 @@ spec:
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-mosquitto
-    destination:
-      name: in-cluster
-      namespace: PR-{{ .number }}-mosquitto
-    project: apps
-    source:
-      directory:
-        recurse: true
-      path: deploy/
-      repoURL: https://github.com/syoder89-homelab/homelab-apps
-      targetRevision: "{{ .head_sha }}"
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-      - CreateNamespace=true
+    spec:
+      destination:
+        name: in-cluster
+        namespace: PR-{{ .number }}-mosquitto
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
 ---
 # Source: application-generator/templates/applicationset.yaml
 apiVersion: argoproj.io/v1alpha1
@@ -378,22 +386,23 @@ spec:
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-victoria-metrics-scott
-    destination:
-      name: in-cluster
-      namespace: PR-{{ .number }}-scott-monitoring
-    project: apps
-    source:
-      directory:
-        recurse: true
-      path: deploy/
-      repoURL: https://github.com/syoder89-homelab/homelab-apps
-      targetRevision: "{{ .head_sha }}"
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-      - CreateNamespace=true
+    spec:
+      destination:
+        name: in-cluster
+        namespace: PR-{{ .number }}-scott-monitoring
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
 ---
 # Source: application-generator/templates/applicationset.yaml
 apiVersion: argoproj.io/v1alpha1
@@ -422,19 +431,20 @@ spec:
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-victoria-metrics-taylor
-    destination:
-      name: in-cluster
-      namespace: PR-{{ .number }}-taylor-monitoring
-    project: apps
-    source:
-      directory:
-        recurse: true
-      path: deploy/
-      repoURL: https://github.com/syoder89-homelab/homelab-apps
-      targetRevision: "{{ .head_sha }}"
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-      - CreateNamespace=true
+    spec:
+      destination:
+        name: in-cluster
+        namespace: PR-{{ .number }}-taylor-monitoring
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
