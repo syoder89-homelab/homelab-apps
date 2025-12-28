@@ -79,7 +79,8 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-frigate"
-          namespace: "frigate"
+          # Cannot set the namespace here as it is dynamic based on PR number
+          #namespace: "frigate"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/frigate"
@@ -191,7 +192,8 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-grafana-scott"
-          namespace: "scott-monitoring"
+          # Cannot set the namespace here as it is dynamic based on PR number
+          #namespace: "scott-monitoring"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/grafana-scott"
@@ -303,7 +305,8 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-grafana"
-          namespace: "taylor-monitoring"
+          # Cannot set the namespace here as it is dynamic based on PR number
+          #namespace: "taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/grafana-taylor"
@@ -415,7 +418,8 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-home-assistant"
-          namespace: "home-assistant"
+          # Cannot set the namespace here as it is dynamic based on PR number
+          #namespace: "home-assistant"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/home-assistant"
@@ -527,7 +531,8 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-influxdb"
-          namespace: "scott-monitoring"
+          # Cannot set the namespace here as it is dynamic based on PR number
+          #namespace: "scott-monitoring"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/influxdb-scott"
@@ -639,7 +644,8 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-kargo-config"
-          namespace: "homelab-apps"
+          # Cannot set the namespace here as it is dynamic based on PR number
+          #namespace: "homelab-apps"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/kargo-config"
@@ -751,7 +757,8 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-mosquitto"
-          namespace: "taylor-monitoring"
+          # Cannot set the namespace here as it is dynamic based on PR number
+          #namespace: "taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/mosquitto-taylor"
@@ -863,7 +870,8 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-mosquitto"
-          namespace: "mosquitto"
+          # Cannot set the namespace here as it is dynamic based on PR number
+          #namespace: "mosquitto"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/mosquitto"
@@ -975,7 +983,8 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-victoria-metrics-scott"
-          namespace: "scott-monitoring"
+          # Cannot set the namespace here as it is dynamic based on PR number
+          #namespace: "scott-monitoring"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/victoria-metrics-scott"
@@ -1087,7 +1096,8 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-victoria-metrics"
-          namespace: "taylor-monitoring"
+          # Cannot set the namespace here as it is dynamic based on PR number
+          #namespace: "taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/victoria-metrics-taylor"
