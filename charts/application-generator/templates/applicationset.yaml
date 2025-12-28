@@ -25,7 +25,7 @@ spec:
           key: token
       filters:
       - targetBranchMatch: "^{{ $stage.targetBranch }}/{{ $app.name }}$"
-      requeueAfterSeconds: 180
+      requeueAfterSeconds: 60
       values:
         appName: "pr-{{`{{ .number }}`}}-{{ $stage_name }}-{{ $app.name }}"
         appNamespace: "pr-{{`{{ .number }}`}}-{{ $app.namespace | default $app.name }}"
