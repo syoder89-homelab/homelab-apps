@@ -51,10 +51,10 @@ spec:
           selfHeal: true
         managedNamespaceMetadata:
           labels:
-            app.kubernetes.io/instance: "{{ .values.appName }}"
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
           annotations:
             argocd.argoproj.io/tracking-id: >-
-              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
         syncOptions:
         - CreateNamespace=true
 ---
@@ -110,10 +110,10 @@ spec:
           selfHeal: true
         managedNamespaceMetadata:
           labels:
-            app.kubernetes.io/instance: "{{ .values.appName }}"
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
           annotations:
             argocd.argoproj.io/tracking-id: >-
-              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
         syncOptions:
         - CreateNamespace=true
 ---
@@ -169,10 +169,10 @@ spec:
           selfHeal: true
         managedNamespaceMetadata:
           labels:
-            app.kubernetes.io/instance: "{{ .values.appName }}"
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
           annotations:
             argocd.argoproj.io/tracking-id: >-
-              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
         syncOptions:
         - CreateNamespace=true
 ---
@@ -228,10 +228,10 @@ spec:
           selfHeal: true
         managedNamespaceMetadata:
           labels:
-            app.kubernetes.io/instance: "{{ .values.appName }}"
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
           annotations:
             argocd.argoproj.io/tracking-id: >-
-              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
         syncOptions:
         - CreateNamespace=true
 ---
@@ -287,10 +287,10 @@ spec:
           selfHeal: true
         managedNamespaceMetadata:
           labels:
-            app.kubernetes.io/instance: "{{ .values.appName }}"
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
           annotations:
             argocd.argoproj.io/tracking-id: >-
-              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
         syncOptions:
         - CreateNamespace=true
 ---
@@ -346,10 +346,10 @@ spec:
           selfHeal: true
         managedNamespaceMetadata:
           labels:
-            app.kubernetes.io/instance: "{{ .values.appName }}"
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
           annotations:
             argocd.argoproj.io/tracking-id: >-
-              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
         syncOptions:
         - CreateNamespace=true
 ---
@@ -405,10 +405,10 @@ spec:
           selfHeal: true
         managedNamespaceMetadata:
           labels:
-            app.kubernetes.io/instance: "{{ .values.appName }}"
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
           annotations:
             argocd.argoproj.io/tracking-id: >-
-              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
         syncOptions:
         - CreateNamespace=true
 ---
@@ -464,10 +464,10 @@ spec:
           selfHeal: true
         managedNamespaceMetadata:
           labels:
-            app.kubernetes.io/instance: "{{ .values.appName }}"
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
           annotations:
             argocd.argoproj.io/tracking-id: >-
-              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
         syncOptions:
         - CreateNamespace=true
 ---
@@ -523,10 +523,10 @@ spec:
           selfHeal: true
         managedNamespaceMetadata:
           labels:
-            app.kubernetes.io/instance: "{{ .values.appName }}"
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
           annotations:
             argocd.argoproj.io/tracking-id: >-
-              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
         syncOptions:
         - CreateNamespace=true
 ---
@@ -582,9 +582,9 @@ spec:
           selfHeal: true
         managedNamespaceMetadata:
           labels:
-            app.kubernetes.io/instance: "{{ .values.appName }}"
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
           annotations:
             argocd.argoproj.io/tracking-id: >-
-              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
         syncOptions:
         - CreateNamespace=true
