@@ -100,6 +100,8 @@ spec:
         - name: targetBranch
           value: "{{ $stage.targetBranch }}/{{ $app.name }}"
       - uses: argocd-update
+        retry:
+          errorThreshold: 5
         config:
           apps:
           - name: "pr-{{`${{ outputs.promotion.prNumber }}`}}-{{ $stage_name }}-{{ $app.name }}"
