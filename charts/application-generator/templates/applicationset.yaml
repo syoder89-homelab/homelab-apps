@@ -22,7 +22,7 @@ spec:
         repo: homelab-apps
       filters:
       - targetBranchMatch: "^{{ $stage.targetBranch }}/{{ $app.name }}$"
-      requeueAfterSeconds: 1800
+      requeueAfterSeconds: 180
   template:
     metadata:
       name: PR-{{`{{ .number }}`}}-{{ $stage_name }}-{{ $app.name }}
