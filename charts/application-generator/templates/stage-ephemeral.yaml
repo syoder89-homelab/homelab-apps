@@ -82,7 +82,7 @@ spec:
       - uses: helm-template
         config:
           releaseName: "{{ $app.releaseName | default $app.name }}"
-          namespace: "{{ $app.namespace | default $app.name }}
+          namespace: "{{ $app.namespace | default $app.name }}"
           buildDependencies: true
           includeCRDs: true
           path: "{{`${{ vars.path_src }}`}}/{{ dir $path }}"
