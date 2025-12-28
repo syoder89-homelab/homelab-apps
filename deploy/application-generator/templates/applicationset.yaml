@@ -20,16 +20,19 @@ spec:
       filters:
       - targetBranchMatch: "^env/test/frigate$"
       requeueAfterSeconds: 180
+      values:
+        appName: "pr-{{ .number }}-test-frigate"
+        appNamespace: "pr-{{ .number }}-frigate"
   template:
     metadata:
-      name: "pr-{{ .number }}-test-frigate"
+      name: "{{ .values.appName }}"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-frigate
     spec:
       destination:
         name: in-cluster
-        namespace: "pr-{{ .number }}-frigate"
+        namespace: "{{ .values.appNamespace }}"
       project: apps
       source:
         directory:
@@ -41,6 +44,12 @@ spec:
         automated:
           prune: true
           selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            app.kubernetes.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
         syncOptions:
         - CreateNamespace=true
 ---
@@ -65,16 +74,19 @@ spec:
       filters:
       - targetBranchMatch: "^env/test/grafana-scott$"
       requeueAfterSeconds: 180
+      values:
+        appName: "pr-{{ .number }}-test-grafana-scott"
+        appNamespace: "pr-{{ .number }}-scott-monitoring"
   template:
     metadata:
-      name: "pr-{{ .number }}-test-grafana-scott"
+      name: "{{ .values.appName }}"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-grafana-scott
     spec:
       destination:
         name: in-cluster
-        namespace: "pr-{{ .number }}-scott-monitoring"
+        namespace: "{{ .values.appNamespace }}"
       project: apps
       source:
         directory:
@@ -86,6 +98,12 @@ spec:
         automated:
           prune: true
           selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            app.kubernetes.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
         syncOptions:
         - CreateNamespace=true
 ---
@@ -110,16 +128,19 @@ spec:
       filters:
       - targetBranchMatch: "^env/test/grafana-taylor$"
       requeueAfterSeconds: 180
+      values:
+        appName: "pr-{{ .number }}-test-grafana-taylor"
+        appNamespace: "pr-{{ .number }}-taylor-monitoring"
   template:
     metadata:
-      name: "pr-{{ .number }}-test-grafana-taylor"
+      name: "{{ .values.appName }}"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-grafana-taylor
     spec:
       destination:
         name: in-cluster
-        namespace: "pr-{{ .number }}-taylor-monitoring"
+        namespace: "{{ .values.appNamespace }}"
       project: apps
       source:
         directory:
@@ -131,6 +152,12 @@ spec:
         automated:
           prune: true
           selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            app.kubernetes.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
         syncOptions:
         - CreateNamespace=true
 ---
@@ -155,16 +182,19 @@ spec:
       filters:
       - targetBranchMatch: "^env/test/home-assistant$"
       requeueAfterSeconds: 180
+      values:
+        appName: "pr-{{ .number }}-test-home-assistant"
+        appNamespace: "pr-{{ .number }}-home-assistant"
   template:
     metadata:
-      name: "pr-{{ .number }}-test-home-assistant"
+      name: "{{ .values.appName }}"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-home-assistant
     spec:
       destination:
         name: in-cluster
-        namespace: "pr-{{ .number }}-home-assistant"
+        namespace: "{{ .values.appNamespace }}"
       project: apps
       source:
         directory:
@@ -176,6 +206,12 @@ spec:
         automated:
           prune: true
           selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            app.kubernetes.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
         syncOptions:
         - CreateNamespace=true
 ---
@@ -200,16 +236,19 @@ spec:
       filters:
       - targetBranchMatch: "^env/test/influxdb-scott$"
       requeueAfterSeconds: 180
+      values:
+        appName: "pr-{{ .number }}-test-influxdb-scott"
+        appNamespace: "pr-{{ .number }}-scott-monitoring"
   template:
     metadata:
-      name: "pr-{{ .number }}-test-influxdb-scott"
+      name: "{{ .values.appName }}"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-influxdb-scott
     spec:
       destination:
         name: in-cluster
-        namespace: "pr-{{ .number }}-scott-monitoring"
+        namespace: "{{ .values.appNamespace }}"
       project: apps
       source:
         directory:
@@ -221,6 +260,12 @@ spec:
         automated:
           prune: true
           selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            app.kubernetes.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
         syncOptions:
         - CreateNamespace=true
 ---
@@ -245,16 +290,19 @@ spec:
       filters:
       - targetBranchMatch: "^env/test/kargo-config$"
       requeueAfterSeconds: 180
+      values:
+        appName: "pr-{{ .number }}-test-kargo-config"
+        appNamespace: "pr-{{ .number }}-homelab-apps"
   template:
     metadata:
-      name: "pr-{{ .number }}-test-kargo-config"
+      name: "{{ .values.appName }}"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-kargo-config
     spec:
       destination:
         name: in-cluster
-        namespace: "pr-{{ .number }}-homelab-apps"
+        namespace: "{{ .values.appNamespace }}"
       project: apps
       source:
         directory:
@@ -266,6 +314,12 @@ spec:
         automated:
           prune: true
           selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            app.kubernetes.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
         syncOptions:
         - CreateNamespace=true
 ---
@@ -290,16 +344,19 @@ spec:
       filters:
       - targetBranchMatch: "^env/test/mosquitto-taylor$"
       requeueAfterSeconds: 180
+      values:
+        appName: "pr-{{ .number }}-test-mosquitto-taylor"
+        appNamespace: "pr-{{ .number }}-taylor-monitoring"
   template:
     metadata:
-      name: "pr-{{ .number }}-test-mosquitto-taylor"
+      name: "{{ .values.appName }}"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-mosquitto-taylor
     spec:
       destination:
         name: in-cluster
-        namespace: "pr-{{ .number }}-taylor-monitoring"
+        namespace: "{{ .values.appNamespace }}"
       project: apps
       source:
         directory:
@@ -311,6 +368,12 @@ spec:
         automated:
           prune: true
           selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            app.kubernetes.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
         syncOptions:
         - CreateNamespace=true
 ---
@@ -335,16 +398,19 @@ spec:
       filters:
       - targetBranchMatch: "^env/test/mosquitto$"
       requeueAfterSeconds: 180
+      values:
+        appName: "pr-{{ .number }}-test-mosquitto"
+        appNamespace: "pr-{{ .number }}-mosquitto"
   template:
     metadata:
-      name: "pr-{{ .number }}-test-mosquitto"
+      name: "{{ .values.appName }}"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-mosquitto
     spec:
       destination:
         name: in-cluster
-        namespace: "pr-{{ .number }}-mosquitto"
+        namespace: "{{ .values.appNamespace }}"
       project: apps
       source:
         directory:
@@ -356,6 +422,12 @@ spec:
         automated:
           prune: true
           selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            app.kubernetes.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
         syncOptions:
         - CreateNamespace=true
 ---
@@ -380,16 +452,19 @@ spec:
       filters:
       - targetBranchMatch: "^env/test/victoria-metrics-scott$"
       requeueAfterSeconds: 180
+      values:
+        appName: "pr-{{ .number }}-test-victoria-metrics-scott"
+        appNamespace: "pr-{{ .number }}-scott-monitoring"
   template:
     metadata:
-      name: "pr-{{ .number }}-test-victoria-metrics-scott"
+      name: "{{ .values.appName }}"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-victoria-metrics-scott
     spec:
       destination:
         name: in-cluster
-        namespace: "pr-{{ .number }}-scott-monitoring"
+        namespace: "{{ .values.appNamespace }}"
       project: apps
       source:
         directory:
@@ -401,6 +476,12 @@ spec:
         automated:
           prune: true
           selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            app.kubernetes.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
         syncOptions:
         - CreateNamespace=true
 ---
@@ -425,16 +506,19 @@ spec:
       filters:
       - targetBranchMatch: "^env/test/victoria-metrics-taylor$"
       requeueAfterSeconds: 180
+      values:
+        appName: "pr-{{ .number }}-test-victoria-metrics-taylor"
+        appNamespace: "pr-{{ .number }}-taylor-monitoring"
   template:
     metadata:
-      name: "pr-{{ .number }}-test-victoria-metrics-taylor"
+      name: "{{ .values.appName }}"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-victoria-metrics-taylor
     spec:
       destination:
         name: in-cluster
-        namespace: "pr-{{ .number }}-taylor-monitoring"
+        namespace: "{{ .values.appNamespace }}"
       project: apps
       source:
         directory:
@@ -446,5 +530,11 @@ spec:
         automated:
           prune: true
           selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            app.kubernetes.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              "{{ .values.appName }}":apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}"
         syncOptions:
         - CreateNamespace=true
