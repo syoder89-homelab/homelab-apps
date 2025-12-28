@@ -14,7 +14,9 @@ spec:
       kind: Warehouse
       name: {{ $app.name }}
     sources:
-      {{ $stage.sources | toYaml }}
+      {{- /* Allow the sources to be templated based on stage and app values */ -}}
+      {{- $ctx := (dict "Values" $.Values "app" $app "stage" $stage) }}
+      {{- include "better-tpl" (list $stage.sources $ctx) | nindent 6 }}
   promotionTemplate:
     spec:
       vars:

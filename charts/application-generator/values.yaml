@@ -1,9 +1,9 @@
 stages:
   prod:
     sources:
-      direct: true
-      # stages:
-      # - staging
+      # direct: true
+      stages:
+      - test-{{ .app.name }}
     asPR: true
     isEphemeral: false
     targetBranch: env/prod
