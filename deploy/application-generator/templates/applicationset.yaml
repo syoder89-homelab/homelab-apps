@@ -18,7 +18,7 @@ spec:
         # The Github repository
         repo: homelab-apps
         filters:
-        - targetBranchMatch: "env/test/frigate"
+        - targetBranchMatch: "^env/test/frigate$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -63,7 +63,7 @@ spec:
         # The Github repository
         repo: homelab-apps
         filters:
-        - targetBranchMatch: "env/test/grafana-scott"
+        - targetBranchMatch: "^env/test/grafana-scott$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -108,7 +108,7 @@ spec:
         # The Github repository
         repo: homelab-apps
         filters:
-        - targetBranchMatch: "env/test/grafana-taylor"
+        - targetBranchMatch: "^env/test/grafana-taylor$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -153,7 +153,7 @@ spec:
         # The Github repository
         repo: homelab-apps
         filters:
-        - targetBranchMatch: "env/test/home-assistant"
+        - targetBranchMatch: "^env/test/home-assistant$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -198,7 +198,7 @@ spec:
         # The Github repository
         repo: homelab-apps
         filters:
-        - targetBranchMatch: "env/test/influxdb-scott"
+        - targetBranchMatch: "^env/test/influxdb-scott$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -243,7 +243,7 @@ spec:
         # The Github repository
         repo: homelab-apps
         filters:
-        - targetBranchMatch: "env/test/kargo-config"
+        - targetBranchMatch: "^env/test/kargo-config$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -288,7 +288,7 @@ spec:
         # The Github repository
         repo: homelab-apps
         filters:
-        - targetBranchMatch: "env/test/mosquitto-taylor"
+        - targetBranchMatch: "^env/test/mosquitto-taylor$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -333,7 +333,7 @@ spec:
         # The Github repository
         repo: homelab-apps
         filters:
-        - targetBranchMatch: "env/test/mosquitto"
+        - targetBranchMatch: "^env/test/mosquitto$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -378,7 +378,7 @@ spec:
         # The Github repository
         repo: homelab-apps
         filters:
-        - targetBranchMatch: "env/test/victoria-metrics-scott"
+        - targetBranchMatch: "^env/test/victoria-metrics-scott$"
       requeueAfterSeconds: 1800
   template:
     metadata:
@@ -423,7 +423,7 @@ spec:
         # The Github repository
         repo: homelab-apps
         filters:
-        - targetBranchMatch: "env/test/victoria-metrics-taylor"
+        - targetBranchMatch: "^env/test/victoria-metrics-taylor$"
       requeueAfterSeconds: 1800
   template:
     metadata:
