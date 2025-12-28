@@ -22,7 +22,7 @@ spec:
           key: token
       filters:
       - targetBranchMatch: "^env/test/frigate$"
-      requeueAfterSeconds: 180
+      requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-frigate"
         appNamespace: "pr-{{ .number }}-frigate"
@@ -79,7 +79,7 @@ spec:
           key: token
       filters:
       - targetBranchMatch: "^env/test/grafana-scott$"
-      requeueAfterSeconds: 180
+      requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-grafana-scott"
         appNamespace: "pr-{{ .number }}-scott-monitoring"
@@ -136,7 +136,7 @@ spec:
           key: token
       filters:
       - targetBranchMatch: "^env/test/grafana-taylor$"
-      requeueAfterSeconds: 180
+      requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-grafana-taylor"
         appNamespace: "pr-{{ .number }}-taylor-monitoring"
@@ -193,7 +193,7 @@ spec:
           key: token
       filters:
       - targetBranchMatch: "^env/test/home-assistant$"
-      requeueAfterSeconds: 180
+      requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-home-assistant"
         appNamespace: "pr-{{ .number }}-home-assistant"
@@ -250,7 +250,7 @@ spec:
           key: token
       filters:
       - targetBranchMatch: "^env/test/influxdb-scott$"
-      requeueAfterSeconds: 180
+      requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-influxdb-scott"
         appNamespace: "pr-{{ .number }}-scott-monitoring"
@@ -307,7 +307,7 @@ spec:
           key: token
       filters:
       - targetBranchMatch: "^env/test/kargo-config$"
-      requeueAfterSeconds: 180
+      requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-kargo-config"
         appNamespace: "pr-{{ .number }}-homelab-apps"
@@ -364,7 +364,7 @@ spec:
           key: token
       filters:
       - targetBranchMatch: "^env/test/mosquitto-taylor$"
-      requeueAfterSeconds: 180
+      requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-mosquitto-taylor"
         appNamespace: "pr-{{ .number }}-taylor-monitoring"
@@ -421,7 +421,7 @@ spec:
           key: token
       filters:
       - targetBranchMatch: "^env/test/mosquitto$"
-      requeueAfterSeconds: 180
+      requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-mosquitto"
         appNamespace: "pr-{{ .number }}-mosquitto"
@@ -478,7 +478,7 @@ spec:
           key: token
       filters:
       - targetBranchMatch: "^env/test/victoria-metrics-scott$"
-      requeueAfterSeconds: 180
+      requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-victoria-metrics-scott"
         appNamespace: "pr-{{ .number }}-scott-monitoring"
@@ -535,7 +535,7 @@ spec:
           key: token
       filters:
       - targetBranchMatch: "^env/test/victoria-metrics-taylor$"
-      requeueAfterSeconds: 180
+      requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-victoria-metrics-taylor"
         appNamespace: "pr-{{ .number }}-taylor-monitoring"
