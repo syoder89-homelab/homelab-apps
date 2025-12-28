@@ -78,7 +78,7 @@ spec:
           #- ${{ vars.path_src }}/applications/frigate/values/test.yaml
       - uses: helm-template
         config:
-          releaseName: "frigate"
+          releaseName: "test-frigate"
           namespace: "frigate"
           buildDependencies: true
           includeCRDs: true
@@ -190,7 +190,7 @@ spec:
           #- ${{ vars.path_src }}/applications/grafana-scott/values/test.yaml
       - uses: helm-template
         config:
-          releaseName: "grafana-scott"
+          releaseName: "test-grafana-scott"
           namespace: "scott-monitoring"
           buildDependencies: true
           includeCRDs: true
@@ -302,7 +302,7 @@ spec:
           #- ${{ vars.path_src }}/applications/grafana-taylor/values/test.yaml
       - uses: helm-template
         config:
-          releaseName: "grafana"
+          releaseName: "test-grafana"
           namespace: "taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
@@ -414,7 +414,7 @@ spec:
           #- ${{ vars.path_src }}/applications/home-assistant/values/test.yaml
       - uses: helm-template
         config:
-          releaseName: "home-assistant"
+          releaseName: "test-home-assistant"
           namespace: "home-assistant"
           buildDependencies: true
           includeCRDs: true
@@ -526,7 +526,7 @@ spec:
           #- ${{ vars.path_src }}/applications/influxdb-scott/values/test.yaml
       - uses: helm-template
         config:
-          releaseName: "influxdb"
+          releaseName: "test-influxdb"
           namespace: "scott-monitoring"
           buildDependencies: true
           includeCRDs: true
@@ -638,7 +638,7 @@ spec:
           #- ${{ vars.path_src }}/applications/kargo-config/values/test.yaml
       - uses: helm-template
         config:
-          releaseName: "kargo-config"
+          releaseName: "test-kargo-config"
           namespace: "homelab-apps"
           buildDependencies: true
           includeCRDs: true
@@ -750,7 +750,7 @@ spec:
           #- ${{ vars.path_src }}/applications/mosquitto-taylor/values/test.yaml
       - uses: helm-template
         config:
-          releaseName: "mosquitto"
+          releaseName: "test-mosquitto"
           namespace: "taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
@@ -862,7 +862,7 @@ spec:
           #- ${{ vars.path_src }}/applications/mosquitto/values/test.yaml
       - uses: helm-template
         config:
-          releaseName: "mosquitto"
+          releaseName: "test-mosquitto"
           namespace: "mosquitto"
           buildDependencies: true
           includeCRDs: true
@@ -974,7 +974,7 @@ spec:
           #- ${{ vars.path_src }}/applications/victoria-metrics-scott/values/test.yaml
       - uses: helm-template
         config:
-          releaseName: "victoria-metrics-scott"
+          releaseName: "test-victoria-metrics-scott"
           namespace: "scott-monitoring"
           buildDependencies: true
           includeCRDs: true
@@ -1086,7 +1086,7 @@ spec:
           #- ${{ vars.path_src }}/applications/victoria-metrics-taylor/values/test.yaml
       - uses: helm-template
         config:
-          releaseName: "victoria-metrics"
+          releaseName: "test-victoria-metrics"
           namespace: "taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
