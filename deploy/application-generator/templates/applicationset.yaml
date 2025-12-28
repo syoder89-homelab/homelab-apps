@@ -22,14 +22,14 @@ spec:
       requeueAfterSeconds: 180
   template:
     metadata:
-      name: PR-{{ .number }}-test-frigate
+      name: "pr-{{ .number }}-test-frigate"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-frigate
     spec:
       destination:
         name: in-cluster
-        namespace: PR-{{ .number }}-frigate
+        namespace: "pr-{{ .number }}-frigate"
       project: apps
       source:
         directory:
@@ -67,14 +67,14 @@ spec:
       requeueAfterSeconds: 180
   template:
     metadata:
-      name: PR-{{ .number }}-test-grafana-scott
+      name: "pr-{{ .number }}-test-grafana-scott"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-grafana-scott
     spec:
       destination:
         name: in-cluster
-        namespace: PR-{{ .number }}-scott-monitoring
+        namespace: "pr-{{ .number }}-scott-monitoring"
       project: apps
       source:
         directory:
@@ -112,14 +112,14 @@ spec:
       requeueAfterSeconds: 180
   template:
     metadata:
-      name: PR-{{ .number }}-test-grafana-taylor
+      name: "pr-{{ .number }}-test-grafana-taylor"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-grafana-taylor
     spec:
       destination:
         name: in-cluster
-        namespace: PR-{{ .number }}-taylor-monitoring
+        namespace: "pr-{{ .number }}-taylor-monitoring"
       project: apps
       source:
         directory:
@@ -157,14 +157,14 @@ spec:
       requeueAfterSeconds: 180
   template:
     metadata:
-      name: PR-{{ .number }}-test-home-assistant
+      name: "pr-{{ .number }}-test-home-assistant"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-home-assistant
     spec:
       destination:
         name: in-cluster
-        namespace: PR-{{ .number }}-home-assistant
+        namespace: "pr-{{ .number }}-home-assistant"
       project: apps
       source:
         directory:
@@ -202,14 +202,14 @@ spec:
       requeueAfterSeconds: 180
   template:
     metadata:
-      name: PR-{{ .number }}-test-influxdb-scott
+      name: "pr-{{ .number }}-test-influxdb-scott"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-influxdb-scott
     spec:
       destination:
         name: in-cluster
-        namespace: PR-{{ .number }}-scott-monitoring
+        namespace: "pr-{{ .number }}-scott-monitoring"
       project: apps
       source:
         directory:
@@ -247,14 +247,14 @@ spec:
       requeueAfterSeconds: 180
   template:
     metadata:
-      name: PR-{{ .number }}-test-kargo-config
+      name: "pr-{{ .number }}-test-kargo-config"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-kargo-config
     spec:
       destination:
         name: in-cluster
-        namespace: PR-{{ .number }}-homelab-apps
+        namespace: "pr-{{ .number }}-homelab-apps"
       project: apps
       source:
         directory:
@@ -292,14 +292,14 @@ spec:
       requeueAfterSeconds: 180
   template:
     metadata:
-      name: PR-{{ .number }}-test-mosquitto-taylor
+      name: "pr-{{ .number }}-test-mosquitto-taylor"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-mosquitto-taylor
     spec:
       destination:
         name: in-cluster
-        namespace: PR-{{ .number }}-taylor-monitoring
+        namespace: "pr-{{ .number }}-taylor-monitoring"
       project: apps
       source:
         directory:
@@ -337,14 +337,14 @@ spec:
       requeueAfterSeconds: 180
   template:
     metadata:
-      name: PR-{{ .number }}-test-mosquitto
+      name: "pr-{{ .number }}-test-mosquitto"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-mosquitto
     spec:
       destination:
         name: in-cluster
-        namespace: PR-{{ .number }}-mosquitto
+        namespace: "pr-{{ .number }}-mosquitto"
       project: apps
       source:
         directory:
@@ -382,14 +382,14 @@ spec:
       requeueAfterSeconds: 180
   template:
     metadata:
-      name: PR-{{ .number }}-test-victoria-metrics-scott
+      name: "pr-{{ .number }}-test-victoria-metrics-scott"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-victoria-metrics-scott
     spec:
       destination:
         name: in-cluster
-        namespace: PR-{{ .number }}-scott-monitoring
+        namespace: "pr-{{ .number }}-scott-monitoring"
       project: apps
       source:
         directory:
@@ -427,14 +427,14 @@ spec:
       requeueAfterSeconds: 180
   template:
     metadata:
-      name: PR-{{ .number }}-test-victoria-metrics-taylor
+      name: "pr-{{ .number }}-test-victoria-metrics-taylor"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:test-victoria-metrics-taylor
     spec:
       destination:
         name: in-cluster
-        namespace: PR-{{ .number }}-taylor-monitoring
+        namespace: "pr-{{ .number }}-taylor-monitoring"
       project: apps
       source:
         directory:
