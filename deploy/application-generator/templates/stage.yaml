@@ -11,7 +11,8 @@ spec:
       kind: Warehouse
       name: frigate
     sources:
-      direct: true
+      stages:
+      - test-frigate
   promotionTemplate:
     spec:
       vars:
@@ -91,7 +92,8 @@ spec:
       kind: Warehouse
       name: grafana-scott
     sources:
-      direct: true
+      stages:
+      - test-grafana-scott
   promotionTemplate:
     spec:
       vars:
@@ -171,7 +173,8 @@ spec:
       kind: Warehouse
       name: grafana-taylor
     sources:
-      direct: true
+      stages:
+      - test-grafana-taylor
   promotionTemplate:
     spec:
       vars:
@@ -251,7 +254,8 @@ spec:
       kind: Warehouse
       name: home-assistant
     sources:
-      direct: true
+      stages:
+      - test-home-assistant
   promotionTemplate:
     spec:
       vars:
@@ -331,7 +335,8 @@ spec:
       kind: Warehouse
       name: influxdb-scott
     sources:
-      direct: true
+      stages:
+      - test-influxdb-scott
   promotionTemplate:
     spec:
       vars:
@@ -411,7 +416,8 @@ spec:
       kind: Warehouse
       name: kargo-config
     sources:
-      direct: true
+      stages:
+      - test-kargo-config
   promotionTemplate:
     spec:
       vars:
@@ -491,7 +497,8 @@ spec:
       kind: Warehouse
       name: mosquitto-taylor
     sources:
-      direct: true
+      stages:
+      - test-mosquitto-taylor
   promotionTemplate:
     spec:
       vars:
@@ -571,7 +578,8 @@ spec:
       kind: Warehouse
       name: mosquitto
     sources:
-      direct: true
+      stages:
+      - test-mosquitto
   promotionTemplate:
     spec:
       vars:
@@ -651,7 +659,8 @@ spec:
       kind: Warehouse
       name: victoria-metrics-scott
     sources:
-      direct: true
+      stages:
+      - test-victoria-metrics-scott
   promotionTemplate:
     spec:
       vars:
@@ -731,7 +740,8 @@ spec:
       kind: Warehouse
       name: victoria-metrics-taylor
     sources:
-      direct: true
+      stages:
+      - test-victoria-metrics-taylor
   promotionTemplate:
     spec:
       vars:
