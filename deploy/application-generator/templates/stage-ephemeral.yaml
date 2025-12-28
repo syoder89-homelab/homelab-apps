@@ -79,8 +79,7 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-frigate"
-          # Cannot set the namespace here as it is dynamic based on PR number
-          #namespace: "frigate"
+          namespace: "test-frigate"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/frigate"
@@ -192,8 +191,7 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-grafana-scott"
-          # Cannot set the namespace here as it is dynamic based on PR number
-          #namespace: "scott-monitoring"
+          namespace: "test-scott-monitoring"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/grafana-scott"
@@ -305,8 +303,7 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-grafana"
-          # Cannot set the namespace here as it is dynamic based on PR number
-          #namespace: "taylor-monitoring"
+          namespace: "test-taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/grafana-taylor"
@@ -418,8 +415,7 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-home-assistant"
-          # Cannot set the namespace here as it is dynamic based on PR number
-          #namespace: "home-assistant"
+          namespace: "test-home-assistant"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/home-assistant"
@@ -531,8 +527,7 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-influxdb"
-          # Cannot set the namespace here as it is dynamic based on PR number
-          #namespace: "scott-monitoring"
+          namespace: "test-scott-monitoring"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/influxdb-scott"
@@ -644,8 +639,7 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-kargo-config"
-          # Cannot set the namespace here as it is dynamic based on PR number
-          #namespace: "homelab-apps"
+          namespace: "test-homelab-apps"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/kargo-config"
@@ -757,8 +751,7 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-mosquitto"
-          # Cannot set the namespace here as it is dynamic based on PR number
-          #namespace: "taylor-monitoring"
+          namespace: "test-taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/mosquitto-taylor"
@@ -870,8 +863,7 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-mosquitto"
-          # Cannot set the namespace here as it is dynamic based on PR number
-          #namespace: "mosquitto"
+          namespace: "test-mosquitto"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/mosquitto"
@@ -983,8 +975,7 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-victoria-metrics-scott"
-          # Cannot set the namespace here as it is dynamic based on PR number
-          #namespace: "scott-monitoring"
+          namespace: "test-scott-monitoring"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/victoria-metrics-scott"
@@ -1096,8 +1087,7 @@ spec:
       - uses: helm-template
         config:
           releaseName: "test-victoria-metrics"
-          # Cannot set the namespace here as it is dynamic based on PR number
-          #namespace: "taylor-monitoring"
+          namespace: "test-taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
           path: "${{ vars.path_src }}/applications/victoria-metrics-taylor"
