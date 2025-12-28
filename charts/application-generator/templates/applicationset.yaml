@@ -38,7 +38,7 @@ spec:
         recurse: true
       path: deploy/
       repoURL: https://github.com/syoder89-homelab/homelab-apps
-      targetRevision: {{`{{ .head_sha }}`}}
+      targetRevision: "{{`{{ .head_sha }}`}}"
     syncPolicy:
       automated:
         prune: true
