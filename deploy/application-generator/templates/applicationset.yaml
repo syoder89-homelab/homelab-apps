@@ -25,7 +25,9 @@ spec:
       requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-frigate"
-        appNamespace: "pr-{{ .number }}-frigate"
+        #appNamespace: "pr-{{ .number }}-frigate"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "test-frigate"
   template:
     metadata:
       name: "{{ .values.appName }}"
@@ -82,7 +84,9 @@ spec:
       requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-grafana-scott"
-        appNamespace: "pr-{{ .number }}-scott-monitoring"
+        #appNamespace: "pr-{{ .number }}-scott-monitoring"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "test-scott-monitoring"
   template:
     metadata:
       name: "{{ .values.appName }}"
@@ -139,7 +143,9 @@ spec:
       requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-grafana-taylor"
-        appNamespace: "pr-{{ .number }}-taylor-monitoring"
+        #appNamespace: "pr-{{ .number }}-taylor-monitoring"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "test-taylor-monitoring"
   template:
     metadata:
       name: "{{ .values.appName }}"
@@ -196,7 +202,9 @@ spec:
       requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-home-assistant"
-        appNamespace: "pr-{{ .number }}-home-assistant"
+        #appNamespace: "pr-{{ .number }}-home-assistant"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "test-home-assistant"
   template:
     metadata:
       name: "{{ .values.appName }}"
@@ -253,7 +261,9 @@ spec:
       requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-influxdb-scott"
-        appNamespace: "pr-{{ .number }}-scott-monitoring"
+        #appNamespace: "pr-{{ .number }}-scott-monitoring"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "test-scott-monitoring"
   template:
     metadata:
       name: "{{ .values.appName }}"
@@ -310,7 +320,9 @@ spec:
       requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-kargo-config"
-        appNamespace: "pr-{{ .number }}-homelab-apps"
+        #appNamespace: "pr-{{ .number }}-homelab-apps"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "test-homelab-apps"
   template:
     metadata:
       name: "{{ .values.appName }}"
@@ -367,7 +379,9 @@ spec:
       requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-mosquitto-taylor"
-        appNamespace: "pr-{{ .number }}-taylor-monitoring"
+        #appNamespace: "pr-{{ .number }}-taylor-monitoring"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "test-taylor-monitoring"
   template:
     metadata:
       name: "{{ .values.appName }}"
@@ -424,7 +438,9 @@ spec:
       requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-mosquitto"
-        appNamespace: "pr-{{ .number }}-mosquitto"
+        #appNamespace: "pr-{{ .number }}-mosquitto"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "test-mosquitto"
   template:
     metadata:
       name: "{{ .values.appName }}"
@@ -481,7 +497,9 @@ spec:
       requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-victoria-metrics-scott"
-        appNamespace: "pr-{{ .number }}-scott-monitoring"
+        #appNamespace: "pr-{{ .number }}-scott-monitoring"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "test-scott-monitoring"
   template:
     metadata:
       name: "{{ .values.appName }}"
@@ -538,7 +556,9 @@ spec:
       requeueAfterSeconds: 60
       values:
         appName: "pr-{{ .number }}-test-victoria-metrics-taylor"
-        appNamespace: "pr-{{ .number }}-taylor-monitoring"
+        #appNamespace: "pr-{{ .number }}-taylor-monitoring"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "test-taylor-monitoring"
   template:
     metadata:
       name: "{{ .values.appName }}"
