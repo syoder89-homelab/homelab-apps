@@ -40,7 +40,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "false"
+          value: "true"
       - uses: argocd-update
         config:
           apps:

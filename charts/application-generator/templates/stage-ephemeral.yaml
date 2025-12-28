@@ -1,7 +1,7 @@
 {{- range $path, $_ := .Files.Glob "applications/*/Chart.yaml" }}
 {{- $app := $.Files.Get $path | fromYaml }}
 {{- range $stage_name, $stage := $.Values.stages }}
-{{- if not $stage.isEphemeral }}
+{{- if $stage.isEphemeral }}
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
@@ -27,6 +27,29 @@ spec:
       - name: path_out
         value: ./out
       steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: {{ $stage.targetBranch }}/{{ $app.name }}
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: {{ $stage_name }}-{{ $app.name }}
+      #       sources:
+      #       - repoURL: {{`${{ vars.gitRepo }}`}}
+      #         desiredRevision: {{`${{ outputs.promotion-orig.commit }}`}}
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
@@ -72,15 +95,18 @@ spec:
         vars:
         - name: asPR
           value: "{{ $stage.asPR }}"
+        - name: waitForPR
+          value: "true"
         - name: targetBranch
           value: {{ $stage.targetBranch }}/{{ $app.name }}
-      - uses: argocd-update
-        config:
-          apps:
-          - name: {{ $stage_name }}-{{ $app.name }}
-            sources:
-            - repoURL: {{`${{ vars.gitRepo }}`}}
-              desiredRevision: {{`${{ outputs.promotion.commit }}`}}
+      # No easy way to update an application that's generated from an ApplicationSet
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: PR-{{`${{ outputs.promotion.prNumber }}`}}-{{ $stage_name }}-{{ $app.name }}
+      #       sources:
+      #       - repoURL: {{`${{ vars.gitRepo }}`}}
+      #         desiredRevision: {{`${{ outputs.promotion.commit }}`}}
 {{- end }}
 {{- end }}
 {{- end }}

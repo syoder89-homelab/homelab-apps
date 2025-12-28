@@ -17,6 +17,8 @@ spec:
     value: ./out
   - name: path_out
     value: ${{ path_out }}/out
+  - name: clearPath
+    value: "true"
   # Sequence of promotion steps
   steps:
     - uses: git-clone
@@ -29,6 +31,7 @@ spec:
           create: true
           path: ${{ vars.path_out }}
     - uses: git-clear
+      if: ${{ vars.clearPath == "true" }}
       config:
         path: ${{ vars.path_out }}
 ---
@@ -51,6 +54,8 @@ spec:
     value: ./out
   - name: asPR
     value: "false"
+  - name: waitForPR
+    value: "true"
   # Sequence of promotion steps
   steps:
     - uses: git-commit
@@ -79,12 +84,13 @@ spec:
         targetBranch: ${{ vars.targetBranch }}
     - uses: git-wait-for-pr
       as: wait-for-pr
-      if: ${{ vars.asPR == "true" && status("commit") == 'Succeeded' }}
+      if: ${{ vars.asPR == "true" && vars.waitForPR == "true" && status("commit") == 'Succeeded' }}
       config:
         repoURL: ${{ vars.gitRepo }}
         prNumber: ${{ task.outputs['open-pr'].pr.id }}
     - uses: compose-output
       as: output
       config:
-        commit: "${{ status('commit') == 'Succeeded' && vars.asPR == 'true' ? task.outputs['wait-for-pr'].commit : task.outputs['commit'].commit }}"
+        commit: "${{ status('commit') == 'Succeeded' && vars.asPR == 'true' && vars.waitForPR == 'true' ? task.outputs['wait-for-pr'].commit : task.outputs['commit'].commit }}"
         branch: ${{ vars.targetBranch }}
+        prNumber: "${{ status('commit') == 'Succeeded' && vars.asPR == 'true' ? task.outputs['open-pr'].pr.id : ''}}"

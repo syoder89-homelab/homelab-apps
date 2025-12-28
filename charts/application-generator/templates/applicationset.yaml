@@ -1,0 +1,50 @@
+{{- range $path, $_ := .Files.Glob "applications/*/Chart.yaml" }}
+{{- $app := $.Files.Get $path | fromYaml }}
+{{- range $stage_name, $stage := $.Values.stages }}
+{{- if $stage.isEphemeral }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ephemeral-{{ $stage_name }}-{{ $app.name }}
+  namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: homelab-apps:{{ $stage_name }}-{{ $app.name }}
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: syoder89-homelab
+        # The Github repository
+        repo: homelab-apps
+        filters:
+        - targetBranchMatch: "{{ $stage.targetBranch }}/{{ $app.name }}"
+      requeueAfterSeconds: 1800
+  template:
+    metadata:
+      name: PR-{{`{{ .number }}`}}-{{ $stage_name }}-{{ $app.name }}
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: homelab-apps:{{ $stage_name }}-{{ $app.name }}
+    destination:
+      name: in-cluster
+      namespace: PR-{{`{{ .number }}`}}-{{ $app.namespace | default $app.name }}
+    project: apps
+    source:
+      directory:
+        recurse: true
+      path: deploy/
+      repoURL: https://github.com/syoder89-homelab/homelab-apps
+      targetRevision: {{`{{ .head_sha }}`}}
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+      - CreateNamespace=true
+{{- end }}
+{{- end }}
+{{- end }}
