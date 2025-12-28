@@ -20,6 +20,9 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
       filters:
       - targetBranchMatch: "^{{ $stage.targetBranch }}/{{ $app.name }}$"
       requeueAfterSeconds: 180
