@@ -17,6 +17,9 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
       filters:
       - targetBranchMatch: "^env/test/frigate$"
       requeueAfterSeconds: 180
@@ -71,6 +74,9 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
       filters:
       - targetBranchMatch: "^env/test/grafana-scott$"
       requeueAfterSeconds: 180
@@ -125,6 +131,9 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
       filters:
       - targetBranchMatch: "^env/test/grafana-taylor$"
       requeueAfterSeconds: 180
@@ -179,6 +188,9 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
       filters:
       - targetBranchMatch: "^env/test/home-assistant$"
       requeueAfterSeconds: 180
@@ -233,6 +245,9 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
       filters:
       - targetBranchMatch: "^env/test/influxdb-scott$"
       requeueAfterSeconds: 180
@@ -287,6 +302,9 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
       filters:
       - targetBranchMatch: "^env/test/kargo-config$"
       requeueAfterSeconds: 180
@@ -341,6 +359,9 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
       filters:
       - targetBranchMatch: "^env/test/mosquitto-taylor$"
       requeueAfterSeconds: 180
@@ -395,6 +416,9 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
       filters:
       - targetBranchMatch: "^env/test/mosquitto$"
       requeueAfterSeconds: 180
@@ -449,6 +473,9 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
       filters:
       - targetBranchMatch: "^env/test/victoria-metrics-scott$"
       requeueAfterSeconds: 180
@@ -503,6 +530,9 @@ spec:
         owner: syoder89-homelab
         # The Github repository
         repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
       filters:
       - targetBranchMatch: "^env/test/victoria-metrics-taylor$"
       requeueAfterSeconds: 180
