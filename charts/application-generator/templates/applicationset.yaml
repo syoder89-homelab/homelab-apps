@@ -23,16 +23,19 @@ spec:
       filters:
       - targetBranchMatch: "^{{ $stage.targetBranch }}/{{ $app.name }}$"
       requeueAfterSeconds: 180
+      values:
+        appName: "pr-{{`{{ .number }}`}}-{{ $stage_name }}-{{ $app.name }}"
+        appNamespace: "pr-{{`{{ .number }}`}}-{{ $app.namespace | default $app.name }}"
   template:
     metadata:
-      name: "pr-{{`{{ .number }}`}}-{{ $stage_name }}-{{ $app.name }}"
+      name: "{{`{{ .values.appName }}`}}"
       namespace: argocd
       annotations:
         kargo.akuity.io/authorized-stage: homelab-apps:{{ $stage_name }}-{{ $app.name }}
     spec:
       destination:
         name: in-cluster
-        namespace: "pr-{{`{{ .number }}`}}-{{ $app.namespace | default $app.name }}"
+        namespace: "{{`{{ .values.appNamespace }}`}}"
       project: apps
       source:
         directory:
@@ -44,6 +47,12 @@ spec:
         automated:
           prune: true
           selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            app.kubernetes.io/instance: "{{`{{ .values.appName }}`}}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              "{{`{{ .values.appName }}`}}":apps/Namespace:{{`{{ .values.appNamespace }}`}}/{{`{{ .values.appNamespace }}`}}"
         syncOptions:
         - CreateNamespace=true
 {{- end }}
