@@ -1,0 +1,17 @@
+---
+# Source: victoria-metrics-scott/charts/victoria-metrics-single/templates/clusterrolebinding.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: victoria-metrics-scott-victoria-metrics-single-clusterrolebinding
+  labels:
+    helm.sh/chart: victoria-metrics-single-0.9.3
+    app.kubernetes.io/managed-by: Helm
+subjects:
+  - kind: ServiceAccount
+    name: victoria-metrics-scott-victoria-metrics-single
+    namespace: scott-monitoring
+roleRef:
+  kind: ClusterRole
+  name: victoria-metrics-scott-victoria-metrics-single-clusterrole
+  apiGroup: rbac.authorization.k8s.io
