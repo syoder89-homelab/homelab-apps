@@ -1,0 +1,1060 @@
+---
+# Source: application-generator/templates/stage-ephemeral.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test-frigate
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: frigate
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/test/frigate
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: env/test/frigate
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: test-frigate
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion-orig.commit }}
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/frigate/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: test
+            - key: envType
+              value: test
+            - key: appName
+              value: frigate
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/test/frigate-values.yaml
+          #- ${{ vars.path_src }}/applications/frigate/values/test.yaml
+      - uses: helm-template
+        config:
+          releaseName: frigate
+          namespace: frigate
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/frigate
+          outPath: ${{ vars.path_out }}/deploy/frigate
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: waitForPR
+          value: "true"
+        - name: targetBranch
+          value: env/test/frigate
+      # No easy way to update an application that's generated from an ApplicationSet
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: PR-${{ outputs.promotion.prNumber }}-test-frigate
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion.commit }}
+---
+# Source: application-generator/templates/stage-ephemeral.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test-grafana-scott
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: grafana-scott
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/test/grafana-scott
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: env/test/grafana-scott
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: test-grafana-scott
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion-orig.commit }}
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/grafana-scott/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: test
+            - key: envType
+              value: test
+            - key: appName
+              value: grafana-scott
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/test/grafana-scott-values.yaml
+          #- ${{ vars.path_src }}/applications/grafana-scott/values/test.yaml
+      - uses: helm-template
+        config:
+          releaseName: grafana-scott
+          namespace: scott-monitoring
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/grafana-scott
+          outPath: ${{ vars.path_out }}/deploy/grafana-scott
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: waitForPR
+          value: "true"
+        - name: targetBranch
+          value: env/test/grafana-scott
+      # No easy way to update an application that's generated from an ApplicationSet
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: PR-${{ outputs.promotion.prNumber }}-test-grafana-scott
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion.commit }}
+---
+# Source: application-generator/templates/stage-ephemeral.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test-grafana-taylor
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: grafana-taylor
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/test/grafana-taylor
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: env/test/grafana-taylor
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: test-grafana-taylor
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion-orig.commit }}
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/grafana-taylor/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: test
+            - key: envType
+              value: test
+            - key: appName
+              value: grafana-taylor
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/test/grafana-taylor-values.yaml
+          #- ${{ vars.path_src }}/applications/grafana-taylor/values/test.yaml
+      - uses: helm-template
+        config:
+          releaseName: grafana
+          namespace: taylor-monitoring
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/grafana-taylor
+          outPath: ${{ vars.path_out }}/deploy/grafana-taylor
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: waitForPR
+          value: "true"
+        - name: targetBranch
+          value: env/test/grafana-taylor
+      # No easy way to update an application that's generated from an ApplicationSet
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: PR-${{ outputs.promotion.prNumber }}-test-grafana-taylor
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion.commit }}
+---
+# Source: application-generator/templates/stage-ephemeral.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test-home-assistant
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: home-assistant
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/test/home-assistant
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: env/test/home-assistant
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: test-home-assistant
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion-orig.commit }}
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/home-assistant/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: test
+            - key: envType
+              value: test
+            - key: appName
+              value: home-assistant
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/test/home-assistant-values.yaml
+          #- ${{ vars.path_src }}/applications/home-assistant/values/test.yaml
+      - uses: helm-template
+        config:
+          releaseName: home-assistant
+          namespace: home-assistant
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/home-assistant
+          outPath: ${{ vars.path_out }}/deploy/home-assistant
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: waitForPR
+          value: "true"
+        - name: targetBranch
+          value: env/test/home-assistant
+      # No easy way to update an application that's generated from an ApplicationSet
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: PR-${{ outputs.promotion.prNumber }}-test-home-assistant
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion.commit }}
+---
+# Source: application-generator/templates/stage-ephemeral.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test-influxdb-scott
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: influxdb-scott
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/test/influxdb-scott
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: env/test/influxdb-scott
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: test-influxdb-scott
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion-orig.commit }}
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/influxdb-scott/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: test
+            - key: envType
+              value: test
+            - key: appName
+              value: influxdb-scott
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/test/influxdb-scott-values.yaml
+          #- ${{ vars.path_src }}/applications/influxdb-scott/values/test.yaml
+      - uses: helm-template
+        config:
+          releaseName: influxdb
+          namespace: scott-monitoring
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/influxdb-scott
+          outPath: ${{ vars.path_out }}/deploy/influxdb-scott
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: waitForPR
+          value: "true"
+        - name: targetBranch
+          value: env/test/influxdb-scott
+      # No easy way to update an application that's generated from an ApplicationSet
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: PR-${{ outputs.promotion.prNumber }}-test-influxdb-scott
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion.commit }}
+---
+# Source: application-generator/templates/stage-ephemeral.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test-kargo-config
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: kargo-config
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/test/kargo-config
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: env/test/kargo-config
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: test-kargo-config
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion-orig.commit }}
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/kargo-config/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: test
+            - key: envType
+              value: test
+            - key: appName
+              value: kargo-config
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/test/kargo-config-values.yaml
+          #- ${{ vars.path_src }}/applications/kargo-config/values/test.yaml
+      - uses: helm-template
+        config:
+          releaseName: kargo-config
+          namespace: homelab-apps
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/kargo-config
+          outPath: ${{ vars.path_out }}/deploy/kargo-config
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: waitForPR
+          value: "true"
+        - name: targetBranch
+          value: env/test/kargo-config
+      # No easy way to update an application that's generated from an ApplicationSet
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: PR-${{ outputs.promotion.prNumber }}-test-kargo-config
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion.commit }}
+---
+# Source: application-generator/templates/stage-ephemeral.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test-mosquitto-taylor
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: mosquitto-taylor
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/test/mosquitto-taylor
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: env/test/mosquitto-taylor
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: test-mosquitto-taylor
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion-orig.commit }}
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/mosquitto-taylor/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: test
+            - key: envType
+              value: test
+            - key: appName
+              value: mosquitto-taylor
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/test/mosquitto-taylor-values.yaml
+          #- ${{ vars.path_src }}/applications/mosquitto-taylor/values/test.yaml
+      - uses: helm-template
+        config:
+          releaseName: mosquitto
+          namespace: taylor-monitoring
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/mosquitto-taylor
+          outPath: ${{ vars.path_out }}/deploy/mosquitto-taylor
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: waitForPR
+          value: "true"
+        - name: targetBranch
+          value: env/test/mosquitto-taylor
+      # No easy way to update an application that's generated from an ApplicationSet
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: PR-${{ outputs.promotion.prNumber }}-test-mosquitto-taylor
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion.commit }}
+---
+# Source: application-generator/templates/stage-ephemeral.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test-mosquitto
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: mosquitto
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/test/mosquitto
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: env/test/mosquitto
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: test-mosquitto
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion-orig.commit }}
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/mosquitto/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: test
+            - key: envType
+              value: test
+            - key: appName
+              value: mosquitto
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/test/mosquitto-values.yaml
+          #- ${{ vars.path_src }}/applications/mosquitto/values/test.yaml
+      - uses: helm-template
+        config:
+          releaseName: mosquitto
+          namespace: mosquitto
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/mosquitto
+          outPath: ${{ vars.path_out }}/deploy/mosquitto
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: waitForPR
+          value: "true"
+        - name: targetBranch
+          value: env/test/mosquitto
+      # No easy way to update an application that's generated from an ApplicationSet
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: PR-${{ outputs.promotion.prNumber }}-test-mosquitto
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion.commit }}
+---
+# Source: application-generator/templates/stage-ephemeral.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test-victoria-metrics-scott
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: victoria-metrics-scott
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/test/victoria-metrics-scott
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: env/test/victoria-metrics-scott
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: test-victoria-metrics-scott
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion-orig.commit }}
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/victoria-metrics-scott/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: test
+            - key: envType
+              value: test
+            - key: appName
+              value: victoria-metrics-scott
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/test/victoria-metrics-scott-values.yaml
+          #- ${{ vars.path_src }}/applications/victoria-metrics-scott/values/test.yaml
+      - uses: helm-template
+        config:
+          releaseName: victoria-metrics-scott
+          namespace: scott-monitoring
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/victoria-metrics-scott
+          outPath: ${{ vars.path_out }}/deploy/victoria-metrics-scott
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: waitForPR
+          value: "true"
+        - name: targetBranch
+          value: env/test/victoria-metrics-scott
+      # No easy way to update an application that's generated from an ApplicationSet
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: PR-${{ outputs.promotion.prNumber }}-test-victoria-metrics-scott
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion.commit }}
+---
+# Source: application-generator/templates/stage-ephemeral.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test-victoria-metrics-taylor
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: victoria-metrics-taylor
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/test/victoria-metrics-taylor
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: env/test/victoria-metrics-taylor
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: test-victoria-metrics-taylor
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion-orig.commit }}
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/victoria-metrics-taylor/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: stageName
+              value: test
+            - key: envType
+              value: test
+            - key: appName
+              value: victoria-metrics-taylor
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/test/victoria-metrics-taylor-values.yaml
+          #- ${{ vars.path_src }}/applications/victoria-metrics-taylor/values/test.yaml
+      - uses: helm-template
+        config:
+          releaseName: victoria-metrics
+          namespace: taylor-monitoring
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/victoria-metrics-taylor
+          outPath: ${{ vars.path_out }}/deploy/victoria-metrics-taylor
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: waitForPR
+          value: "true"
+        - name: targetBranch
+          value: env/test/victoria-metrics-taylor
+      # No easy way to update an application that's generated from an ApplicationSet
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: PR-${{ outputs.promotion.prNumber }}-test-victoria-metrics-taylor
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion.commit }}
