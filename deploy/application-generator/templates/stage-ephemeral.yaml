@@ -97,6 +97,8 @@ spec:
         - name: targetBranch
           value: "env/test/frigate"
       - uses: argocd-update
+        retry:
+          errorThreshold: 5
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-frigate"
@@ -207,6 +209,8 @@ spec:
         - name: targetBranch
           value: "env/test/grafana-scott"
       - uses: argocd-update
+        retry:
+          errorThreshold: 5
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-grafana-scott"
@@ -317,6 +321,8 @@ spec:
         - name: targetBranch
           value: "env/test/grafana-taylor"
       - uses: argocd-update
+        retry:
+          errorThreshold: 5
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-grafana-taylor"
@@ -427,6 +433,8 @@ spec:
         - name: targetBranch
           value: "env/test/home-assistant"
       - uses: argocd-update
+        retry:
+          errorThreshold: 5
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-home-assistant"
@@ -537,6 +545,8 @@ spec:
         - name: targetBranch
           value: "env/test/influxdb-scott"
       - uses: argocd-update
+        retry:
+          errorThreshold: 5
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-influxdb-scott"
@@ -647,6 +657,8 @@ spec:
         - name: targetBranch
           value: "env/test/kargo-config"
       - uses: argocd-update
+        retry:
+          errorThreshold: 5
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-kargo-config"
@@ -757,6 +769,8 @@ spec:
         - name: targetBranch
           value: "env/test/mosquitto-taylor"
       - uses: argocd-update
+        retry:
+          errorThreshold: 5
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-mosquitto-taylor"
@@ -867,6 +881,8 @@ spec:
         - name: targetBranch
           value: "env/test/mosquitto"
       - uses: argocd-update
+        retry:
+          errorThreshold: 5
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-mosquitto"
@@ -977,6 +993,8 @@ spec:
         - name: targetBranch
           value: "env/test/victoria-metrics-scott"
       - uses: argocd-update
+        retry:
+          errorThreshold: 5
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-victoria-metrics-scott"
@@ -1087,6 +1105,8 @@ spec:
         - name: targetBranch
           value: "env/test/victoria-metrics-taylor"
       - uses: argocd-update
+        retry:
+          errorThreshold: 5
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-victoria-metrics-taylor"
