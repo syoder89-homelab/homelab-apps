@@ -8,11 +8,11 @@
 {{- $configFile := include "better-tpl" (list $configFile $) }}
 {{- /* Create the values map giving precedence to later files just as Helm does */ -}}
 {{- range $path, $_ := $.Files.Glob $configFile }}
-{{- $values := merge $values ($.Files.Get $path | fromYaml) }}
+{{- $values := mustMergeOverwrite $values ($.Files.Get $path | fromYaml) }}
 {{- end }}
 {{- end }}
 {{- /* Create a new context with the aggregated values merged into the original Values.  */ -}}
-{{- $ctx := (dict "Values" (merge $.Values $values)) }}
+{{- $ctx := (dict "Values" (mustMergeOverwrite $.Values $values)) }}
 {{- /*
   Render the aggregated values using the recursive better-tpl helper and our context.
   We're effectively using $values to render $values.
