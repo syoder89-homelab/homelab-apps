@@ -6,12 +6,12 @@ envs:
       - test-{{ .app.name }}
     asPR: true
     isEphemeral: false
-    targetBranch: env/prod
+    targetBranchPrefix: env/prod
     envType: prod
   test:
     sources:
       direct: true
     asPR: true
     isEphemeral: true
-    targetBranch: env/test
+    targetBranchPrefix: env/test
     envType: test

@@ -20,7 +20,7 @@ spec:
       recurse: true
     path: deploy/
     repoURL: https://github.com/syoder89-homelab/homelab-apps
-    targetRevision: {{ $env.targetBranch }}/{{ $app.name }}
+    targetRevision: {{ $env.targetBranchPrefix }}/{{ $app.name }}
   syncPolicy:
     automated:
       prune: true

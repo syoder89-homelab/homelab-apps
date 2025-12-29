@@ -23,7 +23,7 @@ spec:
       - name: gitRepo
         value: https://github.com/syoder89-homelab/homelab-apps
       - name: targetBranch
-        value: {{ $env.targetBranch }}/{{ $app.name }}
+        value: {{ $env.targetBranchPrefix }}/{{ $app.name }}
       - name: path_src
         value: ./src
       - name: path_out
@@ -75,7 +75,7 @@ spec:
         - name: asPR
           value: "{{ $env.asPR }}"
         - name: targetBranch
-          value: {{ $env.targetBranch }}/{{ $app.name }}
+          value: {{ $env.targetBranchPrefix }}/{{ $app.name }}
       - uses: argocd-update
         config:
           apps:

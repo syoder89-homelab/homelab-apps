@@ -24,7 +24,7 @@ spec:
           secretName: argocd-github-pat
           key: token
       filters:
-      - targetBranchMatch: "^{{ $env.targetBranch }}/{{ $app.name }}$"
+      - targetBranchMatch: "^{{ $env.targetBranchPrefix }}/{{ $app.name }}$"
       requeueAfterSeconds: 60
       values:
         appName: "pr-{{`{{ .number }}`}}-{{ $env_name }}-{{ $app.name }}"
