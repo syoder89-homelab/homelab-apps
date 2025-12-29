@@ -18,7 +18,7 @@ spec:
       app.kubernetes.io/name: grafana
       app.kubernetes.io/instance: grafana-scott
   strategy:
-    type: Recreate
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -29,6 +29,7 @@ spec:
       annotations:
         checksum/config: 0e9cbd0ea8e24e32f7dfca5bab17a2ba05652642f0a09a4882833ae88e4cc4a3
         checksum/sc-dashboard-provider-config: e70bf6a851099d385178a76de9757bb0bef8299da6d8443602590e44f05fdf24
+        checksum/secret: d550f992d4e72d70cc35dadb4563d7d3f28377d54824b49110b633069478b2a3
         kubectl.kubernetes.io/default-container: grafana
     spec:
       
@@ -40,29 +41,6 @@ spec:
         runAsGroup: 472
         runAsNonRoot: true
         runAsUser: 472
-      initContainers:
-        - name: init-chown-data
-          image: "docker.io/library/busybox:1.31.1"
-          imagePullPolicy: IfNotPresent
-          securityContext:
-            capabilities:
-              add:
-              - CHOWN
-              drop:
-              - ALL
-            readOnlyRootFilesystem: false
-            runAsNonRoot: false
-            runAsUser: 0
-            seccompProfile:
-              type: RuntimeDefault
-          command:
-            - chown
-            - -R
-            - 472:472
-            - /var/lib/grafana
-          volumeMounts:
-            - name: storage
-              mountPath: "/var/lib/grafana"
       enableServiceLinks: true
       containers:
         - name: grafana
@@ -102,12 +80,12 @@ spec:
             - name: GF_SECURITY_ADMIN_USER
               valueFrom:
                 secretKeyRef:
-                  name: grafana-scott-admin-credentials
+                  name: grafana-scott
                   key: admin-user
             - name: GF_SECURITY_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: grafana-scott-admin-credentials
+                  name: grafana-scott
                   key: admin-password
             - name: GF_PATHS_DATA
               value: /var/lib/grafana/
@@ -133,5 +111,4 @@ spec:
           configMap:
             name: grafana-scott
         - name: storage
-          persistentVolumeClaim:
-            claimName: grafana-scott
+          emptyDir: {}
