@@ -100,6 +100,7 @@ spec:
         - name: targetBranch
           value: "{{ $env.targetBranchPrefix }}/{{ $app.name }}"
       - uses: argocd-update
+        if: {{`${{ outputs.promotion.prNumber != "" }}`}}
         retry:
           errorThreshold: 5
         config:
@@ -110,6 +111,7 @@ spec:
               desiredRevision: "{{`${{ outputs.promotion.commit }}`}}"
       - uses: git-wait-for-pr
         as: wait-for-pr
+        if: {{`${{ outputs.promotion.prNumber != "" }}`}}
         config:
           repoURL: "{{`${{ vars.gitRepo }}`}}"
           prNumber: "{{`${{ outputs.promotion.prNumber }}`}}"
