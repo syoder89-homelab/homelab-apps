@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/instance: test-grafana-scott
     app.kubernetes.io/version: "12.3.0"
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - name: service
       port: 80
