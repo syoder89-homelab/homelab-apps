@@ -1,0 +1,17 @@
+---
+# Source: kargo-config/templates/kargo-project-config.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: ProjectConfig
+metadata:
+  name: homelab-apps
+spec:
+  promotionPolicies:
+  - stageSelector:
+      # Apply to all stages matching a glob pattern
+      # YOLO
+      name: "glob:prod-*"
+    autoPromotionEnabled: true
+  - stageSelector:
+      # Apply to all stages matching a glob pattern
+      name: "glob:test-*"
+    autoPromotionEnabled: true

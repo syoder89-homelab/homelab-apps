@@ -1,0 +1,10 @@
+---
+# Source: kargo-config/templates/kargo-github-signing-key.yaml
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: kargo-github-signing-key
+  labels:
+    kargo.akuity.io/cred-type: git
+spec:
+  itemPath: "vaults/homelab/items/kargo-github-signing-key"
