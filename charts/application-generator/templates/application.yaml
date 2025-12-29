@@ -9,7 +9,7 @@ metadata:
   name: {{ $env_name }}-{{ $app.name }}
   namespace: argocd
   annotations:
-    kargo.akuity.io/authorized-stage: {{ .Values.kargo.projectName }}:{{ $env_name }}-{{ $app.name }}
+    kargo.akuity.io/authorized-stage: {{ $.Values.kargo.projectName }}:{{ $env_name }}-{{ $app.name }}
 spec:
   destination:
     name: in-cluster
@@ -19,7 +19,7 @@ spec:
     directory:
       recurse: true
     path: deploy/
-    repoURL: {{ .Values.repo.repoURL }}
+    repoURL: {{ $.Values.repo.repoURL }}
     targetRevision: {{ $env.targetBranchPrefix }}/{{ $app.name }}
   syncPolicy:
     automated:

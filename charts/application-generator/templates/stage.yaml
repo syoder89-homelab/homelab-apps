@@ -7,7 +7,7 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
   name: {{ $env_name }}-{{ $app.name }}
-  namespace: {{ .Values.kargo.projectName }}
+  namespace: {{ $.Values.kargo.projectName }}
 spec:
   requestedFreight:
   - origin:
@@ -21,7 +21,7 @@ spec:
     spec:
       vars:
       - name: gitRepo
-        value: {{ .Values.repo.repoURL }}
+        value: {{ $.Values.repo.repoURL }}
       - name: targetBranch
         value: {{ $env.targetBranchPrefix }}/{{ $app.name }}
       - name: path_src

@@ -5,14 +5,14 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
   name: {{ $app.name }}
-  namespace: {{ .Values.kargo.projectName }}
+  namespace: {{ $.Values.kargo.projectName }}
 spec:
   subscriptions:
   - git:
       branch: main
       commitSelectionStrategy: NewestFromBranch
       discoveryLimit: 10
-      repoURL: {{ .Values.repo.repoURL }}.git
+      repoURL: {{ $.Values.repo.repoURL }}.git
       includePaths:
       - {{ dir $path }}
       # Alternate config strategy
