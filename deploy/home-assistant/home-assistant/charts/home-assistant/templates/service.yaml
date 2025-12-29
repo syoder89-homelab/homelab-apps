@@ -1,0 +1,22 @@
+---
+# Source: home-assistant/charts/home-assistant/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-home-assistant
+  labels:
+    helm.sh/chart: home-assistant-0.3.35
+    app.kubernetes.io/name: home-assistant
+    app.kubernetes.io/instance: test-home-assistant
+    app.kubernetes.io/version: "2025.12.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: home-assistant
+    app.kubernetes.io/instance: test-home-assistant
