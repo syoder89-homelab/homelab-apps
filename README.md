@@ -206,6 +206,36 @@ Each application supports multiple configuration levels:
 3. **Environment Config** (`config/envs/[env-name]/*.yaml`): Environment-specific overrides
 4. **Templates** (`templates/*.yaml`): Kubernetes manifests and secrets
 
+### Configuration Templating
+
+Configuration files support Helm templating, allowing you to use variables, conditionals, and other Helm functions. This enables dynamic configuration based on the environment, environment type, or other values.
+
+**Template Syntax**: Use standard Helm template syntax in YAML files:
+```yaml
+# Example: Using environment and environment type variables
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.appName }}-config
+  namespace: {{ .Values.namespace }}
+spec:
+  config.yaml: |
+    environment: {{ .Values.envName }}
+    environment_type: {{ .Values.envType }}
+    {{- if eq .Values.envType "prod" }}
+    replicas: 3
+    {{- else }}
+    replicas: 1
+    {{- end }}
+```
+
+**Available Template Variables**:
+- `.Values.envName`: Name of the current environment (e.g., `prod`, `test`)
+- `.Values.envType`: Type of the current environment (e.g., `prod`, `test`)
+- Any other values defined in your configuration files (merged hierarchically)
+
+The `config-generator` chart processes all configuration files through Helm's templating engine, allowing for flexible, dynamic configurations across your environments.
+
 ### Adding Custom Values
 
 To customize an application:
