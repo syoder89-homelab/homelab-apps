@@ -1,0 +1,8 @@
+shortName: apps
+projectName: homelab-{{ .Values.shortName }}
+kargo:
+  projectName: {{ .Values.projectName }}
+repo:
+  orgName: syoder89-homelab
+  repoName: {{ .Values.projectName }}
+  repoURL: https://github.com/{{ .Values.repo.orgName }}/{{ .Values.repo.repoName }}

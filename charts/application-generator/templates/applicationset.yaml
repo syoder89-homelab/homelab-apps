@@ -9,7 +9,7 @@ metadata:
   name: ephemeral-{{ $env_name }}-{{ $app.name }}
   namespace: argocd
   annotations:
-    kargo.akuity.io/authorized-stage: homelab-apps:{{ $env_name }}-{{ $app.name }}
+    kargo.akuity.io/authorized-stage: {{ .Values.kargo.projectName }}:{{ $env_name }}-{{ $app.name }}
 spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
@@ -19,7 +19,7 @@ spec:
         # The GitHub organization or user.
         owner: syoder89-homelab
         # The Github repository
-        repo: homelab-apps
+        repo: {{ .Values.kargo.projectName }}
         tokenRef:
           secretName: argocd-github-pat
           key: token
@@ -36,7 +36,7 @@ spec:
       name: "{{`{{ .values.appName }}`}}"
       namespace: argocd
       annotations:
-        kargo.akuity.io/authorized-stage: homelab-apps:{{ $env_name }}-{{ $app.name }}
+        kargo.akuity.io/authorized-stage: {{ .Values.kargo.projectName }}:{{ $env_name }}-{{ $app.name }}
     spec:
       destination:
         name: in-cluster
@@ -46,7 +46,7 @@ spec:
         directory:
           recurse: true
         path: deploy/
-        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        repoURL: {{ .Values.repo.repoURL }}
         targetRevision: "{{`{{ .head_sha }}`}}"
       syncPolicy:
         automated:

@@ -1,7 +1,7 @@
 apiVersion: kargo.akuity.io/v1alpha1
 kind: ProjectConfig
 metadata:
-  name: homelab-apps
+  name: {{ .Values.kargo.projectName }}
 spec:
   promotionPolicies:
   - stageSelector:
