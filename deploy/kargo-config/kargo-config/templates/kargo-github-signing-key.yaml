@@ -4,7 +4,6 @@ apiVersion: onepassword.com/v1
 kind: OnePasswordItem
 metadata:
   name: kargo-github-signing-key
-  namespace: homelab-apps
   labels:
     kargo.akuity.io/cred-type: git
 spec:
