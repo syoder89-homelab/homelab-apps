@@ -67,7 +67,7 @@ spec:
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
-            - key: stageName
+            - key: envName
               value: test
             - key: envType
               value: test
@@ -179,7 +179,7 @@ spec:
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
-            - key: stageName
+            - key: envName
               value: test
             - key: envType
               value: test
@@ -291,7 +291,7 @@ spec:
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
-            - key: stageName
+            - key: envName
               value: test
             - key: envType
               value: test
@@ -403,7 +403,7 @@ spec:
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
-            - key: stageName
+            - key: envName
               value: test
             - key: envType
               value: test
@@ -515,7 +515,7 @@ spec:
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
-            - key: stageName
+            - key: envName
               value: test
             - key: envType
               value: test
@@ -627,7 +627,7 @@ spec:
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
-            - key: stageName
+            - key: envName
               value: test
             - key: envType
               value: test
@@ -739,7 +739,7 @@ spec:
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
-            - key: stageName
+            - key: envName
               value: test
             - key: envType
               value: test
@@ -851,7 +851,7 @@ spec:
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
-            - key: stageName
+            - key: envName
               value: test
             - key: envType
               value: test
@@ -963,7 +963,7 @@ spec:
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
-            - key: stageName
+            - key: envName
               value: test
             - key: envType
               value: test
@@ -1075,7 +1075,7 @@ spec:
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
-            - key: stageName
+            - key: envName
               value: test
             - key: envType
               value: test
