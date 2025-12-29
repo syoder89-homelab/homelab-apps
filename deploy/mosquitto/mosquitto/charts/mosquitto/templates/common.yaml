@@ -3,9 +3,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mosquitto
+  name: test-mosquitto
   labels:
-    app.kubernetes.io/instance: mosquitto
+    app.kubernetes.io/instance: test-mosquitto
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: mosquitto
     app.kubernetes.io/version: 2.0.14
@@ -20,15 +20,15 @@ spec:
     name: mqtt
   selector:
     app.kubernetes.io/name: mosquitto
-    app.kubernetes.io/instance: mosquitto
+    app.kubernetes.io/instance: test-mosquitto
 ---
 # Source: mosquitto/charts/mosquitto/templates/common.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mosquitto
+  name: test-mosquitto
   labels:
-    app.kubernetes.io/instance: mosquitto
+    app.kubernetes.io/instance: test-mosquitto
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: mosquitto
     app.kubernetes.io/version: 2.0.14
@@ -41,12 +41,12 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: mosquitto
-      app.kubernetes.io/instance: mosquitto
+      app.kubernetes.io/instance: test-mosquitto
   template:
     metadata:
       labels:
         app.kubernetes.io/name: mosquitto
-        app.kubernetes.io/instance: mosquitto
+        app.kubernetes.io/instance: test-mosquitto
     spec:
       
       serviceAccountName: default
@@ -54,7 +54,7 @@ spec:
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
       containers:
-        - name: mosquitto
+        - name: test-mosquitto
           image: "eclipse-mosquitto:2.0.14"
           imagePullPolicy: IfNotPresent
           ports:
@@ -89,4 +89,4 @@ spec:
       volumes:
         - name: mosquitto-config
           configMap:
-            name: mosquitto-config
+            name: test-mosquitto-config
