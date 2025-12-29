@@ -1,0 +1,55 @@
+---
+# Source: influxdb-scott/charts/influxdb/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-influxdb
+  labels:
+    helm.sh/chart: influxdb-4.12.0
+    app.kubernetes.io/name: influxdb
+    app.kubernetes.io/instance: test-influxdb
+    app.kubernetes.io/version: "1.8.10"
+    app.kubernetes.io/managed-by: Helm
+data:
+  influxdb.conf: |+
+    reporting-disabled = false
+    bind-address = ":8088"
+
+    [meta]
+      dir = "/var/lib/influxdb/meta"
+
+    [data]
+      dir = "/var/lib/influxdb/data"
+      wal-dir = "/var/lib/influxdb/wal"
+
+    [coordinator]
+
+    [retention]
+
+    [shard-precreation]
+
+    [monitor]
+
+    [subscriber]
+
+    [http]
+
+    # TODO: allow multiple graphite listeners
+
+    [[graphite]]
+
+    # TODO: allow multiple collectd listeners with templates
+
+    [[collectd]]
+
+    # TODO: allow multiple opentsdb listeners with templates
+
+    [[opentsdb]]
+
+    # TODO: allow multiple udp listeners with templates
+
+    [[udp]]
+
+    [continuous_queries]
+
+    [logging]
