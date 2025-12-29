@@ -1,12 +1,12 @@
 {{- range $path, $_ := .Files.Glob "applications/*/Chart.yaml" }}
 {{- $app := $.Files.Get $path | fromYaml }}
-{{- range $stage_name, $stage := $.Values.stages }}
-{{- if not $stage.isEphemeral }}
+{{- range $env_name, $env := $.Values.envs }}
+{{- if not $env.isEphemeral }}
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
-  name: {{ $stage_name }}-{{ $app.name }}
+  name: {{ $env_name }}-{{ $app.name }}
   namespace: homelab-apps
 spec:
   requestedFreight:
@@ -14,16 +14,16 @@ spec:
       kind: Warehouse
       name: {{ $app.name }}
     sources:
-      {{- /* Allow the sources to be templated based on stage and app values */ -}}
-      {{- $ctx := (dict "Values" $.Values "app" $app "stage" $stage) }}
-      {{- include "better-tpl" (list $stage.sources $ctx) | nindent 6 }}
+      {{- /* Allow the sources to be templated based on env and app values */ -}}
+      {{- $ctx := (dict "Values" $.Values "app" $app "env" $env) }}
+      {{- include "better-tpl" (list $env.sources $ctx) | nindent 6 }}
   promotionTemplate:
     spec:
       vars:
       - name: gitRepo
         value: https://github.com/syoder89-homelab/homelab-apps
       - name: targetBranch
-        value: {{ $stage.targetBranch }}/{{ $app.name }}
+        value: {{ $env.targetBranch }}/{{ $app.name }}
       - name: path_src
         value: ./src
       - name: path_out
@@ -49,15 +49,15 @@ spec:
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
-            - key: stageName
-              value: {{ $stage_name }}
+            - key: envName
+              value: {{ $env_name }}
             - key: envType
-              value: {{ $stage.envType }}
+              value: {{ $env.envType }}
             - key: appName
               value: {{ $app.name }}
           #valuesFiles:
-          #- {{`${{ vars.path_src }}`}}/config/{{ $stage_name }}/{{ $app.name }}-values.yaml
-          #- {{`${{ vars.path_src }}`}}/{{ dir $path }}/values/{{ $stage_name }}.yaml
+          #- {{`${{ vars.path_src }}`}}/config/{{ $env_name }}/{{ $app.name }}-values.yaml
+          #- {{`${{ vars.path_src }}`}}/{{ dir $path }}/values/{{ $env_name }}.yaml
       - uses: helm-template
         config:
           releaseName: {{ $app.releaseName | default $app.name }}
@@ -73,13 +73,13 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "{{ $stage.asPR }}"
+          value: "{{ $env.asPR }}"
         - name: targetBranch
-          value: {{ $stage.targetBranch }}/{{ $app.name }}
+          value: {{ $env.targetBranch }}/{{ $app.name }}
       - uses: argocd-update
         config:
           apps:
-          - name: {{ $stage_name }}-{{ $app.name }}
+          - name: {{ $env_name }}-{{ $app.name }}
             sources:
             - repoURL: {{`${{ vars.gitRepo }}`}}
               desiredRevision: {{`${{ outputs.promotion.commit }}`}}

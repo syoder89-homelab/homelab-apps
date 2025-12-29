@@ -1,15 +1,15 @@
 {{- range $path, $_ := .Files.Glob "applications/*/Chart.yaml" }}
 {{- $app := $.Files.Get $path | fromYaml }}
-{{- range $stage_name, $stage := $.Values.stages }}
-{{- if not $stage.isEphemeral }}
+{{- range $env_name, $env := $.Values.envs }}
+{{- if not $env.isEphemeral }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ $stage_name }}-{{ $app.name }}
+  name: {{ $env_name }}-{{ $app.name }}
   namespace: argocd
   annotations:
-    kargo.akuity.io/authorized-stage: homelab-apps:{{ $stage_name }}-{{ $app.name }}
+    kargo.akuity.io/authorized-stage: homelab-apps:{{ $env_name }}-{{ $app.name }}
 spec:
   destination:
     name: in-cluster
@@ -20,7 +20,7 @@ spec:
       recurse: true
     path: deploy/
     repoURL: https://github.com/syoder89-homelab/homelab-apps
-    targetRevision: {{ $stage.targetBranch }}/{{ $app.name }}
+    targetRevision: {{ $env.targetBranch }}/{{ $app.name }}
   syncPolicy:
     automated:
       prune: true

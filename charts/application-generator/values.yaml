@@ -1,4 +1,4 @@
-stages:
+envs:
   prod:
     sources:
       # direct: true

@@ -1,12 +1,12 @@
 {{- range $path, $_ := .Files.Glob "applications/*/Chart.yaml" }}
 {{- $app := $.Files.Get $path | fromYaml }}
-{{- range $stage_name, $stage := $.Values.stages }}
-{{- if $stage.isEphemeral }}
+{{- range $env_name, $env := $.Values.envs }}
+{{- if $env.isEphemeral }}
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
-  name: {{ $stage_name }}-{{ $app.name }}
+  name: {{ $env_name }}-{{ $app.name }}
   namespace: homelab-apps
 spec:
   requestedFreight:
@@ -14,14 +14,14 @@ spec:
       kind: Warehouse
       name: {{ $app.name }}
     sources:
-      {{ $stage.sources | toYaml }}
+      {{ $env.sources | toYaml }}
   promotionTemplate:
     spec:
       vars:
       - name: gitRepo
         value: https://github.com/syoder89-homelab/homelab-apps
       - name: targetBranch
-        value: {{ $stage.targetBranch }}/{{ $app.name }}
+        value: {{ $env.targetBranch }}/{{ $app.name }}
       - name: path_src
         value: ./src
       - name: path_out
@@ -42,11 +42,11 @@ spec:
       #   - name: asPR
       #     value: "true"
       #   - name: targetBranch
-      #     value: {{ $stage.targetBranch }}/{{ $app.name }}
+      #     value: {{ $env.targetBranch }}/{{ $app.name }}
       # - uses: argocd-update
       #   config:
       #     apps:
-      #     - name: {{ $stage_name }}-{{ $app.name }}
+      #     - name: {{ $env_name }}-{{ $app.name }}
       #       sources:
       #       - repoURL: {{`${{ vars.gitRepo }}`}}
       #         desiredRevision: {{`${{ outputs.promotion-orig.commit }}`}}
@@ -70,19 +70,19 @@ spec:
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
-            - key: stageName
-              value: {{ $stage_name }}
+            - key: envName
+              value: {{ $env_name }}
             - key: envType
-              value: {{ $stage.envType }}
+              value: {{ $env.envType }}
             - key: appName
               value: {{ $app.name }}
           #valuesFiles:
-          #- {{`${{ vars.path_src }}`}}/config/{{ $stage_name }}/{{ $app.name }}-values.yaml
-          #- {{`${{ vars.path_src }}`}}/{{ dir $path }}/values/{{ $stage_name }}.yaml
+          #- {{`${{ vars.path_src }}`}}/config/{{ $env_name }}/{{ $app.name }}-values.yaml
+          #- {{`${{ vars.path_src }}`}}/{{ dir $path }}/values/{{ $env_name }}.yaml
       - uses: helm-template
         config:
-          releaseName: "{{ $stage_name }}-{{ $app.releaseName | default $app.name }}"
-          namespace: "{{ $stage_name }}-{{ $app.namespace | default $app.name }}"
+          releaseName: "{{ $env_name }}-{{ $app.releaseName | default $app.name }}"
+          namespace: "{{ $env_name }}-{{ $app.namespace | default $app.name }}"
           buildDependencies: true
           includeCRDs: true
           path: "{{`${{ vars.path_src }}`}}/{{ dir $path }}"
@@ -94,17 +94,17 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "{{ $stage.asPR }}"
+          value: "{{ $env.asPR }}"
         - name: waitForPR
           value: "false"
         - name: targetBranch
-          value: "{{ $stage.targetBranch }}/{{ $app.name }}"
+          value: "{{ $env.targetBranch }}/{{ $app.name }}"
       - uses: argocd-update
         retry:
           errorThreshold: 5
         config:
           apps:
-          - name: "pr-{{`${{ outputs.promotion.prNumber }}`}}-{{ $stage_name }}-{{ $app.name }}"
+          - name: "pr-{{`${{ outputs.promotion.prNumber }}`}}-{{ $env_name }}-{{ $app.name }}"
             sources:
             - repoURL: "{{`${{ vars.gitRepo }}`}}"
               desiredRevision: "{{`${{ outputs.promotion.commit }}`}}"

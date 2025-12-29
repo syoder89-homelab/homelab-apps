@@ -1,15 +1,15 @@
 {{- range $path, $_ := .Files.Glob "applications/*/Chart.yaml" }}
 {{- $app := $.Files.Get $path | fromYaml }}
-{{- range $stage_name, $stage := $.Values.stages }}
-{{- if $stage.isEphemeral }}
+{{- range $env_name, $env := $.Values.envs }}
+{{- if $env.isEphemeral }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: ephemeral-{{ $stage_name }}-{{ $app.name }}
+  name: ephemeral-{{ $env_name }}-{{ $app.name }}
   namespace: argocd
   annotations:
-    kargo.akuity.io/authorized-stage: homelab-apps:{{ $stage_name }}-{{ $app.name }}
+    kargo.akuity.io/authorized-stage: homelab-apps:{{ $env_name }}-{{ $app.name }}
 spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
@@ -24,19 +24,19 @@ spec:
           secretName: argocd-github-pat
           key: token
       filters:
-      - targetBranchMatch: "^{{ $stage.targetBranch }}/{{ $app.name }}$"
+      - targetBranchMatch: "^{{ $env.targetBranch }}/{{ $app.name }}$"
       requeueAfterSeconds: 60
       values:
-        appName: "pr-{{`{{ .number }}`}}-{{ $stage_name }}-{{ $app.name }}"
+        appName: "pr-{{`{{ .number }}`}}-{{ $env_name }}-{{ $app.name }}"
         #appNamespace: "pr-{{`{{ .number }}`}}-{{ $app.namespace | default $app.name }}"
         # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
-        appNamespace: "{{ $stage_name }}-{{ $app.namespace | default $app.name }}"
+        appNamespace: "{{ $env_name }}-{{ $app.namespace | default $app.name }}"
   template:
     metadata:
       name: "{{`{{ .values.appName }}`}}"
       namespace: argocd
       annotations:
-        kargo.akuity.io/authorized-stage: homelab-apps:{{ $stage_name }}-{{ $app.name }}
+        kargo.akuity.io/authorized-stage: homelab-apps:{{ $env_name }}-{{ $app.name }}
     spec:
       destination:
         name: in-cluster
