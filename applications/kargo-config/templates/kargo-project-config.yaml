@@ -10,3 +10,7 @@ spec:
       # YOLO
       name: "glob:prod-*"
     autoPromotionEnabled: true
+  - stageSelector:
+      # Apply to all stages matching a glob pattern
+      name: "glob:test-*"
+    autoPromotionEnabled: true
