@@ -3,21 +3,21 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  namespace: scott-monitoring
+  namespace: test-scott-monitoring
   labels:
     app: server
     app.kubernetes.io/name: victoria-metrics-single
-    app.kubernetes.io/instance: victoria-metrics-scott
+    app.kubernetes.io/instance: test-victoria-metrics-scott
     helm.sh/chart: victoria-metrics-single-0.9.3
     app.kubernetes.io/managed-by: Helm
-  name: victoria-metrics-scott-victoria-metrics-single-server
+  name: test-victoria-metrics-scott-victoria-metrics-single-server
 spec:
-  serviceName: victoria-metrics-scott-victoria-metrics-single-server
+  serviceName: test-victoria-metrics-scott-victoria-metrics-single-server
   selector:
     matchLabels:
       app: server
       app.kubernetes.io/name: victoria-metrics-single
-      app.kubernetes.io/instance: victoria-metrics-scott
+      app.kubernetes.io/instance: test-victoria-metrics-scott
   replicas: 1
   podManagementPolicy: OrderedReady
   template:
@@ -25,7 +25,7 @@ spec:
       labels:
         app: server
         app.kubernetes.io/name: victoria-metrics-single
-        app.kubernetes.io/instance: victoria-metrics-scott
+        app.kubernetes.io/instance: test-victoria-metrics-scott
         helm.sh/chart: victoria-metrics-single-0.9.3
         app.kubernetes.io/managed-by: Helm
     spec:
@@ -66,7 +66,7 @@ spec:
             - name: server-volume
               mountPath: /storage
               subPath: 
-      serviceAccountName: victoria-metrics-scott-victoria-metrics-single
+      serviceAccountName: test-victoria-metrics-scott-victoria-metrics-single
       terminationGracePeriodSeconds: 60
       volumes:
   volumeClaimTemplates:
