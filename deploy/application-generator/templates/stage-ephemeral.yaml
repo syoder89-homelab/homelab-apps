@@ -97,6 +97,7 @@ spec:
         - name: targetBranch
           value: "env/test/frigate"
       - uses: argocd-update
+        if: ${{ outputs.promotion.prNumber != "" }}
         retry:
           errorThreshold: 5
         config:
@@ -107,6 +108,7 @@ spec:
               desiredRevision: "${{ outputs.promotion.commit }}"
       - uses: git-wait-for-pr
         as: wait-for-pr
+        if: ${{ outputs.promotion.prNumber != "" }}
         config:
           repoURL: "${{ vars.gitRepo }}"
           prNumber: "${{ outputs.promotion.prNumber }}"
@@ -209,6 +211,7 @@ spec:
         - name: targetBranch
           value: "env/test/grafana-scott"
       - uses: argocd-update
+        if: ${{ outputs.promotion.prNumber != "" }}
         retry:
           errorThreshold: 5
         config:
@@ -219,6 +222,7 @@ spec:
               desiredRevision: "${{ outputs.promotion.commit }}"
       - uses: git-wait-for-pr
         as: wait-for-pr
+        if: ${{ outputs.promotion.prNumber != "" }}
         config:
           repoURL: "${{ vars.gitRepo }}"
           prNumber: "${{ outputs.promotion.prNumber }}"
@@ -321,6 +325,7 @@ spec:
         - name: targetBranch
           value: "env/test/grafana-taylor"
       - uses: argocd-update
+        if: ${{ outputs.promotion.prNumber != "" }}
         retry:
           errorThreshold: 5
         config:
@@ -331,6 +336,7 @@ spec:
               desiredRevision: "${{ outputs.promotion.commit }}"
       - uses: git-wait-for-pr
         as: wait-for-pr
+        if: ${{ outputs.promotion.prNumber != "" }}
         config:
           repoURL: "${{ vars.gitRepo }}"
           prNumber: "${{ outputs.promotion.prNumber }}"
@@ -433,6 +439,7 @@ spec:
         - name: targetBranch
           value: "env/test/home-assistant"
       - uses: argocd-update
+        if: ${{ outputs.promotion.prNumber != "" }}
         retry:
           errorThreshold: 5
         config:
@@ -443,6 +450,7 @@ spec:
               desiredRevision: "${{ outputs.promotion.commit }}"
       - uses: git-wait-for-pr
         as: wait-for-pr
+        if: ${{ outputs.promotion.prNumber != "" }}
         config:
           repoURL: "${{ vars.gitRepo }}"
           prNumber: "${{ outputs.promotion.prNumber }}"
@@ -545,6 +553,7 @@ spec:
         - name: targetBranch
           value: "env/test/influxdb-scott"
       - uses: argocd-update
+        if: ${{ outputs.promotion.prNumber != "" }}
         retry:
           errorThreshold: 5
         config:
@@ -555,6 +564,7 @@ spec:
               desiredRevision: "${{ outputs.promotion.commit }}"
       - uses: git-wait-for-pr
         as: wait-for-pr
+        if: ${{ outputs.promotion.prNumber != "" }}
         config:
           repoURL: "${{ vars.gitRepo }}"
           prNumber: "${{ outputs.promotion.prNumber }}"
@@ -657,6 +667,7 @@ spec:
         - name: targetBranch
           value: "env/test/kargo-config"
       - uses: argocd-update
+        if: ${{ outputs.promotion.prNumber != "" }}
         retry:
           errorThreshold: 5
         config:
@@ -667,6 +678,7 @@ spec:
               desiredRevision: "${{ outputs.promotion.commit }}"
       - uses: git-wait-for-pr
         as: wait-for-pr
+        if: ${{ outputs.promotion.prNumber != "" }}
         config:
           repoURL: "${{ vars.gitRepo }}"
           prNumber: "${{ outputs.promotion.prNumber }}"
@@ -769,6 +781,7 @@ spec:
         - name: targetBranch
           value: "env/test/mosquitto-taylor"
       - uses: argocd-update
+        if: ${{ outputs.promotion.prNumber != "" }}
         retry:
           errorThreshold: 5
         config:
@@ -779,6 +792,7 @@ spec:
               desiredRevision: "${{ outputs.promotion.commit }}"
       - uses: git-wait-for-pr
         as: wait-for-pr
+        if: ${{ outputs.promotion.prNumber != "" }}
         config:
           repoURL: "${{ vars.gitRepo }}"
           prNumber: "${{ outputs.promotion.prNumber }}"
@@ -881,6 +895,7 @@ spec:
         - name: targetBranch
           value: "env/test/mosquitto"
       - uses: argocd-update
+        if: ${{ outputs.promotion.prNumber != "" }}
         retry:
           errorThreshold: 5
         config:
@@ -891,6 +906,7 @@ spec:
               desiredRevision: "${{ outputs.promotion.commit }}"
       - uses: git-wait-for-pr
         as: wait-for-pr
+        if: ${{ outputs.promotion.prNumber != "" }}
         config:
           repoURL: "${{ vars.gitRepo }}"
           prNumber: "${{ outputs.promotion.prNumber }}"
@@ -993,6 +1009,7 @@ spec:
         - name: targetBranch
           value: "env/test/victoria-metrics-scott"
       - uses: argocd-update
+        if: ${{ outputs.promotion.prNumber != "" }}
         retry:
           errorThreshold: 5
         config:
@@ -1003,6 +1020,7 @@ spec:
               desiredRevision: "${{ outputs.promotion.commit }}"
       - uses: git-wait-for-pr
         as: wait-for-pr
+        if: ${{ outputs.promotion.prNumber != "" }}
         config:
           repoURL: "${{ vars.gitRepo }}"
           prNumber: "${{ outputs.promotion.prNumber }}"
@@ -1105,6 +1123,7 @@ spec:
         - name: targetBranch
           value: "env/test/victoria-metrics-taylor"
       - uses: argocd-update
+        if: ${{ outputs.promotion.prNumber != "" }}
         retry:
           errorThreshold: 5
         config:
@@ -1115,6 +1134,7 @@ spec:
               desiredRevision: "${{ outputs.promotion.commit }}"
       - uses: git-wait-for-pr
         as: wait-for-pr
+        if: ${{ outputs.promotion.prNumber != "" }}
         config:
           repoURL: "${{ vars.gitRepo }}"
           prNumber: "${{ outputs.promotion.prNumber }}"
