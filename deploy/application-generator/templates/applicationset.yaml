@@ -38,7 +38,7 @@ spec:
       destination:
         name: in-cluster
         namespace: "{{ .values.appNamespace }}"
-      project: apps
+      project: $.Values.argocd.projectName
       source:
         directory:
           recurse: true
@@ -97,7 +97,7 @@ spec:
       destination:
         name: in-cluster
         namespace: "{{ .values.appNamespace }}"
-      project: apps
+      project: $.Values.argocd.projectName
       source:
         directory:
           recurse: true
@@ -156,7 +156,7 @@ spec:
       destination:
         name: in-cluster
         namespace: "{{ .values.appNamespace }}"
-      project: apps
+      project: $.Values.argocd.projectName
       source:
         directory:
           recurse: true
@@ -215,7 +215,7 @@ spec:
       destination:
         name: in-cluster
         namespace: "{{ .values.appNamespace }}"
-      project: apps
+      project: $.Values.argocd.projectName
       source:
         directory:
           recurse: true
@@ -274,7 +274,7 @@ spec:
       destination:
         name: in-cluster
         namespace: "{{ .values.appNamespace }}"
-      project: apps
+      project: $.Values.argocd.projectName
       source:
         directory:
           recurse: true
@@ -333,7 +333,7 @@ spec:
       destination:
         name: in-cluster
         namespace: "{{ .values.appNamespace }}"
-      project: apps
+      project: $.Values.argocd.projectName
       source:
         directory:
           recurse: true
@@ -392,7 +392,7 @@ spec:
       destination:
         name: in-cluster
         namespace: "{{ .values.appNamespace }}"
-      project: apps
+      project: $.Values.argocd.projectName
       source:
         directory:
           recurse: true
@@ -451,7 +451,7 @@ spec:
       destination:
         name: in-cluster
         namespace: "{{ .values.appNamespace }}"
-      project: apps
+      project: $.Values.argocd.projectName
       source:
         directory:
           recurse: true
@@ -510,7 +510,7 @@ spec:
       destination:
         name: in-cluster
         namespace: "{{ .values.appNamespace }}"
-      project: apps
+      project: $.Values.argocd.projectName
       source:
         directory:
           recurse: true
@@ -569,7 +569,7 @@ spec:
       destination:
         name: in-cluster
         namespace: "{{ .values.appNamespace }}"
-      project: apps
+      project: $.Values.argocd.projectName
       source:
         directory:
           recurse: true
