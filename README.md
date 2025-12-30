@@ -13,6 +13,7 @@ A Kubernetes-based home lab infrastructure-as-code repository for deploying and 
 - [Deployment](#deployment)
 - [Development](#development)
 - [Contributing](#contributing)
+- [Generators Documentation](#generators-documentation)
 
 ## Overview
 
@@ -365,6 +366,16 @@ kubectl get promotions -n kargo
 | `config/` | Global and environment-specific settings |
 | `.gitignore` | Git ignore rules (secrets, temporary files) |
 | `README.md` | This documentation |
+| `GENERATORS.md` | Detailed documentation for chart generators |
+
+## Generators Documentation
+
+For detailed information about the `application-generator` and `config-generator` charts, see [GENERATORS.md](GENERATORS.md). This documentation covers:
+
+- **Application Generator**: Automatically discovers applications and generates ArgoCD Applications and Kargo Stages
+- **Config Generator**: Renders templated configuration files with hierarchical merging and Helm template support
+- **Workflow Integration**: How the two generators work together to create a complete GitOps pipeline
+- **Customization Guide**: How to add new environments and application-specific configurations
 
 ## License
 
