@@ -6,10 +6,10 @@ metadata:
   name: test-grafana-scott
   namespace: test-scott-monitoring
   labels:
-    helm.sh/chart: grafana-10.4.0
+    helm.sh/chart: grafana-10.4.1
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: test-grafana-scott
-    app.kubernetes.io/version: "12.3.0"
+    app.kubernetes.io/version: "12.3.1"
 spec:
   type: LoadBalancer
   ports:
