@@ -1,5 +1,7 @@
 shortName: apps
 projectName: homelab-{{ .Values.shortName }}
+argocd:
+  projectName: "{{ .Values.shortName }}"
 kargo:
   projectName: "{{ .Values.projectName }}"
 repo:
