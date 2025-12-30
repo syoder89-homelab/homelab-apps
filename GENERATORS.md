@@ -428,8 +428,8 @@ Application Generator (values.yaml)
      - `applications/frigate/config/envs/prod/` (frigate prod overrides)
    - Renders all templates using environment variables
    - Generates production deployment manifests
-   - Commits to `env/prod/frigate` branch
-   - ArgoCD application `prod-frigate` syncs the new revision
+   - **Creates a pull request** to `env/prod/frigate` branch (because prod has `asPR: true`)
+   - PR must be reviewed and merged before ArgoCD application `prod-frigate` syncs the new revision
 
 ### Key Benefits
 
