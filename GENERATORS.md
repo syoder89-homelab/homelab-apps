@@ -47,7 +47,7 @@ envs:
       # Define sources for this stage
       stages:
         - test-{{ .app.name }}  # Promote from test stage
-    asPR: false              # Don't create PRs for non-ephemeral
+    asPR: false              # Commit directly to Git (don't create PR)
     isEphemeral: false       # Not an ephemeral environment
     targetBranchPrefix: env/prod  # Branch prefix for promotions
     envType: prod            # Environment type (used by config-generator)
@@ -55,7 +55,7 @@ envs:
   test:
     sources:
       direct: true           # Accept direct promotions
-    asPR: true               # Create PRs for this environment
+    asPR: true               # Create PRs for promotions
     isEphemeral: true        # Ephemeral, temporary environment
     targetBranchPrefix: env/test
     envType: test
@@ -68,9 +68,9 @@ envs:
 | `sources` | object | Freight sources for this stage (direct or from other stages) |
 | `sources.direct` | boolean | Accept direct promotions (changes from specific branches) |
 | `sources.stages` | array | Accept promotions from specific Kargo stages |
-| `asPR` | boolean | Create pull requests for promotions (useful for review workflows) |
-| `isEphemeral` | boolean | Whether this is a temporary/test environment |
-| `targetBranchPrefix` | string | Git branch prefix for promotions (e.g., `env/prod/app-name`) |
+| `asPR` | boolean | Create pull requests for promotions instead of direct commits (applies to all environments, not just ephemeral) |
+| `isEphemeral` | boolean | Whether this is a temporary/test environment (affects deployment scope and manifest generation) |
+| `targetBranchPrefix` | string | Git branch prefix for promotions (e.g., `env/prod/app-name` or `env/test/app-name`) |
 | `envType` | string | Environment type, passed to config-generator for template rendering |
 
 ### Generated Resources
@@ -122,7 +122,7 @@ spec:
           - targetBranchMatch: "^env/test/frigate$"
 ```
 
-This enables **automatic ephemeral deployments** when pull requests are opened with the matching branch pattern.
+This enables **automatic ephemeral deployments** when pull requests are opened with the matching branch pattern. Only environments with `isEphemeral: true` get ApplicationSets; others use standard Applications.
 
 #### 3. Kargo Stages (stage.yaml)
 
@@ -150,14 +150,18 @@ spec:
 2. `copy` - Copy repository config to config-generator
 3. `helm-template` (config-generator) - Render templated configuration
 4. `helm-template` (application) - Generate Kubernetes manifests
-5. `push-manifests` - Commit generated manifests to Git
+5. `push-manifests` - Commit generated manifests to Git (or create PR if `asPR: true`)
 6. `argocd-update` - Update ArgoCD Application to new revision
+
+The `asPR` flag controls whether promotions are committed directly or submitted as pull requests for review.
 
 #### 4. Ephemeral Kargo Stages (stage-ephemeral.yaml)
 
-For ephemeral environments, similar to non-ephemeral but:
-- Creates namespaced deployments (e.g., `test-{appName}`)
-- May use different promotion strategies (often PR-based with ArgoCD ApplicationSets)
+For ephemeral environments, the generator creates Kargo Stage resources similar to non-ephemeral, but with differences:
+- Creates namespaced deployments to isolate ephemeral resources (e.g., `test-{appName}`)
+- Release name and namespace are scoped to the environment (e.g., `test-frigate` instead of `frigate`)
+- May have different promotion logic or cleanup strategies
+- Still respects the `asPR` flag for creating pull requests
 
 #### 5. Kargo Warehouses (warehouse.yaml)
 
