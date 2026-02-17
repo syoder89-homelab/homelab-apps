@@ -1,19 +1,20 @@
 ---
-# Source: victoria-metrics-taylor/charts/victoria-metrics-single/templates/server-pvc.yaml
+# Source: victoria-metrics-taylor/charts/victoria-metrics-single/templates/pvc.yaml
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: victoria-metrics-victoria-metrics-single-server
   namespace: taylor-monitoring
-  labels:
+  labels: 
     app: server
-    app.kubernetes.io/name: victoria-metrics-single
     app.kubernetes.io/instance: victoria-metrics
-    helm.sh/chart: victoria-metrics-single-0.9.3
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: victoria-metrics-single
+    app.kubernetes.io/version: v1.136.0
+    helm.sh/chart: victoria-metrics-single-0.31.0
 spec:
-  accessModes:
+  accessModes: 
     - ReadWriteOnce
   resources:
     requests:
-      storage: "16Gi"
+      storage: 16Gi
