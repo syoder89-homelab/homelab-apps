@@ -1,0 +1,10 @@
+Scott VolumeSnapshots:
+NAME                                                                                        READYTOUSE   SOURCEPVC                                                               SOURCESNAPSHOTCONTENT   RESTORESIZE   SNAPSHOTCLASS       SNAPSHOTCONTENT   CREATIONTIME   AGE
+server-volume-victoria-metrics-scott-victoria-metrics-single-server-0-snapshot-1771369606                server-volume-victoria-metrics-scott-victoria-metrics-single-server-0                                         openebs-snapclass                                    1s
+victoria-metrics-scott-victoria-metrics-single-server-snapshot-1771369606                                victoria-metrics-scott-victoria-metrics-single-server                                                         openebs-snapclass                                    1s
+
+Taylor VolumeSnapshots:
+NAME                                                                                       READYTOUSE   SOURCEPVC                                                              SOURCESNAPSHOTCONTENT   RESTORESIZE   SNAPSHOTCLASS       SNAPSHOTCONTENT   CREATIONTIME   AGE
+server-volume-test-victoria-metrics-victoria-metrics-single-server-0-snapshot-1771369606                server-volume-test-victoria-metrics-victoria-metrics-single-server-0                                         openebs-snapclass                                    1s
+server-volume-victoria-metrics-victoria-metrics-single-server-0-snapshot-1771369606                     server-volume-victoria-metrics-victoria-metrics-single-server-0                                              openebs-snapclass                                    1s
+victoria-metrics-victoria-metrics-single-server-snapshot-1771369606                                     victoria-metrics-victoria-metrics-single-server                                                              openebs-snapclass                                    0s

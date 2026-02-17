@@ -1,0 +1,155 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      argocd.argoproj.io/tracking-id: prod-grafana-taylor:/PersistentVolumeClaim:taylor-monitoring/grafana
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"prod-grafana-taylor:/PersistentVolumeClaim:taylor-monitoring/grafana"},"finalizers":["kubernetes.io/pvc-protection"],"labels":{"app.kubernetes.io/instance":"grafana","app.kubernetes.io/name":"grafana","app.kubernetes.io/version":"12.3.0","helm.sh/chart":"grafana-10.4.0"},"name":"grafana","namespace":"taylor-monitoring"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"10Gi"}},"storageClassName":"openebs-storage-persist"}}
+      meta.helm.sh/release-name: grafana
+      meta.helm.sh/release-namespace: taylor-monitoring
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: local.csi.openebs.io
+      volume.kubernetes.io/storage-provisioner: local.csi.openebs.io
+    creationTimestamp: "2022-08-06T22:55:51Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app.kubernetes.io/instance: grafana
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: grafana
+      app.kubernetes.io/version: 12.3.0
+      helm.sh/chart: grafana-10.4.0
+    name: grafana
+    namespace: taylor-monitoring
+    resourceVersion: "442805207"
+    uid: cdb95975-d95a-448c-ad7b-da38ddb41d90
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Gi
+    storageClassName: openebs-storage-persist
+    volumeMode: Filesystem
+    volumeName: pvc-cdb95975-d95a-448c-ad7b-da38ddb41d90
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 10Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: local.csi.openebs.io
+      volume.kubernetes.io/storage-provisioner: local.csi.openebs.io
+    creationTimestamp: "2025-12-28T20:59:53Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app: server
+      app.kubernetes.io/instance: test-victoria-metrics
+      app.kubernetes.io/name: victoria-metrics-single
+    name: server-volume-test-victoria-metrics-victoria-metrics-single-server-0
+    namespace: taylor-monitoring
+    resourceVersion: "445096120"
+    uid: 4ac04433-e3a0-4f13-8fc4-d6ce559c47f6
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 16Gi
+    storageClassName: openebs-storage
+    volumeMode: Filesystem
+    volumeName: pvc-4ac04433-e3a0-4f13-8fc4-d6ce559c47f6
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 16Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: local.csi.openebs.io
+      volume.kubernetes.io/storage-provisioner: local.csi.openebs.io
+    creationTimestamp: "2022-08-03T22:31:57Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app: server
+      app.kubernetes.io/instance: victoria-metrics
+      app.kubernetes.io/name: victoria-metrics-single
+    name: server-volume-victoria-metrics-victoria-metrics-single-server-0
+    namespace: taylor-monitoring
+    resourceVersion: "3836263"
+    uid: 53c58730-ab27-45db-b700-897165196f6d
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 16Gi
+    storageClassName: openebs-storage
+    volumeMode: Filesystem
+    volumeName: pvc-53c58730-ab27-45db-b700-897165196f6d
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 16Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      argocd.argoproj.io/tracking-id: prod-victoria-metrics-taylor:/PersistentVolumeClaim:taylor-monitoring/victoria-metrics-victoria-metrics-single-server
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"prod-victoria-metrics-taylor:/PersistentVolumeClaim:taylor-monitoring/victoria-metrics-victoria-metrics-single-server"},"labels":{"app":"server","app.kubernetes.io/instance":"victoria-metrics","app.kubernetes.io/managed-by":"Helm","app.kubernetes.io/name":"victoria-metrics-single","helm.sh/chart":"victoria-metrics-single-0.9.3"},"name":"victoria-metrics-victoria-metrics-single-server","namespace":"taylor-monitoring"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"16Gi"}}}}
+      meta.helm.sh/release-name: victoria-metrics
+      meta.helm.sh/release-namespace: taylor-monitoring
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: local.csi.openebs.io
+      volume.kubernetes.io/storage-provisioner: local.csi.openebs.io
+    creationTimestamp: "2022-08-06T22:55:48Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app: server
+      app.kubernetes.io/instance: victoria-metrics
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: victoria-metrics-single
+      helm.sh/chart: victoria-metrics-single-0.9.3
+    name: victoria-metrics-victoria-metrics-single-server
+    namespace: taylor-monitoring
+    resourceVersion: "442813815"
+    uid: 8c765a97-a290-4396-83b3-dca19710561e
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 16Gi
+    storageClassName: openebs-storage
+    volumeMode: Filesystem
+    volumeName: pvc-8c765a97-a290-4396-83b3-dca19710561e
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 16Gi
+    phase: Bound
+kind: List
+metadata:
+  resourceVersion: ""

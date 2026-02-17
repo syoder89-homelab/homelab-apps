@@ -1,0 +1,9 @@
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: victoria-metrics-victoria-metrics-single-server-snapshot-1771369606
+  namespace: taylor-monitoring
+spec:
+  volumeSnapshotClassName: openebs-snapclass
+  source:
+    persistentVolumeClaimName: victoria-metrics-victoria-metrics-single-server

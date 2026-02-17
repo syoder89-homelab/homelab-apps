@@ -1,0 +1,154 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      argocd.argoproj.io/tracking-id: prod-grafana-scott:/PersistentVolumeClaim:scott-monitoring/grafana-scott
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"prod-grafana-scott:/PersistentVolumeClaim:scott-monitoring/grafana-scott"},"finalizers":["kubernetes.io/pvc-protection"],"labels":{"app.kubernetes.io/instance":"grafana-scott","app.kubernetes.io/name":"grafana","app.kubernetes.io/version":"12.3.1","helm.sh/chart":"grafana-10.4.1"},"name":"grafana-scott","namespace":"scott-monitoring"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"10Gi"}},"storageClassName":"openebs-storage-persist"}}
+      meta.helm.sh/release-name: grafana-scott
+      meta.helm.sh/release-namespace: scott-monitoring
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: local.csi.openebs.io
+      volume.kubernetes.io/storage-provisioner: local.csi.openebs.io
+    creationTimestamp: "2022-10-20T19:19:08Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app.kubernetes.io/instance: grafana-scott
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: grafana
+      app.kubernetes.io/version: 12.3.1
+      helm.sh/chart: grafana-10.4.1
+    name: grafana-scott
+    namespace: scott-monitoring
+    resourceVersion: "445596063"
+    uid: 15911f4e-6892-4a0e-a4c7-c40d860a7b59
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Gi
+    storageClassName: openebs-storage-persist
+    volumeMode: Filesystem
+    volumeName: pvc-15911f4e-6892-4a0e-a4c7-c40d860a7b59
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 10Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: local.csi.openebs.io
+      volume.kubernetes.io/storage-provisioner: local.csi.openebs.io
+    creationTimestamp: "2022-10-20T20:23:10Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app.kubernetes.io/instance: influxdb
+      app.kubernetes.io/name: influxdb
+    name: influxdb-data-influxdb-0
+    namespace: scott-monitoring
+    resourceVersion: "315194276"
+    uid: 8bedf7ae-fd84-4433-88ce-bf71ff3498b9
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 256Gi
+    storageClassName: openebs-storage-persist
+    volumeMode: Filesystem
+    volumeName: pvc-8bedf7ae-fd84-4433-88ce-bf71ff3498b9
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 256Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: local.csi.openebs.io
+      volume.kubernetes.io/storage-provisioner: local.csi.openebs.io
+    creationTimestamp: "2025-12-28T20:49:49Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app: server
+      app.kubernetes.io/instance: victoria-metrics-scott
+      app.kubernetes.io/name: victoria-metrics-single
+    name: server-volume-victoria-metrics-scott-victoria-metrics-single-server-0
+    namespace: scott-monitoring
+    resourceVersion: "445092889"
+    uid: cd1af2f2-0dc2-466d-bb2e-6a1838e10bb9
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 16Gi
+    storageClassName: openebs-storage
+    volumeMode: Filesystem
+    volumeName: pvc-cd1af2f2-0dc2-466d-bb2e-6a1838e10bb9
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 16Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      argocd.argoproj.io/tracking-id: prod-victoria-metrics-scott:/PersistentVolumeClaim:scott-monitoring/victoria-metrics-scott-victoria-metrics-single-server
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"prod-victoria-metrics-scott:/PersistentVolumeClaim:scott-monitoring/victoria-metrics-scott-victoria-metrics-single-server"},"labels":{"app":"server","app.kubernetes.io/instance":"victoria-metrics-scott","app.kubernetes.io/managed-by":"Helm","app.kubernetes.io/name":"victoria-metrics-single","helm.sh/chart":"victoria-metrics-single-0.9.3"},"name":"victoria-metrics-scott-victoria-metrics-single-server","namespace":"scott-monitoring"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"16Gi"}}}}
+      meta.helm.sh/release-name: victoria-metrics-scott
+      meta.helm.sh/release-namespace: scott-monitoring
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: local.csi.openebs.io
+      volume.kubernetes.io/storage-provisioner: local.csi.openebs.io
+    creationTimestamp: "2022-10-20T19:19:06Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app: server
+      app.kubernetes.io/instance: victoria-metrics-scott
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: victoria-metrics-single
+      helm.sh/chart: victoria-metrics-single-0.9.3
+    name: victoria-metrics-scott-victoria-metrics-single-server
+    namespace: scott-monitoring
+    resourceVersion: "442817855"
+    uid: 4e1a5ba2-bbf8-4572-a102-c4377b3c6a90
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 16Gi
+    storageClassName: openebs-storage
+    volumeMode: Filesystem
+    volumeName: pvc-4e1a5ba2-bbf8-4572-a102-c4377b3c6a90
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 16Gi
+    phase: Bound
+kind: List
+metadata:
+  resourceVersion: ""

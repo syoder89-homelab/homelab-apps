@@ -1,0 +1,121 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      argocd.argoproj.io/tracking-id: prod-victoria-metrics-scott:apps/Deployment:scott-monitoring/victoria-metrics-scott-victoria-metrics-single-server
+      deployment.kubernetes.io/revision: "3"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"prod-victoria-metrics-scott:apps/Deployment:scott-monitoring/victoria-metrics-scott-victoria-metrics-single-server"},"labels":{"app":"server","app.kubernetes.io/instance":"victoria-metrics-scott","app.kubernetes.io/managed-by":"Helm","app.kubernetes.io/name":"victoria-metrics-single","helm.sh/chart":"victoria-metrics-single-0.9.3"},"name":"victoria-metrics-scott-victoria-metrics-single-server","namespace":"scott-monitoring"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"server","app.kubernetes.io/instance":"victoria-metrics-scott","app.kubernetes.io/name":"victoria-metrics-single"}},"strategy":{"type":"Recreate"},"template":{"metadata":{"labels":{"app":"server","app.kubernetes.io/instance":"victoria-metrics-scott","app.kubernetes.io/managed-by":"Helm","app.kubernetes.io/name":"victoria-metrics-single","helm.sh/chart":"victoria-metrics-single-0.9.3"}},"spec":{"automountServiceAccountToken":true,"containers":[{"args":["--retentionPeriod=1","--storageDataPath=/storage","--envflag.enable=true","--envflag.prefix=VM_","--loggerFormat=json"],"image":"victoriametrics/victoria-metrics:v1.93.0","imagePullPolicy":"IfNotPresent","livenessProbe":{"failureThreshold":10,"httpGet":{"path":"/health","port":8428,"scheme":"HTTP"},"initialDelaySeconds":30,"periodSeconds":30,"timeoutSeconds":5},"name":"victoria-metrics-single-server","ports":[{"containerPort":8428,"name":"http"}],"readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/health","port":"http"},"initialDelaySeconds":5,"periodSeconds":15,"timeoutSeconds":5},"resources":{},"securityContext":{},"volumeMounts":[{"mountPath":"/storage","name":"server-volume","subPath":null}]}],"serviceAccountName":"victoria-metrics-scott-victoria-metrics-single","terminationGracePeriodSeconds":60,"volumes":[{"name":"server-volume","persistentVolumeClaim":{"claimName":"victoria-metrics-scott-victoria-metrics-single-server"}}]}}}}
+      meta.helm.sh/release-name: victoria-metrics-scott
+      meta.helm.sh/release-namespace: scott-monitoring
+    creationTimestamp: "2022-10-20T19:19:06Z"
+    generation: 4
+    labels:
+      app: server
+      app.kubernetes.io/instance: victoria-metrics-scott
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: victoria-metrics-single
+      helm.sh/chart: victoria-metrics-single-0.9.3
+    name: victoria-metrics-scott-victoria-metrics-single-server
+    namespace: scott-monitoring
+    resourceVersion: "460864178"
+    uid: 30d67645-151d-4856-a594-c8ffbad7d7fd
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: server
+        app.kubernetes.io/instance: victoria-metrics-scott
+        app.kubernetes.io/name: victoria-metrics-single
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: server
+          app.kubernetes.io/instance: victoria-metrics-scott
+          app.kubernetes.io/managed-by: Helm
+          app.kubernetes.io/name: victoria-metrics-single
+          helm.sh/chart: victoria-metrics-single-0.9.3
+      spec:
+        automountServiceAccountToken: true
+        containers:
+        - args:
+          - --retentionPeriod=1
+          - --storageDataPath=/storage
+          - --envflag.enable=true
+          - --envflag.prefix=VM_
+          - --loggerFormat=json
+          image: victoriametrics/victoria-metrics:v1.93.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /health
+              port: 8428
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: victoria-metrics-single-server
+          ports:
+          - containerPort: 8428
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources: {}
+          securityContext: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /storage
+            name: server-volume
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: victoria-metrics-scott-victoria-metrics-single
+        serviceAccountName: victoria-metrics-scott-victoria-metrics-single
+        terminationGracePeriodSeconds: 60
+        volumes:
+        - name: server-volume
+          persistentVolumeClaim:
+            claimName: victoria-metrics-scott-victoria-metrics-single-server
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2022-10-20T19:19:06Z"
+      lastUpdateTime: "2023-08-15T01:00:24Z"
+      message: ReplicaSet "victoria-metrics-scott-victoria-metrics-single-server-764cf4dc7f"
+        has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-02-11T15:03:43Z"
+      lastUpdateTime: "2026-02-11T15:03:43Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 4
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
