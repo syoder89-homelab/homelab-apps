@@ -7,8 +7,8 @@ namespace: scott-monitoring
 releaseName: victoria-metrics-scott
 type: application
 version: "0.0.1"
-appVersion: "0.9.3"
+appVersion: "0.31.0"
 dependencies:
   - name: victoria-metrics-single
-    version: "0.9.3"
+    version: "0.31.0"
     repository: "https://victoriametrics.github.io/helm-charts/"
