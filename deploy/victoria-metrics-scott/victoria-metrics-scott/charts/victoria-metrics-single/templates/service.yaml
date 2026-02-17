@@ -1,24 +1,26 @@
 ---
-# Source: victoria-metrics-scott/charts/victoria-metrics-single/templates/server-service-headless.yaml
+# Source: victoria-metrics-scott/charts/victoria-metrics-single/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   namespace: test-scott-monitoring
-  labels:
+  labels: 
     app: server
-    app.kubernetes.io/name: victoria-metrics-single
     app.kubernetes.io/instance: test-victoria-metrics-scott
-    helm.sh/chart: victoria-metrics-single-0.9.3
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: victoria-metrics-single
+    app.kubernetes.io/version: v1.136.0
+    helm.sh/chart: victoria-metrics-single-0.31.0
   name: test-victoria-metrics-scott-victoria-metrics-single-server
 spec:
+  type: ClusterIP
   clusterIP: None
   ports:
     - name: http
       port: 8428
       protocol: TCP
       targetPort: http
-  selector:
+  selector: 
     app: server
-    app.kubernetes.io/name: victoria-metrics-single
     app.kubernetes.io/instance: test-victoria-metrics-scott
+    app.kubernetes.io/name: victoria-metrics-single
