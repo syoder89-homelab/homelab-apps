@@ -5,7 +5,7 @@ kind: StatefulSet
 metadata:
   name: influxdb
   labels:
-    helm.sh/chart: influxdb-4.12.0
+    helm.sh/chart: influxdb-4.12.5
     app.kubernetes.io/name: influxdb
     app.kubernetes.io/instance: influxdb
     app.kubernetes.io/version: "1.8.10"
@@ -69,7 +69,6 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: influxdb-data
-        annotations:
       spec:
         accessModes:
           - "ReadWriteOnce"
