@@ -3,3 +3,4 @@ influxdb:
     collectd:
       enabled: true
       typesdb: /influxdb-collectd/types.db
+      bind-address: ":25826"
