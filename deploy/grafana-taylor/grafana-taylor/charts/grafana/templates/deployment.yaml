@@ -6,10 +6,10 @@ metadata:
   name: test-grafana
   namespace: test-taylor-monitoring
   labels:
-    helm.sh/chart: grafana-10.4.0
+    helm.sh/chart: grafana-10.5.15
     app.kubernetes.io/name: grafana
     app.kubernetes.io/instance: test-grafana
-    app.kubernetes.io/version: "12.3.0"
+    app.kubernetes.io/version: "12.3.1"
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -22,14 +22,14 @@ spec:
   template:
     metadata:
       labels:
-        helm.sh/chart: grafana-10.4.0
+        helm.sh/chart: grafana-10.5.15
         app.kubernetes.io/name: grafana
         app.kubernetes.io/instance: test-grafana
-        app.kubernetes.io/version: "12.3.0"
+        app.kubernetes.io/version: "12.3.1"
       annotations:
-        checksum/config: 0e9cbd0ea8e24e32f7dfca5bab17a2ba05652642f0a09a4882833ae88e4cc4a3
+        checksum/config: 5bceeca3808849664f09f642547ce17fdf495522238ef9ce952b20cfa36b7de5
         checksum/sc-dashboard-provider-config: e70bf6a851099d385178a76de9757bb0bef8299da6d8443602590e44f05fdf24
-        checksum/secret: b5f420b5036bd2a852aea60843d75b512da205fd3ef22ab6bf064d27718b3518
+        checksum/secret: 73e7ecd0e0a78fdc466c2c1d07980a78a37186543a60e56327dc5109b34f0516
         kubectl.kubernetes.io/default-container: grafana
     spec:
       
@@ -44,13 +44,14 @@ spec:
       enableServiceLinks: true
       containers:
         - name: grafana
-          image: "docker.io/grafana/grafana:12.3.0"
+          image: "docker.io/grafana/grafana:12.3.1"
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
               - ALL
+            privileged: false
             seccompProfile:
               type: RuntimeDefault
           volumeMounts:
@@ -59,6 +60,8 @@ spec:
               subPath: grafana.ini
             - name: storage
               mountPath: "/var/lib/grafana"
+            - name: search
+              mountPath: "/var/lib/grafana-search"
           ports:
             - name: grafana
               containerPort: 3000
@@ -95,20 +98,24 @@ spec:
               value: /var/lib/grafana/plugins
             - name: GF_PATHS_PROVISIONING
               value: /etc/grafana/provisioning
+            - name: GF_UNIFIED_STORAGE_INDEX_PATH
+              value: /var/lib/grafana-search/bleve
           livenessProbe:
             failureThreshold: 10
             httpGet:
               path: /api/health
-              port: 3000
+              port: grafana
             initialDelaySeconds: 60
             timeoutSeconds: 30
           readinessProbe:
             httpGet:
               path: /api/health
-              port: 3000
+              port: grafana
       volumes:
         - name: config
           configMap:
             name: test-grafana
         - name: storage
+          emptyDir: {}
+        - name: search
           emptyDir: {}
