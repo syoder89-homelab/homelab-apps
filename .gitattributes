@@ -1,0 +1,27 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# YAML files
+*.yaml text eol=lf
+*.yml text eol=lf
+
+# Shell scripts
+*.sh text eol=lf
+
+# Markdown
+*.md text eol=lf
+
+# Helm chart lock files
+Chart.lock binary
+
+# Helm chart packages
+*.tgz binary
+
+# Template files (treat as text for diffs)
+*.tpl text eol=lf
+
+# Linguist overrides for GitHub language stats
+# Mark config and generated files so they don't skew language stats
+config/** linguist-generated
+applications/*/charts/** linguist-vendored
+victoria-metrics-backup-*/** linguist-generated
