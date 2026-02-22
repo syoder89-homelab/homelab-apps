@@ -105,15 +105,15 @@ Global and environment-specific configuration:
 
 ## Applications
 
-| Application | Purpose |
-|---|---|
-| **Frigate** | Video NVR and camera management |
-| **Grafana** | Metrics visualization and dashboards |
-| **InfluxDB** | Time-series database for metrics |
-| **Victoria Metrics** | Metrics storage and querying |
-| **Home Assistant** | Home automation platform |
-| **Mosquitto** | MQTT message broker |
-| **Kargo Config** | Progressive delivery configuration |
+| Application | Purpose | Version |
+|---|---|---|
+| **Frigate** | Video NVR and camera management | 0.14.1 |
+| **Grafana** | Metrics visualization and dashboards | 10.5.15 |
+| **InfluxDB** | Time-series database for metrics | 4.12.5 |
+| **Victoria Metrics** | Metrics storage and querying | 0.31.0 |
+| **Home Assistant** | Home automation platform | 0.3.44 |
+| **Mosquitto** | MQTT message broker | 4.8.2 |
+| **Kargo Config** | Progressive delivery configuration | 0.0.1 |
 
 ## Getting Started
 
