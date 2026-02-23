@@ -116,6 +116,7 @@ scripts/               # Operational scripts (backup, upgrade checks)
 - Kargo promotes changes via branches prefixed with `env/{envName}/{appName}`
 - Prod promotions create PRs for review (`asPR: true`)
 - Test environments are ephemeral and use PR-based ApplicationSets
+- Test PRs are auto-closed after verification (no manual close needed)
 - **All commits MUST be GPG-signed.** Never use `--no-gpg-sign`, `-c commit.gpgsign=false`, or any other mechanism to bypass commit signing. If signing fails (e.g., 1Password agent not running), stop and ask the user to fix it — do not work around it.
 
 ## Common Tasks
@@ -162,5 +163,6 @@ helm template applications/{app-name} -f applications/{app-name}/config/envs/pro
 
 - [README.md](README.md) — Full project documentation
 - [GENERATORS.md](GENERATORS.md) — Detailed generator chart documentation
+- [PROMOTION_SYSTEM.md](PROMOTION_SYSTEM.md) — Test → prod promotion pipeline, verification, and troubleshooting
 - [VICTORIA_METRICS_UPGRADE.md](VICTORIA_METRICS_UPGRADE.md) — Victoria Metrics upgrade guide
 - [SNAPSHOT_RECOVERY_GUIDE.md](SNAPSHOT_RECOVERY_GUIDE.md) — Snapshot recovery procedures

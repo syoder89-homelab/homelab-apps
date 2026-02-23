@@ -94,3 +94,36 @@ spec:
         commit: "${{ status('commit') == 'Succeeded' && vars.asPR == 'true' && vars.waitForPR == 'true' ? task.outputs['wait-for-pr'].commit : task.outputs['commit'].commit }}"
         branch: ${{ vars.targetBranch }}
         prNumber: "${{ status('commit') == 'Succeeded' && vars.asPR == 'true' ? task.outputs['open-pr'].pr.id : ''}}"
+---
+# verify-deployment: Optional health check for deployed applications.
+# Makes an HTTP GET request to a health endpoint and verifies the response.
+# Use this between argocd-update and close-pr for additional verification
+# beyond ArgoCD's sync+health check.
+apiVersion: kargo.akuity.io/v1alpha1
+kind: PromotionTask
+metadata:
+  name: verify-deployment
+  namespace: homelab-apps
+spec:
+  vars:
+  - name: healthURL
+  - name: expectedStatus
+    value: "200"
+  - name: timeout
+    value: "5m"
+  - name: retries
+    value: "10"
+  steps:
+    - uses: http
+      as: health-check
+      retry:
+        timeout: ${{ vars.timeout }}
+        errorThreshold: ${{ vars.retries }}
+      config:
+        method: GET
+        url: ${{ vars.healthURL }}
+        successExpression: "response.status == ${{ vars.expectedStatus }}"
+    - uses: compose-output
+      as: output
+      config:
+        healthy: "true"

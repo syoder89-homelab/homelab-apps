@@ -368,6 +368,16 @@ kubectl get promotions -n kargo
 | `README.md` | This documentation |
 | `GENERATORS.md` | Detailed documentation for chart generators |
 
+## Promotion System
+
+For detailed documentation on the test → prod promotion pipeline, see [PROMOTION_SYSTEM.md](PROMOTION_SYSTEM.md). This covers:
+
+- **How promotions flow** from Warehouse → Test Stage → Prod Stage
+- **Ephemeral test environments** using PR-based ArgoCD ApplicationSets
+- **Verification strategy** including ArgoCD health checks and optional HTTP probes
+- **PromotionTasks** (prepare-workdir, push-manifests, close-pr, verify-deployment)
+- **Troubleshooting** common promotion issues
+
 ## Generators Documentation
 
 For detailed information about the `application-generator` and `config-generator` charts, see [GENERATORS.md](GENERATORS.md). This documentation covers:
