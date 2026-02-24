@@ -96,22 +96,33 @@ spec:
           value: "false"
         - name: targetBranch
           value: "env/test/frigate"
+      # Verify the ephemeral deployment via ArgoCD
+      # Increased retry threshold and added timeout to handle:
+      #   1. ApplicationSet polling delay (up to 60s for PR detection)
+      #   2. Slow image pulls or initialization on first deploy
       - uses: argocd-update
         if: ${{ outputs.promotion.prNumber != "" }}
         retry:
-          errorThreshold: 5
+          errorThreshold: 10
+          timeout: 10m
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-frigate"
             sources:
             - repoURL: "${{ vars.gitRepo }}"
               desiredRevision: "${{ outputs.promotion.commit }}"
-      - uses: git-wait-for-pr
-        as: wait-for-pr
+      # Auto-merge the PR after successful verification
+      # This eliminates the race condition where manually closing the PR
+      # causes ArgoCD to delete the Application before Kargo finishes verification.
+      # The PR is only merged AFTER argocd-update confirms the app is synced and healthy.
+      - uses: git-merge-pr
+        as: merge-pr
         if: ${{ outputs.promotion.prNumber != "" }}
+        retry:
+          errorThreshold: 3
         config:
           repoURL: "${{ vars.gitRepo }}"
-          prNumber: "${{ outputs.promotion.prNumber }}"
+          prNumber: ${{ outputs.promotion.prNumber }}
 ---
 # Source: application-generator/templates/stage-ephemeral.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -210,22 +221,33 @@ spec:
           value: "false"
         - name: targetBranch
           value: "env/test/grafana-scott"
+      # Verify the ephemeral deployment via ArgoCD
+      # Increased retry threshold and added timeout to handle:
+      #   1. ApplicationSet polling delay (up to 60s for PR detection)
+      #   2. Slow image pulls or initialization on first deploy
       - uses: argocd-update
         if: ${{ outputs.promotion.prNumber != "" }}
         retry:
-          errorThreshold: 5
+          errorThreshold: 10
+          timeout: 10m
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-grafana-scott"
             sources:
             - repoURL: "${{ vars.gitRepo }}"
               desiredRevision: "${{ outputs.promotion.commit }}"
-      - uses: git-wait-for-pr
-        as: wait-for-pr
+      # Auto-merge the PR after successful verification
+      # This eliminates the race condition where manually closing the PR
+      # causes ArgoCD to delete the Application before Kargo finishes verification.
+      # The PR is only merged AFTER argocd-update confirms the app is synced and healthy.
+      - uses: git-merge-pr
+        as: merge-pr
         if: ${{ outputs.promotion.prNumber != "" }}
+        retry:
+          errorThreshold: 3
         config:
           repoURL: "${{ vars.gitRepo }}"
-          prNumber: "${{ outputs.promotion.prNumber }}"
+          prNumber: ${{ outputs.promotion.prNumber }}
 ---
 # Source: application-generator/templates/stage-ephemeral.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -324,22 +346,33 @@ spec:
           value: "false"
         - name: targetBranch
           value: "env/test/grafana-taylor"
+      # Verify the ephemeral deployment via ArgoCD
+      # Increased retry threshold and added timeout to handle:
+      #   1. ApplicationSet polling delay (up to 60s for PR detection)
+      #   2. Slow image pulls or initialization on first deploy
       - uses: argocd-update
         if: ${{ outputs.promotion.prNumber != "" }}
         retry:
-          errorThreshold: 5
+          errorThreshold: 10
+          timeout: 10m
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-grafana-taylor"
             sources:
             - repoURL: "${{ vars.gitRepo }}"
               desiredRevision: "${{ outputs.promotion.commit }}"
-      - uses: git-wait-for-pr
-        as: wait-for-pr
+      # Auto-merge the PR after successful verification
+      # This eliminates the race condition where manually closing the PR
+      # causes ArgoCD to delete the Application before Kargo finishes verification.
+      # The PR is only merged AFTER argocd-update confirms the app is synced and healthy.
+      - uses: git-merge-pr
+        as: merge-pr
         if: ${{ outputs.promotion.prNumber != "" }}
+        retry:
+          errorThreshold: 3
         config:
           repoURL: "${{ vars.gitRepo }}"
-          prNumber: "${{ outputs.promotion.prNumber }}"
+          prNumber: ${{ outputs.promotion.prNumber }}
 ---
 # Source: application-generator/templates/stage-ephemeral.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -438,22 +471,33 @@ spec:
           value: "false"
         - name: targetBranch
           value: "env/test/home-assistant"
+      # Verify the ephemeral deployment via ArgoCD
+      # Increased retry threshold and added timeout to handle:
+      #   1. ApplicationSet polling delay (up to 60s for PR detection)
+      #   2. Slow image pulls or initialization on first deploy
       - uses: argocd-update
         if: ${{ outputs.promotion.prNumber != "" }}
         retry:
-          errorThreshold: 5
+          errorThreshold: 10
+          timeout: 10m
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-home-assistant"
             sources:
             - repoURL: "${{ vars.gitRepo }}"
               desiredRevision: "${{ outputs.promotion.commit }}"
-      - uses: git-wait-for-pr
-        as: wait-for-pr
+      # Auto-merge the PR after successful verification
+      # This eliminates the race condition where manually closing the PR
+      # causes ArgoCD to delete the Application before Kargo finishes verification.
+      # The PR is only merged AFTER argocd-update confirms the app is synced and healthy.
+      - uses: git-merge-pr
+        as: merge-pr
         if: ${{ outputs.promotion.prNumber != "" }}
+        retry:
+          errorThreshold: 3
         config:
           repoURL: "${{ vars.gitRepo }}"
-          prNumber: "${{ outputs.promotion.prNumber }}"
+          prNumber: ${{ outputs.promotion.prNumber }}
 ---
 # Source: application-generator/templates/stage-ephemeral.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -552,22 +596,33 @@ spec:
           value: "false"
         - name: targetBranch
           value: "env/test/influxdb-scott"
+      # Verify the ephemeral deployment via ArgoCD
+      # Increased retry threshold and added timeout to handle:
+      #   1. ApplicationSet polling delay (up to 60s for PR detection)
+      #   2. Slow image pulls or initialization on first deploy
       - uses: argocd-update
         if: ${{ outputs.promotion.prNumber != "" }}
         retry:
-          errorThreshold: 5
+          errorThreshold: 10
+          timeout: 10m
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-influxdb-scott"
             sources:
             - repoURL: "${{ vars.gitRepo }}"
               desiredRevision: "${{ outputs.promotion.commit }}"
-      - uses: git-wait-for-pr
-        as: wait-for-pr
+      # Auto-merge the PR after successful verification
+      # This eliminates the race condition where manually closing the PR
+      # causes ArgoCD to delete the Application before Kargo finishes verification.
+      # The PR is only merged AFTER argocd-update confirms the app is synced and healthy.
+      - uses: git-merge-pr
+        as: merge-pr
         if: ${{ outputs.promotion.prNumber != "" }}
+        retry:
+          errorThreshold: 3
         config:
           repoURL: "${{ vars.gitRepo }}"
-          prNumber: "${{ outputs.promotion.prNumber }}"
+          prNumber: ${{ outputs.promotion.prNumber }}
 ---
 # Source: application-generator/templates/stage-ephemeral.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -666,22 +721,33 @@ spec:
           value: "false"
         - name: targetBranch
           value: "env/test/kargo-config"
+      # Verify the ephemeral deployment via ArgoCD
+      # Increased retry threshold and added timeout to handle:
+      #   1. ApplicationSet polling delay (up to 60s for PR detection)
+      #   2. Slow image pulls or initialization on first deploy
       - uses: argocd-update
         if: ${{ outputs.promotion.prNumber != "" }}
         retry:
-          errorThreshold: 5
+          errorThreshold: 10
+          timeout: 10m
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-kargo-config"
             sources:
             - repoURL: "${{ vars.gitRepo }}"
               desiredRevision: "${{ outputs.promotion.commit }}"
-      - uses: git-wait-for-pr
-        as: wait-for-pr
+      # Auto-merge the PR after successful verification
+      # This eliminates the race condition where manually closing the PR
+      # causes ArgoCD to delete the Application before Kargo finishes verification.
+      # The PR is only merged AFTER argocd-update confirms the app is synced and healthy.
+      - uses: git-merge-pr
+        as: merge-pr
         if: ${{ outputs.promotion.prNumber != "" }}
+        retry:
+          errorThreshold: 3
         config:
           repoURL: "${{ vars.gitRepo }}"
-          prNumber: "${{ outputs.promotion.prNumber }}"
+          prNumber: ${{ outputs.promotion.prNumber }}
 ---
 # Source: application-generator/templates/stage-ephemeral.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -780,22 +846,33 @@ spec:
           value: "false"
         - name: targetBranch
           value: "env/test/mosquitto-taylor"
+      # Verify the ephemeral deployment via ArgoCD
+      # Increased retry threshold and added timeout to handle:
+      #   1. ApplicationSet polling delay (up to 60s for PR detection)
+      #   2. Slow image pulls or initialization on first deploy
       - uses: argocd-update
         if: ${{ outputs.promotion.prNumber != "" }}
         retry:
-          errorThreshold: 5
+          errorThreshold: 10
+          timeout: 10m
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-mosquitto-taylor"
             sources:
             - repoURL: "${{ vars.gitRepo }}"
               desiredRevision: "${{ outputs.promotion.commit }}"
-      - uses: git-wait-for-pr
-        as: wait-for-pr
+      # Auto-merge the PR after successful verification
+      # This eliminates the race condition where manually closing the PR
+      # causes ArgoCD to delete the Application before Kargo finishes verification.
+      # The PR is only merged AFTER argocd-update confirms the app is synced and healthy.
+      - uses: git-merge-pr
+        as: merge-pr
         if: ${{ outputs.promotion.prNumber != "" }}
+        retry:
+          errorThreshold: 3
         config:
           repoURL: "${{ vars.gitRepo }}"
-          prNumber: "${{ outputs.promotion.prNumber }}"
+          prNumber: ${{ outputs.promotion.prNumber }}
 ---
 # Source: application-generator/templates/stage-ephemeral.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -894,22 +971,33 @@ spec:
           value: "false"
         - name: targetBranch
           value: "env/test/mosquitto"
+      # Verify the ephemeral deployment via ArgoCD
+      # Increased retry threshold and added timeout to handle:
+      #   1. ApplicationSet polling delay (up to 60s for PR detection)
+      #   2. Slow image pulls or initialization on first deploy
       - uses: argocd-update
         if: ${{ outputs.promotion.prNumber != "" }}
         retry:
-          errorThreshold: 5
+          errorThreshold: 10
+          timeout: 10m
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-mosquitto"
             sources:
             - repoURL: "${{ vars.gitRepo }}"
               desiredRevision: "${{ outputs.promotion.commit }}"
-      - uses: git-wait-for-pr
-        as: wait-for-pr
+      # Auto-merge the PR after successful verification
+      # This eliminates the race condition where manually closing the PR
+      # causes ArgoCD to delete the Application before Kargo finishes verification.
+      # The PR is only merged AFTER argocd-update confirms the app is synced and healthy.
+      - uses: git-merge-pr
+        as: merge-pr
         if: ${{ outputs.promotion.prNumber != "" }}
+        retry:
+          errorThreshold: 3
         config:
           repoURL: "${{ vars.gitRepo }}"
-          prNumber: "${{ outputs.promotion.prNumber }}"
+          prNumber: ${{ outputs.promotion.prNumber }}
 ---
 # Source: application-generator/templates/stage-ephemeral.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -1008,22 +1096,33 @@ spec:
           value: "false"
         - name: targetBranch
           value: "env/test/victoria-metrics-scott"
+      # Verify the ephemeral deployment via ArgoCD
+      # Increased retry threshold and added timeout to handle:
+      #   1. ApplicationSet polling delay (up to 60s for PR detection)
+      #   2. Slow image pulls or initialization on first deploy
       - uses: argocd-update
         if: ${{ outputs.promotion.prNumber != "" }}
         retry:
-          errorThreshold: 5
+          errorThreshold: 10
+          timeout: 10m
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-victoria-metrics-scott"
             sources:
             - repoURL: "${{ vars.gitRepo }}"
               desiredRevision: "${{ outputs.promotion.commit }}"
-      - uses: git-wait-for-pr
-        as: wait-for-pr
+      # Auto-merge the PR after successful verification
+      # This eliminates the race condition where manually closing the PR
+      # causes ArgoCD to delete the Application before Kargo finishes verification.
+      # The PR is only merged AFTER argocd-update confirms the app is synced and healthy.
+      - uses: git-merge-pr
+        as: merge-pr
         if: ${{ outputs.promotion.prNumber != "" }}
+        retry:
+          errorThreshold: 3
         config:
           repoURL: "${{ vars.gitRepo }}"
-          prNumber: "${{ outputs.promotion.prNumber }}"
+          prNumber: ${{ outputs.promotion.prNumber }}
 ---
 # Source: application-generator/templates/stage-ephemeral.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -1122,19 +1221,30 @@ spec:
           value: "false"
         - name: targetBranch
           value: "env/test/victoria-metrics-taylor"
+      # Verify the ephemeral deployment via ArgoCD
+      # Increased retry threshold and added timeout to handle:
+      #   1. ApplicationSet polling delay (up to 60s for PR detection)
+      #   2. Slow image pulls or initialization on first deploy
       - uses: argocd-update
         if: ${{ outputs.promotion.prNumber != "" }}
         retry:
-          errorThreshold: 5
+          errorThreshold: 10
+          timeout: 10m
         config:
           apps:
           - name: "pr-${{ outputs.promotion.prNumber }}-test-victoria-metrics-taylor"
             sources:
             - repoURL: "${{ vars.gitRepo }}"
               desiredRevision: "${{ outputs.promotion.commit }}"
-      - uses: git-wait-for-pr
-        as: wait-for-pr
+      # Auto-merge the PR after successful verification
+      # This eliminates the race condition where manually closing the PR
+      # causes ArgoCD to delete the Application before Kargo finishes verification.
+      # The PR is only merged AFTER argocd-update confirms the app is synced and healthy.
+      - uses: git-merge-pr
+        as: merge-pr
         if: ${{ outputs.promotion.prNumber != "" }}
+        retry:
+          errorThreshold: 3
         config:
           repoURL: "${{ vars.gitRepo }}"
-          prNumber: "${{ outputs.promotion.prNumber }}"
+          prNumber: ${{ outputs.promotion.prNumber }}
