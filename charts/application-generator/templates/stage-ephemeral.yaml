@@ -107,7 +107,7 @@ spec:
         if: {{`${{ outputs.promotion.prNumber != "" }}`}}
         retry:
           errorThreshold: 10
-          timeout: 10m
+          timeout: 10m0s
         config:
           apps:
           - name: "pr-{{`${{ outputs.promotion.prNumber }}`}}-{{ $env_name }}-{{ $app.name }}"
