@@ -44,6 +44,9 @@ spec:
       app.kubernetes.io/instance: test-mosquitto
   template:
     metadata:
+      annotations:
+        
+        homelab-apps/test-trigger: "2026-02-23"
       labels:
         app.kubernetes.io/name: mosquitto
         app.kubernetes.io/instance: test-mosquitto
