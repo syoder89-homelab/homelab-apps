@@ -100,13 +100,14 @@ spec:
         - name: targetBranch
           value: "{{ $env.targetBranchPrefix }}/{{ $app.name }}"
       # Verify the ephemeral deployment via ArgoCD
-      # Increased retry threshold and added timeout to handle:
-      #   1. ApplicationSet polling delay (up to 60s for PR detection)
-      #   2. Slow image pulls or initialization on first deploy
+      # High errorThreshold (60) ensures retries span the full timeout window,
+      # since each "app not found" check is near-instant during the
+      # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
+        as: argocd-verify
         if: {{`${{ outputs.promotion.prNumber != "" }}`}}
         retry:
-          errorThreshold: 10
+          errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
@@ -115,17 +116,49 @@ spec:
             - repoURL: "{{`${{ vars.gitRepo }}`}}"
               desiredRevision: "{{`${{ outputs.promotion.commit }}`}}"
       # Auto-merge the PR after successful verification
-      # This eliminates the race condition where manually closing the PR
-      # causes ArgoCD to delete the Application before Kargo finishes verification.
-      # The PR is only merged AFTER argocd-update confirms the app is synced and healthy.
+      # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: {{`${{ outputs.promotion.prNumber != "" }}`}}
+        if: {{`${{ outputs.promotion.prNumber != "" && status("argocd-verify") == "Succeeded" }}`}}
         retry:
           errorThreshold: 3
         config:
           repoURL: "{{`${{ vars.gitRepo }}`}}"
           prNumber: {{`${{ outputs.promotion.prNumber }}`}}
+      # Delete the source branch after merge
+      # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
+      # First, get the PR details to find the head branch name.
+      - uses: http
+        as: get-pr
+        if: {{`${{ outputs.promotion.prNumber != "" && status("merge-pr") == "Succeeded" }}`}}
+        retry:
+          errorThreshold: 3
+        config:
+          method: GET
+          url: "https://api.github.com/repos/{{ $.Values.repo.orgName }}/{{ $.Values.repo.repoName }}/pulls/{{`${{ outputs.promotion.prNumber }}`}}"
+          headers:
+          - name: Authorization
+            value: "Bearer {{`${{ secret('kargo-github-pat').password }}`}}"
+          - name: Accept
+            value: "application/vnd.github.v3+json"
+          successExpression: "response.status == 200"
+          outputs:
+          - name: headRef
+            fromExpression: "response.body.head.ref"
+      - uses: http
+        as: delete-branch
+        if: {{`${{ outputs.promotion.prNumber != "" && status("get-pr") == "Succeeded" && outputs['get-pr'].headRef != "" }}`}}
+        retry:
+          errorThreshold: 3
+        config:
+          method: DELETE
+          url: "https://api.github.com/repos/{{ $.Values.repo.orgName }}/{{ $.Values.repo.repoName }}/git/refs/heads/{{`${{ outputs['get-pr'].headRef }}`}}"
+          headers:
+          - name: Authorization
+            value: "Bearer {{`${{ secret('kargo-github-pat').password }}`}}"
+          - name: Accept
+            value: "application/vnd.github.v3+json"
+          successExpression: "response.status == 204 || response.status == 422"
 {{- end }}
 {{- end }}
 {{- end }}
