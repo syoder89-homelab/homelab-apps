@@ -1,30 +1,16 @@
 # GCP Workload Identity Federation credential configuration for ArgoCD
 #
-# This ConfigMap provides the GCP credential config that tells `argocd-k8s-auth gcp`
-# how to exchange the K8s projected SA token for a GCP access token — no long-lived keys.
+# Pulls the credential config JSON from 1Password. The 1Password item should have
+# a field named "credential-config.json" containing the JSON from:
+#   cd homelab-infra/terraform/bootstrap && terraform output -raw argocd_credential_config
 #
-# Populate after running: cd homelab-infra/terraform/bootstrap && terraform apply
-#   terraform output -raw argocd_credential_config > /tmp/credential-config.json
+# The 1Password Connect operator creates a Secret with the same name, populated
+# with the item's fields. The Secret is mounted into the ArgoCD application-controller.
 #
-# Then paste the JSON into the credential-config.json field below.
-#
-apiVersion: v1
-kind: ConfigMap
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
 metadata:
   name: argocd-gcp-wif-config
   namespace: argocd
-data:
-  credential-config.json: |
-    {
-      "type": "external_account",
-      "audience": "//iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/homelab-k8s-pool/providers/homelab-k8s-oidc",
-      "subject_token_type": "urn:ietf:params:oauth:token-type:jwt",
-      "token_url": "https://sts.googleapis.com/v1/token",
-      "service_account_impersonation_url": "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/argocd-deployer@PROJECT_ID.iam.gserviceaccount.com:generateAccessToken",
-      "credential_source": {
-        "file": "/var/run/secrets/tokens/gcp-token",
-        "format": {
-          "type": "text"
-        }
-      }
-    }
+spec:
+  itemPath: "vaults/homelab/items/argocd-gcp-wif-config"
