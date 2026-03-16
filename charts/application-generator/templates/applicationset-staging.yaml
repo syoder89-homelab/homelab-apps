@@ -1,7 +1,7 @@
 {{- range $path, $_ := .Files.Glob "applications/*/Chart.yaml" }}
 {{- $app := $.Files.Get $path | fromYaml }}
 {{- range $env_name, $env := $.Values.envs }}
-{{- if and $env.isEphemeral (not $env.clusterName) }}
+{{- if and $env.isEphemeral $env.clusterName }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -28,7 +28,6 @@ spec:
       requeueAfterSeconds: 60
       values:
         appName: "pr-{{`{{ .number }}`}}-{{ $env_name }}-{{ $app.name }}"
-        #appNamespace: "pr-{{`{{ .number }}`}}-{{ $app.namespace | default $app.name }}"
         # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
         appNamespace: "{{ $env_name }}-{{ $app.namespace | default $app.name }}"
   template:
@@ -39,7 +38,7 @@ spec:
         kargo.akuity.io/authorized-stage: {{ $.Values.kargo.projectName }}:{{ $env_name }}-{{ $app.name }}
     spec:
       destination:
-        name: in-cluster
+        name: {{ $env.clusterName }}
         namespace: "{{`{{ .values.appNamespace }}`}}"
       project: {{ $.Values.argocd.projectName }}
       source:

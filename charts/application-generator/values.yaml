@@ -3,11 +3,20 @@ envs:
     sources:
       # direct: true
       stages:
-      - test-{{ .app.name }}
+      - staging-{{ .app.name }}
     asPR: true
     isEphemeral: false
     targetBranchPrefix: env/prod
     envType: prod
+  staging:
+    sources:
+      stages:
+      - test-{{ .app.name }}
+    asPR: true
+    isEphemeral: true
+    targetBranchPrefix: env/staging
+    envType: staging
+    clusterName: gke-staging
   test:
     sources:
       direct: true

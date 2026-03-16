@@ -1,7 +1,7 @@
 {{- range $path, $_ := .Files.Glob "applications/*/Chart.yaml" }}
 {{- $app := $.Files.Get $path | fromYaml }}
 {{- range $env_name, $env := $.Values.envs }}
-{{- if and $env.isEphemeral (not $env.clusterName) }}
+{{- if and $env.isEphemeral $env.clusterName }}
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
@@ -14,7 +14,9 @@ spec:
       kind: Warehouse
       name: {{ $app.name }}
     sources:
-      {{ $env.sources | toYaml }}
+      {{- /* Allow the sources to be templated based on env and app values */ -}}
+      {{- $ctx := (dict "Values" $.Values "app" $app "env" $env) }}
+      {{- include "better-tpl" (list $env.sources $ctx) | nindent 6 }}
   promotionTemplate:
     spec:
       vars:
@@ -27,29 +29,6 @@ spec:
       - name: path_out
         value: ./out
       steps:
-      # TODO
-      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
-      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
-      # - task:
-      #     name: prepare-workdir 
-      #   vars:
-      #   - name: clearPath
-      #     value: "false"
-      # - task:
-      #     name: push-manifests
-      #   as: promotion-orig
-      #   vars:
-      #   - name: asPR
-      #     value: "true"
-      #   - name: targetBranch
-      #     value: {{ $env.targetBranchPrefix }}/{{ $app.name }}
-      # - uses: argocd-update
-      #   config:
-      #     apps:
-      #     - name: {{ $env_name }}-{{ $app.name }}
-      #       sources:
-      #       - repoURL: {{`${{ vars.gitRepo }}`}}
-      #         desiredRevision: {{`${{ outputs.promotion-orig.commit }}`}}
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
@@ -76,9 +55,6 @@ spec:
               value: {{ $env.envType }}
             - key: appName
               value: {{ $app.name }}
-          #valuesFiles:
-          #- {{`${{ vars.path_src }}`}}/config/{{ $env_name }}/{{ $app.name }}-values.yaml
-          #- {{`${{ vars.path_src }}`}}/{{ dir $path }}/values/{{ $env_name }}.yaml
       - uses: helm-template
         config:
           releaseName: "{{ $env_name }}-{{ $app.releaseName | default $app.name }}"
