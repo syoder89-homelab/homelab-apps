@@ -1,0 +1,9 @@
+# Default owner for all files
+* @syoder89
+
+# CI/CD workflows
+/.github/ @syoder89
+
+# Shared charts and config
+/charts/ @syoder89
+/config/ @syoder89
