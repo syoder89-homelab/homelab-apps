@@ -11,6 +11,7 @@ spec:
       branch: main
       commitSelectionStrategy: NewestFromBranch
       discoveryLimit: 10
+      strictSemver: true
       repoURL: https://github.com/syoder89-homelab/homelab-apps.git
       includePaths:
       - applications/frigate
@@ -29,6 +30,7 @@ spec:
       branch: main
       commitSelectionStrategy: NewestFromBranch
       discoveryLimit: 10
+      strictSemver: true
       repoURL: https://github.com/syoder89-homelab/homelab-apps.git
       includePaths:
       - applications/grafana-scott
@@ -47,6 +49,7 @@ spec:
       branch: main
       commitSelectionStrategy: NewestFromBranch
       discoveryLimit: 10
+      strictSemver: true
       repoURL: https://github.com/syoder89-homelab/homelab-apps.git
       includePaths:
       - applications/grafana-taylor
@@ -65,6 +68,7 @@ spec:
       branch: main
       commitSelectionStrategy: NewestFromBranch
       discoveryLimit: 10
+      strictSemver: true
       repoURL: https://github.com/syoder89-homelab/homelab-apps.git
       includePaths:
       - applications/home-assistant
@@ -83,6 +87,7 @@ spec:
       branch: main
       commitSelectionStrategy: NewestFromBranch
       discoveryLimit: 10
+      strictSemver: true
       repoURL: https://github.com/syoder89-homelab/homelab-apps.git
       includePaths:
       - applications/influxdb-scott
@@ -101,6 +106,7 @@ spec:
       branch: main
       commitSelectionStrategy: NewestFromBranch
       discoveryLimit: 10
+      strictSemver: true
       repoURL: https://github.com/syoder89-homelab/homelab-apps.git
       includePaths:
       - applications/kargo-config
@@ -119,6 +125,7 @@ spec:
       branch: main
       commitSelectionStrategy: NewestFromBranch
       discoveryLimit: 10
+      strictSemver: true
       repoURL: https://github.com/syoder89-homelab/homelab-apps.git
       includePaths:
       - applications/mosquitto-taylor
@@ -137,6 +144,7 @@ spec:
       branch: main
       commitSelectionStrategy: NewestFromBranch
       discoveryLimit: 10
+      strictSemver: true
       repoURL: https://github.com/syoder89-homelab/homelab-apps.git
       includePaths:
       - applications/mosquitto
@@ -155,6 +163,7 @@ spec:
       branch: main
       commitSelectionStrategy: NewestFromBranch
       discoveryLimit: 10
+      strictSemver: true
       repoURL: https://github.com/syoder89-homelab/homelab-apps.git
       includePaths:
       - applications/victoria-metrics-scott
@@ -173,6 +182,7 @@ spec:
       branch: main
       commitSelectionStrategy: NewestFromBranch
       discoveryLimit: 10
+      strictSemver: true
       repoURL: https://github.com/syoder89-homelab/homelab-apps.git
       includePaths:
       - applications/victoria-metrics-taylor
