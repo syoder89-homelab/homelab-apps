@@ -1,0 +1,580 @@
+---
+# Source: application-generator/templates/applicationset-staging.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ephemeral-staging-frigate
+  namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: homelab-apps:staging-frigate
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: syoder89-homelab
+        # The Github repository
+        repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
+      filters:
+      - targetBranchMatch: "^env/staging/frigate$"
+      requeueAfterSeconds: 60
+      values:
+        appName: "pr-{{ .number }}-staging-frigate"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "staging-frigate"
+  template:
+    metadata:
+      name: "{{ .values.appName }}"
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: homelab-apps:staging-frigate
+    spec:
+      destination:
+        name: gke-staging
+        namespace: "{{ .values.appNamespace }}"
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
+        syncOptions:
+        - CreateNamespace=true
+---
+# Source: application-generator/templates/applicationset-staging.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ephemeral-staging-grafana-scott
+  namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: homelab-apps:staging-grafana-scott
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: syoder89-homelab
+        # The Github repository
+        repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
+      filters:
+      - targetBranchMatch: "^env/staging/grafana-scott$"
+      requeueAfterSeconds: 60
+      values:
+        appName: "pr-{{ .number }}-staging-grafana-scott"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "staging-scott-monitoring"
+  template:
+    metadata:
+      name: "{{ .values.appName }}"
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: homelab-apps:staging-grafana-scott
+    spec:
+      destination:
+        name: gke-staging
+        namespace: "{{ .values.appNamespace }}"
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
+        syncOptions:
+        - CreateNamespace=true
+---
+# Source: application-generator/templates/applicationset-staging.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ephemeral-staging-grafana-taylor
+  namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: homelab-apps:staging-grafana-taylor
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: syoder89-homelab
+        # The Github repository
+        repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
+      filters:
+      - targetBranchMatch: "^env/staging/grafana-taylor$"
+      requeueAfterSeconds: 60
+      values:
+        appName: "pr-{{ .number }}-staging-grafana-taylor"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "staging-taylor-monitoring"
+  template:
+    metadata:
+      name: "{{ .values.appName }}"
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: homelab-apps:staging-grafana-taylor
+    spec:
+      destination:
+        name: gke-staging
+        namespace: "{{ .values.appNamespace }}"
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
+        syncOptions:
+        - CreateNamespace=true
+---
+# Source: application-generator/templates/applicationset-staging.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ephemeral-staging-home-assistant
+  namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: homelab-apps:staging-home-assistant
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: syoder89-homelab
+        # The Github repository
+        repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
+      filters:
+      - targetBranchMatch: "^env/staging/home-assistant$"
+      requeueAfterSeconds: 60
+      values:
+        appName: "pr-{{ .number }}-staging-home-assistant"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "staging-home-assistant"
+  template:
+    metadata:
+      name: "{{ .values.appName }}"
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: homelab-apps:staging-home-assistant
+    spec:
+      destination:
+        name: gke-staging
+        namespace: "{{ .values.appNamespace }}"
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
+        syncOptions:
+        - CreateNamespace=true
+---
+# Source: application-generator/templates/applicationset-staging.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ephemeral-staging-influxdb-scott
+  namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: homelab-apps:staging-influxdb-scott
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: syoder89-homelab
+        # The Github repository
+        repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
+      filters:
+      - targetBranchMatch: "^env/staging/influxdb-scott$"
+      requeueAfterSeconds: 60
+      values:
+        appName: "pr-{{ .number }}-staging-influxdb-scott"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "staging-scott-monitoring"
+  template:
+    metadata:
+      name: "{{ .values.appName }}"
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: homelab-apps:staging-influxdb-scott
+    spec:
+      destination:
+        name: gke-staging
+        namespace: "{{ .values.appNamespace }}"
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
+        syncOptions:
+        - CreateNamespace=true
+---
+# Source: application-generator/templates/applicationset-staging.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ephemeral-staging-kargo-config
+  namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: homelab-apps:staging-kargo-config
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: syoder89-homelab
+        # The Github repository
+        repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
+      filters:
+      - targetBranchMatch: "^env/staging/kargo-config$"
+      requeueAfterSeconds: 60
+      values:
+        appName: "pr-{{ .number }}-staging-kargo-config"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "staging-homelab-apps"
+  template:
+    metadata:
+      name: "{{ .values.appName }}"
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: homelab-apps:staging-kargo-config
+    spec:
+      destination:
+        name: gke-staging
+        namespace: "{{ .values.appNamespace }}"
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
+        syncOptions:
+        - CreateNamespace=true
+---
+# Source: application-generator/templates/applicationset-staging.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ephemeral-staging-mosquitto-taylor
+  namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: homelab-apps:staging-mosquitto-taylor
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: syoder89-homelab
+        # The Github repository
+        repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
+      filters:
+      - targetBranchMatch: "^env/staging/mosquitto-taylor$"
+      requeueAfterSeconds: 60
+      values:
+        appName: "pr-{{ .number }}-staging-mosquitto-taylor"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "staging-taylor-monitoring"
+  template:
+    metadata:
+      name: "{{ .values.appName }}"
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: homelab-apps:staging-mosquitto-taylor
+    spec:
+      destination:
+        name: gke-staging
+        namespace: "{{ .values.appNamespace }}"
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
+        syncOptions:
+        - CreateNamespace=true
+---
+# Source: application-generator/templates/applicationset-staging.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ephemeral-staging-mosquitto
+  namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: homelab-apps:staging-mosquitto
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: syoder89-homelab
+        # The Github repository
+        repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
+      filters:
+      - targetBranchMatch: "^env/staging/mosquitto$"
+      requeueAfterSeconds: 60
+      values:
+        appName: "pr-{{ .number }}-staging-mosquitto"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "staging-mosquitto"
+  template:
+    metadata:
+      name: "{{ .values.appName }}"
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: homelab-apps:staging-mosquitto
+    spec:
+      destination:
+        name: gke-staging
+        namespace: "{{ .values.appNamespace }}"
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
+        syncOptions:
+        - CreateNamespace=true
+---
+# Source: application-generator/templates/applicationset-staging.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ephemeral-staging-victoria-metrics-scott
+  namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: homelab-apps:staging-victoria-metrics-scott
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: syoder89-homelab
+        # The Github repository
+        repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
+      filters:
+      - targetBranchMatch: "^env/staging/victoria-metrics-scott$"
+      requeueAfterSeconds: 60
+      values:
+        appName: "pr-{{ .number }}-staging-victoria-metrics-scott"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "staging-scott-monitoring"
+  template:
+    metadata:
+      name: "{{ .values.appName }}"
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: homelab-apps:staging-victoria-metrics-scott
+    spec:
+      destination:
+        name: gke-staging
+        namespace: "{{ .values.appNamespace }}"
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
+        syncOptions:
+        - CreateNamespace=true
+---
+# Source: application-generator/templates/applicationset-staging.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ephemeral-staging-victoria-metrics-taylor
+  namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: homelab-apps:staging-victoria-metrics-taylor
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: syoder89-homelab
+        # The Github repository
+        repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
+      filters:
+      - targetBranchMatch: "^env/staging/victoria-metrics-taylor$"
+      requeueAfterSeconds: 60
+      values:
+        appName: "pr-{{ .number }}-staging-victoria-metrics-taylor"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "staging-taylor-monitoring"
+  template:
+    metadata:
+      name: "{{ .values.appName }}"
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: homelab-apps:staging-victoria-metrics-taylor
+    spec:
+      destination:
+        name: gke-staging
+        namespace: "{{ .values.appNamespace }}"
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
+        syncOptions:
+        - CreateNamespace=true

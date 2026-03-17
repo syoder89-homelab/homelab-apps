@@ -12,7 +12,7 @@ spec:
       name: frigate
     sources:
       stages:
-      - test-frigate
+      - staging-frigate
   promotionTemplate:
     spec:
       vars:
@@ -93,7 +93,7 @@ spec:
       name: grafana-scott
     sources:
       stages:
-      - test-grafana-scott
+      - staging-grafana-scott
   promotionTemplate:
     spec:
       vars:
@@ -174,7 +174,7 @@ spec:
       name: grafana-taylor
     sources:
       stages:
-      - test-grafana-taylor
+      - staging-grafana-taylor
   promotionTemplate:
     spec:
       vars:
@@ -255,7 +255,7 @@ spec:
       name: home-assistant
     sources:
       stages:
-      - test-home-assistant
+      - staging-home-assistant
   promotionTemplate:
     spec:
       vars:
@@ -336,7 +336,7 @@ spec:
       name: influxdb-scott
     sources:
       stages:
-      - test-influxdb-scott
+      - staging-influxdb-scott
   promotionTemplate:
     spec:
       vars:
@@ -417,7 +417,7 @@ spec:
       name: kargo-config
     sources:
       stages:
-      - test-kargo-config
+      - staging-kargo-config
   promotionTemplate:
     spec:
       vars:
@@ -498,7 +498,7 @@ spec:
       name: mosquitto-taylor
     sources:
       stages:
-      - test-mosquitto-taylor
+      - staging-mosquitto-taylor
   promotionTemplate:
     spec:
       vars:
@@ -579,7 +579,7 @@ spec:
       name: mosquitto
     sources:
       stages:
-      - test-mosquitto
+      - staging-mosquitto
   promotionTemplate:
     spec:
       vars:
@@ -660,7 +660,7 @@ spec:
       name: victoria-metrics-scott
     sources:
       stages:
-      - test-victoria-metrics-scott
+      - staging-victoria-metrics-scott
   promotionTemplate:
     spec:
       vars:
@@ -741,7 +741,7 @@ spec:
       name: victoria-metrics-taylor
     sources:
       stages:
-      - test-victoria-metrics-taylor
+      - staging-victoria-metrics-taylor
   promotionTemplate:
     spec:
       vars:
