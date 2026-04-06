@@ -1,6 +1,7 @@
 {{- range $path, $_ := .Files.Glob "applications/*/Chart.yaml" }}
 {{- $app := $.Files.Get $path | fromYaml }}
 {{- range $env_name, $env := $.Values.envs }}
+{{- if ne $env.enabled false }}
 {{- if and $env.isEphemeral (not $env.clusterName) }}
 ---
 apiVersion: kargo.akuity.io/v1alpha1
@@ -159,6 +160,7 @@ spec:
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

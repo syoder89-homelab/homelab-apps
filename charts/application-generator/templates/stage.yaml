@@ -1,6 +1,7 @@
 {{- range $path, $_ := .Files.Glob "applications/*/Chart.yaml" }}
 {{- $app := $.Files.Get $path | fromYaml }}
 {{- range $env_name, $env := $.Values.envs }}
+{{- if ne $env.enabled false }}
 {{- if not $env.isEphemeral }}
 ---
 apiVersion: kargo.akuity.io/v1alpha1
@@ -14,9 +15,21 @@ spec:
       kind: Warehouse
       name: {{ $app.name }}
     sources:
-      {{- /* Allow the sources to be templated based on env and app values */ -}}
+      {{- /* Walk the promotedFrom chain to find the nearest enabled upstream stage,
+           falling back to direct (warehouse) if all upstream stages are disabled. */ -}}
+      {{- $upstreamStage := "" }}
+      {{- if $env.promotedFrom }}
+        {{- $upstreamStage = trim (include "resolve-upstream-stage" (dict "envName" $env.promotedFrom "Values" $.Values "app" $app)) }}
+      {{- end }}
+      {{- if eq $upstreamStage "direct" }}
+      direct: true
+      {{- else if $upstreamStage }}
+      stages:
+      - {{ $upstreamStage }}-{{ $app.name }}
+      {{- else }}
       {{- $ctx := (dict "Values" $.Values "app" $app "env" $env) }}
       {{- include "better-tpl" (list $env.sources $ctx) | nindent 6 }}
+      {{- end }}
   promotionTemplate:
     spec:
       vars:
@@ -83,6 +96,7 @@ spec:
             sources:
             - repoURL: {{`${{ vars.gitRepo }}`}}
               desiredRevision: {{`${{ outputs.promotion.commit }}`}}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

@@ -1,6 +1,7 @@
 {{- range $path, $_ := .Files.Glob "applications/*/Chart.yaml" }}
 {{- $app := $.Files.Get $path | fromYaml }}
 {{- range $env_name, $env := $.Values.envs }}
+{{- if ne $env.enabled false }}
 {{- if not $env.isEphemeral }}
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -27,6 +28,7 @@ spec:
       selfHeal: true
     syncOptions:
     - CreateNamespace=true
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

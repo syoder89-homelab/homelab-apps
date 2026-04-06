@@ -1,5 +1,6 @@
 envs:
   prod:
+    promotedFrom: staging
     sources:
       # direct: true
       stages:
@@ -9,6 +10,8 @@ envs:
     targetBranchPrefix: env/prod
     envType: prod
   staging:
+    enabled: false
+    promotedFrom: test
     sources:
       stages:
       - test-{{ .app.name }}
