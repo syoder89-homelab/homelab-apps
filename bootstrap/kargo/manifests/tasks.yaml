@@ -62,7 +62,7 @@ spec:
       as: commit
       config:
         path: ${{ vars.path_out }}
-        message: "Update Kargo Applications to ${{ ctx.stage }} [skip ci]"
+        message: "${{ commitFrom(vars.gitRepo)?.Message ?? 'Update' }} [skip ci]"
     - uses: git-push
       if: ${{ vars.asPR != "true" && status("commit") == 'Succeeded' }}
       config:
