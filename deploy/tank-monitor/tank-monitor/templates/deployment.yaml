@@ -1,0 +1,32 @@
+---
+# Source: tank-monitor/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tank-monitor
+  namespace: taylor-monitoring
+  labels:
+    app: tank-monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tank-monitor
+  template:
+    metadata:
+      labels:
+        app: tank-monitor
+    spec:
+      containers:
+      - name: tank-monitor
+        image: syoder89/tank-monitor:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SENSOR
+          value: "taylor_water_tank_level1"
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            memory: 64Mi
