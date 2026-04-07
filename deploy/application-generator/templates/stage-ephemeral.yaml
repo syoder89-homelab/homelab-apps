@@ -45,25 +45,25 @@ spec:
       #     apps:
       #     - name: test-frigate
       #       sources:
-      #       - repoURL: "{% vars.gitRepo %}"
-      #         desiredRevision: "{% outputs.promotion-orig.commit %}"
+      #       - repoURL: "${% vars.gitRepo %}"
+      #         desiredRevision: "${% outputs.promotion-orig.commit %}"
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/applications/frigate/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
+          inPath: "${% vars.path_src %}/applications/frigate/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: "{% vars.path_src %}/charts/config-generator"
+          path: "${% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -74,16 +74,16 @@ spec:
             - key: appName
               value: frigate
           #valuesFiles:
-          #- "{% vars.path_src %}/config/test/frigate-values.yaml"
-          #- "{% vars.path_src %}/applications/frigate/values/test.yaml"
+          #- "${% vars.path_src %}/config/test/frigate-values.yaml"
+          #- "${% vars.path_src %}/applications/frigate/values/test.yaml"
       - uses: helm-template
         config:
           releaseName: "test-frigate"
           namespace: "test-frigate"
           buildDependencies: true
           includeCRDs: true
-          path: "{% vars.path_src %}/applications/frigate"
-          outPath: "{% vars.path_out %}/deploy/frigate"
+          path: "${% vars.path_src %}/applications/frigate"
+          outPath: "${% vars.path_out %}/deploy/frigate"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -102,40 +102,40 @@ spec:
       # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
         as: argocd-verify
-        if: "{% outputs.promotion.prNumber != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" %}"
         retry:
           errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
-          - name: "pr-{% outputs.promotion.prNumber %}-test-frigate"
+          - name: "pr-${% outputs.promotion.prNumber %}-test-frigate"
             sources:
-            - repoURL: "{% vars.gitRepo %}"
-              desiredRevision: "{% outputs.promotion.commit %}"
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
       # Auto-merge the PR after successful verification
       # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
-          repoURL: "{% vars.gitRepo %}"
-          prNumber: "{% outputs.promotion.prNumber %}"
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
       # Delete the source branch after merge
       # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
       # First, get the PR details to find the head branch name.
       - uses: http
         as: get-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
           method: GET
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/{% outputs.promotion.prNumber %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${% outputs.promotion.prNumber %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 200"
@@ -144,15 +144,15 @@ spec:
             fromExpression: "response.body.head.ref"
       - uses: http
         as: delete-branch
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
         retry:
           errorThreshold: 3
         config:
           method: DELETE
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/{% outputs['get-pr'].headRef %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${% outputs['get-pr'].headRef %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
@@ -203,25 +203,25 @@ spec:
       #     apps:
       #     - name: test-grafana-scott
       #       sources:
-      #       - repoURL: "{% vars.gitRepo %}"
-      #         desiredRevision: "{% outputs.promotion-orig.commit %}"
+      #       - repoURL: "${% vars.gitRepo %}"
+      #         desiredRevision: "${% outputs.promotion-orig.commit %}"
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/applications/grafana-scott/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
+          inPath: "${% vars.path_src %}/applications/grafana-scott/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: "{% vars.path_src %}/charts/config-generator"
+          path: "${% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -232,16 +232,16 @@ spec:
             - key: appName
               value: grafana-scott
           #valuesFiles:
-          #- "{% vars.path_src %}/config/test/grafana-scott-values.yaml"
-          #- "{% vars.path_src %}/applications/grafana-scott/values/test.yaml"
+          #- "${% vars.path_src %}/config/test/grafana-scott-values.yaml"
+          #- "${% vars.path_src %}/applications/grafana-scott/values/test.yaml"
       - uses: helm-template
         config:
           releaseName: "test-grafana-scott"
           namespace: "test-scott-monitoring"
           buildDependencies: true
           includeCRDs: true
-          path: "{% vars.path_src %}/applications/grafana-scott"
-          outPath: "{% vars.path_out %}/deploy/grafana-scott"
+          path: "${% vars.path_src %}/applications/grafana-scott"
+          outPath: "${% vars.path_out %}/deploy/grafana-scott"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -260,40 +260,40 @@ spec:
       # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
         as: argocd-verify
-        if: "{% outputs.promotion.prNumber != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" %}"
         retry:
           errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
-          - name: "pr-{% outputs.promotion.prNumber %}-test-grafana-scott"
+          - name: "pr-${% outputs.promotion.prNumber %}-test-grafana-scott"
             sources:
-            - repoURL: "{% vars.gitRepo %}"
-              desiredRevision: "{% outputs.promotion.commit %}"
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
       # Auto-merge the PR after successful verification
       # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
-          repoURL: "{% vars.gitRepo %}"
-          prNumber: "{% outputs.promotion.prNumber %}"
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
       # Delete the source branch after merge
       # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
       # First, get the PR details to find the head branch name.
       - uses: http
         as: get-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
           method: GET
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/{% outputs.promotion.prNumber %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${% outputs.promotion.prNumber %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 200"
@@ -302,15 +302,15 @@ spec:
             fromExpression: "response.body.head.ref"
       - uses: http
         as: delete-branch
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
         retry:
           errorThreshold: 3
         config:
           method: DELETE
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/{% outputs['get-pr'].headRef %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${% outputs['get-pr'].headRef %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
@@ -361,25 +361,25 @@ spec:
       #     apps:
       #     - name: test-grafana-taylor
       #       sources:
-      #       - repoURL: "{% vars.gitRepo %}"
-      #         desiredRevision: "{% outputs.promotion-orig.commit %}"
+      #       - repoURL: "${% vars.gitRepo %}"
+      #         desiredRevision: "${% outputs.promotion-orig.commit %}"
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/applications/grafana-taylor/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
+          inPath: "${% vars.path_src %}/applications/grafana-taylor/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: "{% vars.path_src %}/charts/config-generator"
+          path: "${% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -390,16 +390,16 @@ spec:
             - key: appName
               value: grafana-taylor
           #valuesFiles:
-          #- "{% vars.path_src %}/config/test/grafana-taylor-values.yaml"
-          #- "{% vars.path_src %}/applications/grafana-taylor/values/test.yaml"
+          #- "${% vars.path_src %}/config/test/grafana-taylor-values.yaml"
+          #- "${% vars.path_src %}/applications/grafana-taylor/values/test.yaml"
       - uses: helm-template
         config:
           releaseName: "test-grafana"
           namespace: "test-taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
-          path: "{% vars.path_src %}/applications/grafana-taylor"
-          outPath: "{% vars.path_out %}/deploy/grafana-taylor"
+          path: "${% vars.path_src %}/applications/grafana-taylor"
+          outPath: "${% vars.path_out %}/deploy/grafana-taylor"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -418,40 +418,40 @@ spec:
       # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
         as: argocd-verify
-        if: "{% outputs.promotion.prNumber != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" %}"
         retry:
           errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
-          - name: "pr-{% outputs.promotion.prNumber %}-test-grafana-taylor"
+          - name: "pr-${% outputs.promotion.prNumber %}-test-grafana-taylor"
             sources:
-            - repoURL: "{% vars.gitRepo %}"
-              desiredRevision: "{% outputs.promotion.commit %}"
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
       # Auto-merge the PR after successful verification
       # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
-          repoURL: "{% vars.gitRepo %}"
-          prNumber: "{% outputs.promotion.prNumber %}"
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
       # Delete the source branch after merge
       # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
       # First, get the PR details to find the head branch name.
       - uses: http
         as: get-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
           method: GET
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/{% outputs.promotion.prNumber %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${% outputs.promotion.prNumber %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 200"
@@ -460,15 +460,15 @@ spec:
             fromExpression: "response.body.head.ref"
       - uses: http
         as: delete-branch
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
         retry:
           errorThreshold: 3
         config:
           method: DELETE
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/{% outputs['get-pr'].headRef %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${% outputs['get-pr'].headRef %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
@@ -519,25 +519,25 @@ spec:
       #     apps:
       #     - name: test-home-assistant
       #       sources:
-      #       - repoURL: "{% vars.gitRepo %}"
-      #         desiredRevision: "{% outputs.promotion-orig.commit %}"
+      #       - repoURL: "${% vars.gitRepo %}"
+      #         desiredRevision: "${% outputs.promotion-orig.commit %}"
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/applications/home-assistant/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
+          inPath: "${% vars.path_src %}/applications/home-assistant/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: "{% vars.path_src %}/charts/config-generator"
+          path: "${% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -548,16 +548,16 @@ spec:
             - key: appName
               value: home-assistant
           #valuesFiles:
-          #- "{% vars.path_src %}/config/test/home-assistant-values.yaml"
-          #- "{% vars.path_src %}/applications/home-assistant/values/test.yaml"
+          #- "${% vars.path_src %}/config/test/home-assistant-values.yaml"
+          #- "${% vars.path_src %}/applications/home-assistant/values/test.yaml"
       - uses: helm-template
         config:
           releaseName: "test-home-assistant"
           namespace: "test-home-assistant"
           buildDependencies: true
           includeCRDs: true
-          path: "{% vars.path_src %}/applications/home-assistant"
-          outPath: "{% vars.path_out %}/deploy/home-assistant"
+          path: "${% vars.path_src %}/applications/home-assistant"
+          outPath: "${% vars.path_out %}/deploy/home-assistant"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -576,40 +576,40 @@ spec:
       # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
         as: argocd-verify
-        if: "{% outputs.promotion.prNumber != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" %}"
         retry:
           errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
-          - name: "pr-{% outputs.promotion.prNumber %}-test-home-assistant"
+          - name: "pr-${% outputs.promotion.prNumber %}-test-home-assistant"
             sources:
-            - repoURL: "{% vars.gitRepo %}"
-              desiredRevision: "{% outputs.promotion.commit %}"
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
       # Auto-merge the PR after successful verification
       # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
-          repoURL: "{% vars.gitRepo %}"
-          prNumber: "{% outputs.promotion.prNumber %}"
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
       # Delete the source branch after merge
       # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
       # First, get the PR details to find the head branch name.
       - uses: http
         as: get-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
           method: GET
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/{% outputs.promotion.prNumber %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${% outputs.promotion.prNumber %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 200"
@@ -618,15 +618,15 @@ spec:
             fromExpression: "response.body.head.ref"
       - uses: http
         as: delete-branch
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
         retry:
           errorThreshold: 3
         config:
           method: DELETE
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/{% outputs['get-pr'].headRef %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${% outputs['get-pr'].headRef %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
@@ -677,25 +677,25 @@ spec:
       #     apps:
       #     - name: test-influxdb-scott
       #       sources:
-      #       - repoURL: "{% vars.gitRepo %}"
-      #         desiredRevision: "{% outputs.promotion-orig.commit %}"
+      #       - repoURL: "${% vars.gitRepo %}"
+      #         desiredRevision: "${% outputs.promotion-orig.commit %}"
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/applications/influxdb-scott/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
+          inPath: "${% vars.path_src %}/applications/influxdb-scott/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: "{% vars.path_src %}/charts/config-generator"
+          path: "${% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -706,16 +706,16 @@ spec:
             - key: appName
               value: influxdb-scott
           #valuesFiles:
-          #- "{% vars.path_src %}/config/test/influxdb-scott-values.yaml"
-          #- "{% vars.path_src %}/applications/influxdb-scott/values/test.yaml"
+          #- "${% vars.path_src %}/config/test/influxdb-scott-values.yaml"
+          #- "${% vars.path_src %}/applications/influxdb-scott/values/test.yaml"
       - uses: helm-template
         config:
           releaseName: "test-influxdb"
           namespace: "test-scott-monitoring"
           buildDependencies: true
           includeCRDs: true
-          path: "{% vars.path_src %}/applications/influxdb-scott"
-          outPath: "{% vars.path_out %}/deploy/influxdb-scott"
+          path: "${% vars.path_src %}/applications/influxdb-scott"
+          outPath: "${% vars.path_out %}/deploy/influxdb-scott"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -734,40 +734,40 @@ spec:
       # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
         as: argocd-verify
-        if: "{% outputs.promotion.prNumber != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" %}"
         retry:
           errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
-          - name: "pr-{% outputs.promotion.prNumber %}-test-influxdb-scott"
+          - name: "pr-${% outputs.promotion.prNumber %}-test-influxdb-scott"
             sources:
-            - repoURL: "{% vars.gitRepo %}"
-              desiredRevision: "{% outputs.promotion.commit %}"
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
       # Auto-merge the PR after successful verification
       # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
-          repoURL: "{% vars.gitRepo %}"
-          prNumber: "{% outputs.promotion.prNumber %}"
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
       # Delete the source branch after merge
       # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
       # First, get the PR details to find the head branch name.
       - uses: http
         as: get-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
           method: GET
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/{% outputs.promotion.prNumber %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${% outputs.promotion.prNumber %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 200"
@@ -776,15 +776,15 @@ spec:
             fromExpression: "response.body.head.ref"
       - uses: http
         as: delete-branch
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
         retry:
           errorThreshold: 3
         config:
           method: DELETE
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/{% outputs['get-pr'].headRef %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${% outputs['get-pr'].headRef %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
@@ -835,25 +835,25 @@ spec:
       #     apps:
       #     - name: test-kargo-config
       #       sources:
-      #       - repoURL: "{% vars.gitRepo %}"
-      #         desiredRevision: "{% outputs.promotion-orig.commit %}"
+      #       - repoURL: "${% vars.gitRepo %}"
+      #         desiredRevision: "${% outputs.promotion-orig.commit %}"
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/applications/kargo-config/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
+          inPath: "${% vars.path_src %}/applications/kargo-config/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: "{% vars.path_src %}/charts/config-generator"
+          path: "${% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -864,16 +864,16 @@ spec:
             - key: appName
               value: kargo-config
           #valuesFiles:
-          #- "{% vars.path_src %}/config/test/kargo-config-values.yaml"
-          #- "{% vars.path_src %}/applications/kargo-config/values/test.yaml"
+          #- "${% vars.path_src %}/config/test/kargo-config-values.yaml"
+          #- "${% vars.path_src %}/applications/kargo-config/values/test.yaml"
       - uses: helm-template
         config:
           releaseName: "test-kargo-config"
           namespace: "test-homelab-apps"
           buildDependencies: true
           includeCRDs: true
-          path: "{% vars.path_src %}/applications/kargo-config"
-          outPath: "{% vars.path_out %}/deploy/kargo-config"
+          path: "${% vars.path_src %}/applications/kargo-config"
+          outPath: "${% vars.path_out %}/deploy/kargo-config"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -892,40 +892,40 @@ spec:
       # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
         as: argocd-verify
-        if: "{% outputs.promotion.prNumber != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" %}"
         retry:
           errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
-          - name: "pr-{% outputs.promotion.prNumber %}-test-kargo-config"
+          - name: "pr-${% outputs.promotion.prNumber %}-test-kargo-config"
             sources:
-            - repoURL: "{% vars.gitRepo %}"
-              desiredRevision: "{% outputs.promotion.commit %}"
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
       # Auto-merge the PR after successful verification
       # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
-          repoURL: "{% vars.gitRepo %}"
-          prNumber: "{% outputs.promotion.prNumber %}"
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
       # Delete the source branch after merge
       # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
       # First, get the PR details to find the head branch name.
       - uses: http
         as: get-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
           method: GET
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/{% outputs.promotion.prNumber %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${% outputs.promotion.prNumber %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 200"
@@ -934,15 +934,15 @@ spec:
             fromExpression: "response.body.head.ref"
       - uses: http
         as: delete-branch
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
         retry:
           errorThreshold: 3
         config:
           method: DELETE
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/{% outputs['get-pr'].headRef %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${% outputs['get-pr'].headRef %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
@@ -993,25 +993,25 @@ spec:
       #     apps:
       #     - name: test-mosquitto-taylor
       #       sources:
-      #       - repoURL: "{% vars.gitRepo %}"
-      #         desiredRevision: "{% outputs.promotion-orig.commit %}"
+      #       - repoURL: "${% vars.gitRepo %}"
+      #         desiredRevision: "${% outputs.promotion-orig.commit %}"
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/applications/mosquitto-taylor/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
+          inPath: "${% vars.path_src %}/applications/mosquitto-taylor/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: "{% vars.path_src %}/charts/config-generator"
+          path: "${% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -1022,16 +1022,16 @@ spec:
             - key: appName
               value: mosquitto-taylor
           #valuesFiles:
-          #- "{% vars.path_src %}/config/test/mosquitto-taylor-values.yaml"
-          #- "{% vars.path_src %}/applications/mosquitto-taylor/values/test.yaml"
+          #- "${% vars.path_src %}/config/test/mosquitto-taylor-values.yaml"
+          #- "${% vars.path_src %}/applications/mosquitto-taylor/values/test.yaml"
       - uses: helm-template
         config:
           releaseName: "test-mosquitto"
           namespace: "test-taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
-          path: "{% vars.path_src %}/applications/mosquitto-taylor"
-          outPath: "{% vars.path_out %}/deploy/mosquitto-taylor"
+          path: "${% vars.path_src %}/applications/mosquitto-taylor"
+          outPath: "${% vars.path_out %}/deploy/mosquitto-taylor"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -1050,40 +1050,40 @@ spec:
       # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
         as: argocd-verify
-        if: "{% outputs.promotion.prNumber != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" %}"
         retry:
           errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
-          - name: "pr-{% outputs.promotion.prNumber %}-test-mosquitto-taylor"
+          - name: "pr-${% outputs.promotion.prNumber %}-test-mosquitto-taylor"
             sources:
-            - repoURL: "{% vars.gitRepo %}"
-              desiredRevision: "{% outputs.promotion.commit %}"
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
       # Auto-merge the PR after successful verification
       # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
-          repoURL: "{% vars.gitRepo %}"
-          prNumber: "{% outputs.promotion.prNumber %}"
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
       # Delete the source branch after merge
       # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
       # First, get the PR details to find the head branch name.
       - uses: http
         as: get-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
           method: GET
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/{% outputs.promotion.prNumber %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${% outputs.promotion.prNumber %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 200"
@@ -1092,15 +1092,15 @@ spec:
             fromExpression: "response.body.head.ref"
       - uses: http
         as: delete-branch
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
         retry:
           errorThreshold: 3
         config:
           method: DELETE
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/{% outputs['get-pr'].headRef %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${% outputs['get-pr'].headRef %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
@@ -1151,25 +1151,25 @@ spec:
       #     apps:
       #     - name: test-mosquitto
       #       sources:
-      #       - repoURL: "{% vars.gitRepo %}"
-      #         desiredRevision: "{% outputs.promotion-orig.commit %}"
+      #       - repoURL: "${% vars.gitRepo %}"
+      #         desiredRevision: "${% outputs.promotion-orig.commit %}"
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/applications/mosquitto/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
+          inPath: "${% vars.path_src %}/applications/mosquitto/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: "{% vars.path_src %}/charts/config-generator"
+          path: "${% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -1180,16 +1180,16 @@ spec:
             - key: appName
               value: mosquitto
           #valuesFiles:
-          #- "{% vars.path_src %}/config/test/mosquitto-values.yaml"
-          #- "{% vars.path_src %}/applications/mosquitto/values/test.yaml"
+          #- "${% vars.path_src %}/config/test/mosquitto-values.yaml"
+          #- "${% vars.path_src %}/applications/mosquitto/values/test.yaml"
       - uses: helm-template
         config:
           releaseName: "test-mosquitto"
           namespace: "test-mosquitto"
           buildDependencies: true
           includeCRDs: true
-          path: "{% vars.path_src %}/applications/mosquitto"
-          outPath: "{% vars.path_out %}/deploy/mosquitto"
+          path: "${% vars.path_src %}/applications/mosquitto"
+          outPath: "${% vars.path_out %}/deploy/mosquitto"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -1208,40 +1208,40 @@ spec:
       # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
         as: argocd-verify
-        if: "{% outputs.promotion.prNumber != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" %}"
         retry:
           errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
-          - name: "pr-{% outputs.promotion.prNumber %}-test-mosquitto"
+          - name: "pr-${% outputs.promotion.prNumber %}-test-mosquitto"
             sources:
-            - repoURL: "{% vars.gitRepo %}"
-              desiredRevision: "{% outputs.promotion.commit %}"
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
       # Auto-merge the PR after successful verification
       # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
-          repoURL: "{% vars.gitRepo %}"
-          prNumber: "{% outputs.promotion.prNumber %}"
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
       # Delete the source branch after merge
       # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
       # First, get the PR details to find the head branch name.
       - uses: http
         as: get-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
           method: GET
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/{% outputs.promotion.prNumber %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${% outputs.promotion.prNumber %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 200"
@@ -1250,15 +1250,15 @@ spec:
             fromExpression: "response.body.head.ref"
       - uses: http
         as: delete-branch
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
         retry:
           errorThreshold: 3
         config:
           method: DELETE
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/{% outputs['get-pr'].headRef %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${% outputs['get-pr'].headRef %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
@@ -1309,25 +1309,25 @@ spec:
       #     apps:
       #     - name: test-tank-monitor
       #       sources:
-      #       - repoURL: "{% vars.gitRepo %}"
-      #         desiredRevision: "{% outputs.promotion-orig.commit %}"
+      #       - repoURL: "${% vars.gitRepo %}"
+      #         desiredRevision: "${% outputs.promotion-orig.commit %}"
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/applications/tank-monitor/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
+          inPath: "${% vars.path_src %}/applications/tank-monitor/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: "{% vars.path_src %}/charts/config-generator"
+          path: "${% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -1338,16 +1338,16 @@ spec:
             - key: appName
               value: tank-monitor
           #valuesFiles:
-          #- "{% vars.path_src %}/config/test/tank-monitor-values.yaml"
-          #- "{% vars.path_src %}/applications/tank-monitor/values/test.yaml"
+          #- "${% vars.path_src %}/config/test/tank-monitor-values.yaml"
+          #- "${% vars.path_src %}/applications/tank-monitor/values/test.yaml"
       - uses: helm-template
         config:
           releaseName: "test-tank-monitor"
           namespace: "test-taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
-          path: "{% vars.path_src %}/applications/tank-monitor"
-          outPath: "{% vars.path_out %}/deploy/tank-monitor"
+          path: "${% vars.path_src %}/applications/tank-monitor"
+          outPath: "${% vars.path_out %}/deploy/tank-monitor"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -1366,40 +1366,40 @@ spec:
       # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
         as: argocd-verify
-        if: "{% outputs.promotion.prNumber != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" %}"
         retry:
           errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
-          - name: "pr-{% outputs.promotion.prNumber %}-test-tank-monitor"
+          - name: "pr-${% outputs.promotion.prNumber %}-test-tank-monitor"
             sources:
-            - repoURL: "{% vars.gitRepo %}"
-              desiredRevision: "{% outputs.promotion.commit %}"
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
       # Auto-merge the PR after successful verification
       # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
-          repoURL: "{% vars.gitRepo %}"
-          prNumber: "{% outputs.promotion.prNumber %}"
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
       # Delete the source branch after merge
       # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
       # First, get the PR details to find the head branch name.
       - uses: http
         as: get-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
           method: GET
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/{% outputs.promotion.prNumber %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${% outputs.promotion.prNumber %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 200"
@@ -1408,15 +1408,15 @@ spec:
             fromExpression: "response.body.head.ref"
       - uses: http
         as: delete-branch
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
         retry:
           errorThreshold: 3
         config:
           method: DELETE
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/{% outputs['get-pr'].headRef %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${% outputs['get-pr'].headRef %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
@@ -1467,25 +1467,25 @@ spec:
       #     apps:
       #     - name: test-tasmota-monitor
       #       sources:
-      #       - repoURL: "{% vars.gitRepo %}"
-      #         desiredRevision: "{% outputs.promotion-orig.commit %}"
+      #       - repoURL: "${% vars.gitRepo %}"
+      #         desiredRevision: "${% outputs.promotion-orig.commit %}"
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/applications/tasmota-monitor/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
+          inPath: "${% vars.path_src %}/applications/tasmota-monitor/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: "{% vars.path_src %}/charts/config-generator"
+          path: "${% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -1496,16 +1496,16 @@ spec:
             - key: appName
               value: tasmota-monitor
           #valuesFiles:
-          #- "{% vars.path_src %}/config/test/tasmota-monitor-values.yaml"
-          #- "{% vars.path_src %}/applications/tasmota-monitor/values/test.yaml"
+          #- "${% vars.path_src %}/config/test/tasmota-monitor-values.yaml"
+          #- "${% vars.path_src %}/applications/tasmota-monitor/values/test.yaml"
       - uses: helm-template
         config:
           releaseName: "test-tasmota-monitor"
           namespace: "test-taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
-          path: "{% vars.path_src %}/applications/tasmota-monitor"
-          outPath: "{% vars.path_out %}/deploy/tasmota-monitor"
+          path: "${% vars.path_src %}/applications/tasmota-monitor"
+          outPath: "${% vars.path_out %}/deploy/tasmota-monitor"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -1524,40 +1524,40 @@ spec:
       # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
         as: argocd-verify
-        if: "{% outputs.promotion.prNumber != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" %}"
         retry:
           errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
-          - name: "pr-{% outputs.promotion.prNumber %}-test-tasmota-monitor"
+          - name: "pr-${% outputs.promotion.prNumber %}-test-tasmota-monitor"
             sources:
-            - repoURL: "{% vars.gitRepo %}"
-              desiredRevision: "{% outputs.promotion.commit %}"
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
       # Auto-merge the PR after successful verification
       # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
-          repoURL: "{% vars.gitRepo %}"
-          prNumber: "{% outputs.promotion.prNumber %}"
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
       # Delete the source branch after merge
       # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
       # First, get the PR details to find the head branch name.
       - uses: http
         as: get-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
           method: GET
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/{% outputs.promotion.prNumber %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${% outputs.promotion.prNumber %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 200"
@@ -1566,15 +1566,15 @@ spec:
             fromExpression: "response.body.head.ref"
       - uses: http
         as: delete-branch
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
         retry:
           errorThreshold: 3
         config:
           method: DELETE
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/{% outputs['get-pr'].headRef %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${% outputs['get-pr'].headRef %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
@@ -1625,25 +1625,25 @@ spec:
       #     apps:
       #     - name: test-victoria-metrics-scott
       #       sources:
-      #       - repoURL: "{% vars.gitRepo %}"
-      #         desiredRevision: "{% outputs.promotion-orig.commit %}"
+      #       - repoURL: "${% vars.gitRepo %}"
+      #         desiredRevision: "${% outputs.promotion-orig.commit %}"
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/applications/victoria-metrics-scott/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
+          inPath: "${% vars.path_src %}/applications/victoria-metrics-scott/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: "{% vars.path_src %}/charts/config-generator"
+          path: "${% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -1654,16 +1654,16 @@ spec:
             - key: appName
               value: victoria-metrics-scott
           #valuesFiles:
-          #- "{% vars.path_src %}/config/test/victoria-metrics-scott-values.yaml"
-          #- "{% vars.path_src %}/applications/victoria-metrics-scott/values/test.yaml"
+          #- "${% vars.path_src %}/config/test/victoria-metrics-scott-values.yaml"
+          #- "${% vars.path_src %}/applications/victoria-metrics-scott/values/test.yaml"
       - uses: helm-template
         config:
           releaseName: "test-victoria-metrics-scott"
           namespace: "test-scott-monitoring"
           buildDependencies: true
           includeCRDs: true
-          path: "{% vars.path_src %}/applications/victoria-metrics-scott"
-          outPath: "{% vars.path_out %}/deploy/victoria-metrics-scott"
+          path: "${% vars.path_src %}/applications/victoria-metrics-scott"
+          outPath: "${% vars.path_out %}/deploy/victoria-metrics-scott"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -1682,40 +1682,40 @@ spec:
       # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
         as: argocd-verify
-        if: "{% outputs.promotion.prNumber != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" %}"
         retry:
           errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
-          - name: "pr-{% outputs.promotion.prNumber %}-test-victoria-metrics-scott"
+          - name: "pr-${% outputs.promotion.prNumber %}-test-victoria-metrics-scott"
             sources:
-            - repoURL: "{% vars.gitRepo %}"
-              desiredRevision: "{% outputs.promotion.commit %}"
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
       # Auto-merge the PR after successful verification
       # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
-          repoURL: "{% vars.gitRepo %}"
-          prNumber: "{% outputs.promotion.prNumber %}"
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
       # Delete the source branch after merge
       # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
       # First, get the PR details to find the head branch name.
       - uses: http
         as: get-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
           method: GET
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/{% outputs.promotion.prNumber %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${% outputs.promotion.prNumber %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 200"
@@ -1724,15 +1724,15 @@ spec:
             fromExpression: "response.body.head.ref"
       - uses: http
         as: delete-branch
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
         retry:
           errorThreshold: 3
         config:
           method: DELETE
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/{% outputs['get-pr'].headRef %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${% outputs['get-pr'].headRef %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
@@ -1783,25 +1783,25 @@ spec:
       #     apps:
       #     - name: test-victoria-metrics-taylor
       #       sources:
-      #       - repoURL: "{% vars.gitRepo %}"
-      #         desiredRevision: "{% outputs.promotion-orig.commit %}"
+      #       - repoURL: "${% vars.gitRepo %}"
+      #         desiredRevision: "${% outputs.promotion-orig.commit %}"
       - task:
           name: prepare-workdir 
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/applications/victoria-metrics-taylor/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
+          inPath: "${% vars.path_src %}/applications/victoria-metrics-taylor/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: "{% vars.path_src %}/charts/config-generator"
+          path: "${% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -1812,16 +1812,16 @@ spec:
             - key: appName
               value: victoria-metrics-taylor
           #valuesFiles:
-          #- "{% vars.path_src %}/config/test/victoria-metrics-taylor-values.yaml"
-          #- "{% vars.path_src %}/applications/victoria-metrics-taylor/values/test.yaml"
+          #- "${% vars.path_src %}/config/test/victoria-metrics-taylor-values.yaml"
+          #- "${% vars.path_src %}/applications/victoria-metrics-taylor/values/test.yaml"
       - uses: helm-template
         config:
           releaseName: "test-victoria-metrics"
           namespace: "test-taylor-monitoring"
           buildDependencies: true
           includeCRDs: true
-          path: "{% vars.path_src %}/applications/victoria-metrics-taylor"
-          outPath: "{% vars.path_out %}/deploy/victoria-metrics-taylor"
+          path: "${% vars.path_src %}/applications/victoria-metrics-taylor"
+          outPath: "${% vars.path_out %}/deploy/victoria-metrics-taylor"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -1840,40 +1840,40 @@ spec:
       # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
         as: argocd-verify
-        if: "{% outputs.promotion.prNumber != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" %}"
         retry:
           errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
-          - name: "pr-{% outputs.promotion.prNumber %}-test-victoria-metrics-taylor"
+          - name: "pr-${% outputs.promotion.prNumber %}-test-victoria-metrics-taylor"
             sources:
-            - repoURL: "{% vars.gitRepo %}"
-              desiredRevision: "{% outputs.promotion.commit %}"
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
       # Auto-merge the PR after successful verification
       # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
-          repoURL: "{% vars.gitRepo %}"
-          prNumber: "{% outputs.promotion.prNumber %}"
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
       # Delete the source branch after merge
       # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
       # First, get the PR details to find the head branch name.
       - uses: http
         as: get-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
           method: GET
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/{% outputs.promotion.prNumber %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${% outputs.promotion.prNumber %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 200"
@@ -1882,15 +1882,15 @@ spec:
             fromExpression: "response.body.head.ref"
       - uses: http
         as: delete-branch
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
         retry:
           errorThreshold: 3
         config:
           method: DELETE
-          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/{% outputs['get-pr'].headRef %}"
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${% outputs['get-pr'].headRef %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
