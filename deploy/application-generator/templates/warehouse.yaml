@@ -169,6 +169,11 @@ spec:
       - applications/tank-monitor
       # Alternate config strategy
       #- stages/**/tank-monitor-values.yaml
+  - image:
+      repoURL: us-central1-docker.pkg.dev/personal-356214/tank-monitor/tank-monitor
+      tagSelectionStrategy: Lexicographic
+      allowTags: ^\d{8}-[0-9a-f]{7}$
+      discoveryLimit: 10
 ---
 # Source: application-generator/templates/warehouse.yaml
 apiVersion: kargo.akuity.io/v1alpha1
@@ -188,6 +193,11 @@ spec:
       - applications/tasmota-monitor
       # Alternate config strategy
       #- stages/**/tasmota-monitor-values.yaml
+  - image:
+      repoURL: us-central1-docker.pkg.dev/personal-356214/tasmota-monitor/tasmota-monitor
+      tagSelectionStrategy: Lexicographic
+      allowTags: ^\d{8}-[0-9a-f]{7}$
+      discoveryLimit: 10
 ---
 # Source: application-generator/templates/warehouse.yaml
 apiVersion: kargo.akuity.io/v1alpha1

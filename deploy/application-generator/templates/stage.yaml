@@ -26,7 +26,7 @@ spec:
         value: ./out
       steps:
       - task:
-          name: prepare-workdir 
+          name: prepare-workdir
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
@@ -107,7 +107,7 @@ spec:
         value: ./out
       steps:
       - task:
-          name: prepare-workdir 
+          name: prepare-workdir
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
@@ -188,7 +188,7 @@ spec:
         value: ./out
       steps:
       - task:
-          name: prepare-workdir 
+          name: prepare-workdir
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
@@ -269,7 +269,7 @@ spec:
         value: ./out
       steps:
       - task:
-          name: prepare-workdir 
+          name: prepare-workdir
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
@@ -350,7 +350,7 @@ spec:
         value: ./out
       steps:
       - task:
-          name: prepare-workdir 
+          name: prepare-workdir
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
@@ -431,7 +431,7 @@ spec:
         value: ./out
       steps:
       - task:
-          name: prepare-workdir 
+          name: prepare-workdir
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
@@ -512,7 +512,7 @@ spec:
         value: ./out
       steps:
       - task:
-          name: prepare-workdir 
+          name: prepare-workdir
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
@@ -593,7 +593,7 @@ spec:
         value: ./out
       steps:
       - task:
-          name: prepare-workdir 
+          name: prepare-workdir
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
@@ -674,7 +674,14 @@ spec:
         value: ./out
       steps:
       - task:
-          name: prepare-workdir 
+          name: prepare-workdir
+      # Inject promoted image tag(s) into env-specific config before rendering
+      - uses: yaml-update
+        config:
+          path: ${{ vars.path_src }}/applications/tank-monitor/config/envs/prod/values.yaml
+          updates:
+          - key: image.tag
+            value: ${{ imageFrom "us-central1-docker.pkg.dev/personal-356214/tank-monitor/tank-monitor" ".Tag" }}
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
@@ -755,7 +762,14 @@ spec:
         value: ./out
       steps:
       - task:
-          name: prepare-workdir 
+          name: prepare-workdir
+      # Inject promoted image tag(s) into env-specific config before rendering
+      - uses: yaml-update
+        config:
+          path: ${{ vars.path_src }}/applications/tasmota-monitor/config/envs/prod/values.yaml
+          updates:
+          - key: image.tag
+            value: ${{ imageFrom "us-central1-docker.pkg.dev/personal-356214/tasmota-monitor/tasmota-monitor" ".Tag" }}
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
@@ -836,7 +850,7 @@ spec:
         value: ./out
       steps:
       - task:
-          name: prepare-workdir 
+          name: prepare-workdir
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
@@ -917,7 +931,7 @@ spec:
         value: ./out
       steps:
       - task:
-          name: prepare-workdir 
+          name: prepare-workdir
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
