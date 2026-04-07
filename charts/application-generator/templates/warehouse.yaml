@@ -22,6 +22,7 @@ spec:
 {{- range $app.imageSubscriptions }}
   - image:
       repoURL: {{ .repoURL }}
+      imageSelectionStrategy: {{ .tagSelectionStrategy | default "NewestBuild" }}
       tagSelectionStrategy: {{ .tagSelectionStrategy | default "NewestBuild" }}
       strictSemvers: false
 {{- if .allowTags }}
