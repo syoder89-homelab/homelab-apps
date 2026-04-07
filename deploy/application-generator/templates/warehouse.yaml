@@ -171,8 +171,9 @@ spec:
       #- stages/**/tank-monitor-values.yaml
   - image:
       repoURL: us-central1-docker.pkg.dev/personal-356214/tank-monitor/tank-monitor
-      tagSelectionStrategy: Lexicographic
-      allowTags: ^\d{8}-[0-9a-f]{7}$
+      tagSelectionStrategy: NewestBuild
+      strictSemvers: false
+      allowTags: ^[0-9]{8}-[0-9a-f]{7}$
       discoveryLimit: 10
 ---
 # Source: application-generator/templates/warehouse.yaml
@@ -195,8 +196,9 @@ spec:
       #- stages/**/tasmota-monitor-values.yaml
   - image:
       repoURL: us-central1-docker.pkg.dev/personal-356214/tasmota-monitor/tasmota-monitor
-      tagSelectionStrategy: Lexicographic
-      allowTags: ^\d{8}-[0-9a-f]{7}$
+      tagSelectionStrategy: NewestBuild
+      strictSemvers: false
+      allowTags: ^[0-9]{8}-[0-9a-f]{7}$
       discoveryLimit: 10
 ---
 # Source: application-generator/templates/warehouse.yaml
