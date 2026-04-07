@@ -2,3 +2,7 @@ image:
   repository: syoder89/tasmota-monitor
   tag: latest
 sensor: taylor_water_uv
+broker: tcp://mosquitto:1883
+vmPushURL: http://victoria-metrics-victoria-metrics-single-server:8428/api/v1/import/prometheus
+otlpEndpoint: tempo.observability:4317
+probeAddr: ":8080"
