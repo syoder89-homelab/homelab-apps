@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SENSOR
+          value: {{ .Values.sensor | quote }}
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            memory: 64Mi

@@ -1,0 +1,7 @@
+apiVersion: v2
+name: tasmota-monitor
+description: Umbrella Helm chart for tasmota-monitor - MQTT Tasmota energy sensor to VictoriaMetrics
+namespace: taylor-monitoring
+type: application
+version: "0.1.0"
+appVersion: "latest"

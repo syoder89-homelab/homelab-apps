@@ -1,0 +1,7 @@
+apiVersion: v2
+name: tank-monitor
+description: Umbrella Helm chart for tank-monitor - MQTT water level sensor to VictoriaMetrics
+namespace: taylor-monitoring
+type: application
+version: "0.1.0"
+appVersion: "latest"

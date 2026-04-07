@@ -1,0 +1,4 @@
+image:
+  repository: syoder89/tasmota-monitor
+  tag: latest
+sensor: taylor_water_uv
