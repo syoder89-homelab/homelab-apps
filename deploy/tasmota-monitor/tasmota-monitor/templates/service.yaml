@@ -1,0 +1,34 @@
+---
+# Source: tasmota-monitor/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-tasmota-monitor
+  namespace: test-taylor-monitoring
+  labels:
+    app: test-tasmota-monitor
+spec:
+  selector:
+    app: test-tasmota-monitor
+  ports:
+  - name: metrics
+    port: 8080
+    targetPort: metrics
+---
+# Source: tasmota-monitor/templates/service.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: test-tasmota-monitor
+  namespace: test-taylor-monitoring
+  labels:
+    app: test-tasmota-monitor
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: test-tasmota-monitor
+  endpoints:
+  - port: metrics
+    path: /metrics
+    interval: 30s
