@@ -171,6 +171,7 @@ spec:
       #- stages/**/tank-monitor-values.yaml
   - image:
       repoURL: us-central1-docker.pkg.dev/personal-356214/tank-monitor/tank-monitor
+      imageSelectionStrategy: NewestBuild
       tagSelectionStrategy: NewestBuild
       strictSemvers: false
       allowTags: ^[0-9]{8}-[0-9a-f]{7}$
@@ -196,6 +197,7 @@ spec:
       #- stages/**/tasmota-monitor-values.yaml
   - image:
       repoURL: us-central1-docker.pkg.dev/personal-356214/tasmota-monitor/tasmota-monitor
+      imageSelectionStrategy: NewestBuild
       tagSelectionStrategy: NewestBuild
       strictSemvers: false
       allowTags: ^[0-9]{8}-[0-9a-f]{7}$
