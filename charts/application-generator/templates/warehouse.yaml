@@ -22,7 +22,8 @@ spec:
 {{- range $app.imageSubscriptions }}
   - image:
       repoURL: {{ .repoURL }}
-      tagSelectionStrategy: {{ .tagSelectionStrategy | default "Lexicographic" }}
+      tagSelectionStrategy: {{ .tagSelectionStrategy | default "NewestBuild" }}
+      strictSemvers: false
 {{- if .allowTags }}
       allowTags: {{ .allowTags }}
 {{- end }}
