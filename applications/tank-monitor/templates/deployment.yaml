@@ -22,6 +22,37 @@ spec:
         env:
         - name: SENSOR
           value: {{ .Values.sensor | quote }}
+        - name: BROKER
+          value: {{ .Values.broker | quote }}
+        - name: VM_PUSH_URL
+          value: {{ .Values.vmPushURL | quote }}
+        - name: PROBE_ADDR
+          value: {{ .Values.probeAddr | quote }}
+        {{- if .Values.otlpEndpoint }}
+        - name: OTLP_ENDPOINT
+          value: {{ .Values.otlpEndpoint | quote }}
+        {{- end }}
+        ports:
+        - name: metrics
+          containerPort: 8080
+        startupProbe:
+          httpGet:
+            path: /startupz
+            port: metrics
+          failureThreshold: 30
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          periodSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: metrics
+          periodSeconds: 10
+          failureThreshold: 3
         resources:
           requests:
             cpu: 10m
