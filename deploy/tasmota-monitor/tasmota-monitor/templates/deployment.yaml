@@ -1,0 +1,32 @@
+---
+# Source: tasmota-monitor/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasmota-monitor
+  namespace: taylor-monitoring
+  labels:
+    app: tasmota-monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tasmota-monitor
+  template:
+    metadata:
+      labels:
+        app: tasmota-monitor
+    spec:
+      containers:
+      - name: tasmota-monitor
+        image: syoder89/tasmota-monitor:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SENSOR
+          value: "taylor_water_uv"
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            memory: 64Mi
