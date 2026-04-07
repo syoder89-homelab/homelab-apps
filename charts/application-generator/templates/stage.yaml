@@ -49,27 +49,27 @@ spec:
 {{- range $app.imageSubscriptions }}
       - uses: yaml-update
         config:
-          path: {{`${{ vars.path_src }}`}}/{{ dir $path }}/config/envs/{{ $env_name }}/values.yaml
+          path: "{% vars.path_src %}/{{ dir $path }}/config/envs/{{ $env_name }}/values.yaml"
           updates:
           - key: {{ .valuesKey | default "image.tag" }}
-            value: {{`${{ imageFrom "`}}{{ .repoURL }}{{`" ".Tag" }}`}}
+            value: '{% imageFrom("{{ .repoURL }}").Tag %}'
 {{- end }}
 {{- end }}
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: {{`${{ vars.path_src }}`}}/config
-          outPath: {{`${{ vars.path_src }}`}}/charts/config-generator/config/platform
+          inPath: "{% vars.path_src %}/config"
+          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: {{`${{ vars.path_src }}`}}/{{ dir $path }}/config
-          outPath: {{`${{ vars.path_src }}`}}/charts/config-generator/config/application
+          inPath: "{% vars.path_src %}/{{ dir $path }}/config"
+          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: {{`${{ vars.path_src }}`}}/charts/config-generator
+          path: "{% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -80,16 +80,16 @@ spec:
             - key: appName
               value: {{ $app.name }}
           #valuesFiles:
-          #- {{`${{ vars.path_src }}`}}/config/{{ $env_name }}/{{ $app.name }}-values.yaml
-          #- {{`${{ vars.path_src }}`}}/{{ dir $path }}/values/{{ $env_name }}.yaml
+          #- "{% vars.path_src %}/config/{{ $env_name }}/{{ $app.name }}-values.yaml"
+          #- "{% vars.path_src %}/{{ dir $path }}/values/{{ $env_name }}.yaml"
       - uses: helm-template
         config:
           releaseName: {{ $app.releaseName | default $app.name }}
           namespace: {{ $app.namespace | default $app.name }}
           buildDependencies: true
           includeCRDs: true
-          path: {{`${{ vars.path_src }}`}}/{{ dir $path }}
-          outPath: {{`${{ vars.path_out }}`}}/deploy/{{ $app.name }}
+          path: "{% vars.path_src %}/{{ dir $path }}"
+          outPath: "{% vars.path_out %}/deploy/{{ $app.name }}"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -105,8 +105,8 @@ spec:
           apps:
           - name: {{ $env_name }}-{{ $app.name }}
             sources:
-            - repoURL: {{`${{ vars.gitRepo }}`}}
-              desiredRevision: {{`${{ outputs.promotion.commit }}`}}
+            - repoURL: "{% vars.gitRepo %}"
+              desiredRevision: "{% outputs.promotion.commit %}"
 {{- end }}
 {{- end }}
 {{- end }}
