@@ -1,0 +1,3 @@
+image:
+  repository: us-central1-docker.pkg.dev/personal-356214/tasmota-monitor/tasmota-monitor
+  tag: "20260406-d41a4fd"

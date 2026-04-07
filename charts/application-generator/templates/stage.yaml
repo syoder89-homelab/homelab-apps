@@ -44,6 +44,17 @@ spec:
       steps:
       - task:
           name: prepare-workdir 
+{{- if $app.imageSubscriptions }}
+      # Inject promoted image tag(s) into env-specific config before rendering
+{{- range $app.imageSubscriptions }}
+      - uses: yaml-update
+        config:
+          path: {{`${{ vars.path_src }}`}}/{{ dir $path }}/config/envs/{{ $env_name }}/values.yaml
+          updates:
+          - key: {{ .valuesKey | default "image.tag" }}
+            value: {{`${{ imageFrom "`}}{{ .repoURL }}{{`" ".Tag" }}`}}
+{{- end }}
+{{- end }}
       # The config-generator chart needs access to the config manifests
       # Copy config manifests into config-generator chart
       - uses: copy

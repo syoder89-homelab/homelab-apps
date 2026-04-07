@@ -5,3 +5,10 @@ namespace: taylor-monitoring
 type: application
 version: "0.1.0"
 appVersion: "latest"
+
+imageSubscriptions:
+- repoURL: us-central1-docker.pkg.dev/personal-356214/tasmota-monitor/tasmota-monitor
+  tagSelectionStrategy: Lexicographic
+  allowTags: ^\d{8}-[0-9a-f]{7}$
+  discoveryLimit: 10
+  valuesKey: image.tag

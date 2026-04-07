@@ -18,4 +18,15 @@ spec:
       - {{ dir $path }}
       # Alternate config strategy
       #- stages/**/{{ $app.name }}-values.yaml
+{{- if $app.imageSubscriptions }}
+{{- range $app.imageSubscriptions }}
+  - image:
+      repoURL: {{ .repoURL }}
+      tagSelectionStrategy: {{ .tagSelectionStrategy | default "Lexicographic" }}
+{{- if .allowTags }}
+      allowTags: {{ .allowTags }}
+{{- end }}
+      discoveryLimit: {{ .discoveryLimit | default 10 }}
+{{- end }}
+{{- end }}
 {{- end }}
