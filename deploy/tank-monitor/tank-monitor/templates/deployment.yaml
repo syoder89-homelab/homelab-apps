@@ -19,11 +19,40 @@ spec:
     spec:
       containers:
       - name: tank-monitor
-        image: us-central1-docker.pkg.dev/personal-356214/tank-monitor/tank-monitor:20260407-dc430b5
+        image: us-central1-docker.pkg.dev/personal-356214/tank-monitor/tank-monitor:20260407-12701ef
         imagePullPolicy: IfNotPresent
         env:
         - name: SENSOR
           value: "taylor_water_tank_level1"
+        - name: BROKER
+          value: "tcp://mosquitto:1883"
+        - name: VM_PUSH_URL
+          value: "http://victoria-metrics-victoria-metrics-single-server:8428/api/v1/import/prometheus"
+        - name: PROBE_ADDR
+          value: ":8080"
+        - name: OTLP_ENDPOINT
+          value: "tempo.observability:4317"
+        ports:
+        - name: metrics
+          containerPort: 8080
+        startupProbe:
+          httpGet:
+            path: /startupz
+            port: metrics
+          failureThreshold: 30
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          periodSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: metrics
+          periodSeconds: 10
+          failureThreshold: 3
         resources:
           requests:
             cpu: 10m
