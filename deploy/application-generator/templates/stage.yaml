@@ -651,6 +651,168 @@ spec:
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
+  name: prod-tank-monitor
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: tank-monitor
+    sources:
+      stages:
+      - test-tank-monitor
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/prod/tank-monitor
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/tank-monitor/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: envName
+              value: prod
+            - key: envType
+              value: prod
+            - key: appName
+              value: tank-monitor
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/prod/tank-monitor-values.yaml
+          #- ${{ vars.path_src }}/applications/tank-monitor/values/prod.yaml
+      - uses: helm-template
+        config:
+          releaseName: tank-monitor
+          namespace: taylor-monitoring
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/tank-monitor
+          outPath: ${{ vars.path_out }}/deploy/tank-monitor
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: targetBranch
+          value: env/prod/tank-monitor
+      - uses: argocd-update
+        config:
+          apps:
+          - name: prod-tank-monitor
+            sources:
+            - repoURL: ${{ vars.gitRepo }}
+              desiredRevision: ${{ outputs.promotion.commit }}
+---
+# Source: application-generator/templates/stage.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod-tasmota-monitor
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: tasmota-monitor
+    sources:
+      stages:
+      - test-tasmota-monitor
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/prod/tasmota-monitor
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/platform
+      - uses: copy
+        config:
+          inPath: ${{ vars.path_src }}/applications/tasmota-monitor/config
+          outPath: ${{ vars.path_src }}/charts/config-generator/config/application
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: ${{ vars.path_src }}/charts/config-generator
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: envName
+              value: prod
+            - key: envType
+              value: prod
+            - key: appName
+              value: tasmota-monitor
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/prod/tasmota-monitor-values.yaml
+          #- ${{ vars.path_src }}/applications/tasmota-monitor/values/prod.yaml
+      - uses: helm-template
+        config:
+          releaseName: tasmota-monitor
+          namespace: taylor-monitoring
+          buildDependencies: true
+          includeCRDs: true
+          path: ${{ vars.path_src }}/applications/tasmota-monitor
+          outPath: ${{ vars.path_out }}/deploy/tasmota-monitor
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: targetBranch
+          value: env/prod/tasmota-monitor
+      - uses: argocd-update
+        config:
+          apps:
+          - name: prod-tasmota-monitor
+            sources:
+            - repoURL: ${{ vars.gitRepo }}
+              desiredRevision: ${{ outputs.promotion.commit }}
+---
+# Source: application-generator/templates/stage.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
   name: prod-victoria-metrics-scott
   namespace: homelab-apps
 spec:

@@ -1267,6 +1267,322 @@ spec:
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
+  name: test-tank-monitor
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: tank-monitor
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/test/tank-monitor
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: env/test/tank-monitor
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: test-tank-monitor
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion-orig.commit }}
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: "${{ vars.path_src }}/config"
+          outPath: "${{ vars.path_src }}/charts/config-generator/config/platform"
+      - uses: copy
+        config:
+          inPath: "${{ vars.path_src }}/applications/tank-monitor/config"
+          outPath: "${{ vars.path_src }}/charts/config-generator/config/application"
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: "${{ vars.path_src }}/charts/config-generator"
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: envName
+              value: test
+            - key: envType
+              value: test
+            - key: appName
+              value: tank-monitor
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/test/tank-monitor-values.yaml
+          #- ${{ vars.path_src }}/applications/tank-monitor/values/test.yaml
+      - uses: helm-template
+        config:
+          releaseName: "test-tank-monitor"
+          namespace: "test-taylor-monitoring"
+          buildDependencies: true
+          includeCRDs: true
+          path: "${{ vars.path_src }}/applications/tank-monitor"
+          outPath: "${{ vars.path_out }}/deploy/tank-monitor"
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: waitForPR
+          value: "false"
+        - name: targetBranch
+          value: "env/test/tank-monitor"
+      # Verify the ephemeral deployment via ArgoCD
+      # High errorThreshold (60) ensures retries span the full timeout window,
+      # since each "app not found" check is near-instant during the
+      # ApplicationSet polling delay (up to 60s for PR detection).
+      - uses: argocd-update
+        as: argocd-verify
+        if: ${{ outputs.promotion.prNumber != "" }}
+        retry:
+          errorThreshold: 60
+          timeout: 10m0s
+        config:
+          apps:
+          - name: "pr-${{ outputs.promotion.prNumber }}-test-tank-monitor"
+            sources:
+            - repoURL: "${{ vars.gitRepo }}"
+              desiredRevision: "${{ outputs.promotion.commit }}"
+      # Auto-merge the PR after successful verification
+      # Only runs if argocd-update succeeded — prevents merging on failed deployments
+      - uses: git-merge-pr
+        as: merge-pr
+        if: ${{ outputs.promotion.prNumber != "" && status("argocd-verify") == "Succeeded" }}
+        retry:
+          errorThreshold: 3
+        config:
+          repoURL: "${{ vars.gitRepo }}"
+          prNumber: ${{ outputs.promotion.prNumber }}
+      # Delete the source branch after merge
+      # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
+      # First, get the PR details to find the head branch name.
+      - uses: http
+        as: get-pr
+        if: ${{ outputs.promotion.prNumber != "" && status("merge-pr") == "Succeeded" }}
+        retry:
+          errorThreshold: 3
+        config:
+          method: GET
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${{ outputs.promotion.prNumber }}"
+          headers:
+          - name: Authorization
+            value: "Bearer ${{ secret('kargo-github-pat').password }}"
+          - name: Accept
+            value: "application/vnd.github.v3+json"
+          successExpression: "response.status == 200"
+          outputs:
+          - name: headRef
+            fromExpression: "response.body.head.ref"
+      - uses: http
+        as: delete-branch
+        if: ${{ outputs.promotion.prNumber != "" && status("get-pr") == "Succeeded" && outputs['get-pr'].headRef != "" }}
+        retry:
+          errorThreshold: 3
+        config:
+          method: DELETE
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${{ outputs['get-pr'].headRef }}"
+          headers:
+          - name: Authorization
+            value: "Bearer ${{ secret('kargo-github-pat').password }}"
+          - name: Accept
+            value: "application/vnd.github.v3+json"
+          successExpression: "response.status == 204 || response.status == 422"
+---
+# Source: application-generator/templates/stage-ephemeral.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test-tasmota-monitor
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: tasmota-monitor
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/test/tasmota-monitor
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: env/test/tasmota-monitor
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: test-tasmota-monitor
+      #       sources:
+      #       - repoURL: ${{ vars.gitRepo }}
+      #         desiredRevision: ${{ outputs.promotion-orig.commit }}
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: "${{ vars.path_src }}/config"
+          outPath: "${{ vars.path_src }}/charts/config-generator/config/platform"
+      - uses: copy
+        config:
+          inPath: "${{ vars.path_src }}/applications/tasmota-monitor/config"
+          outPath: "${{ vars.path_src }}/charts/config-generator/config/application"
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: "${{ vars.path_src }}/charts/config-generator"
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: envName
+              value: test
+            - key: envType
+              value: test
+            - key: appName
+              value: tasmota-monitor
+          #valuesFiles:
+          #- ${{ vars.path_src }}/config/test/tasmota-monitor-values.yaml
+          #- ${{ vars.path_src }}/applications/tasmota-monitor/values/test.yaml
+      - uses: helm-template
+        config:
+          releaseName: "test-tasmota-monitor"
+          namespace: "test-taylor-monitoring"
+          buildDependencies: true
+          includeCRDs: true
+          path: "${{ vars.path_src }}/applications/tasmota-monitor"
+          outPath: "${{ vars.path_out }}/deploy/tasmota-monitor"
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: waitForPR
+          value: "false"
+        - name: targetBranch
+          value: "env/test/tasmota-monitor"
+      # Verify the ephemeral deployment via ArgoCD
+      # High errorThreshold (60) ensures retries span the full timeout window,
+      # since each "app not found" check is near-instant during the
+      # ApplicationSet polling delay (up to 60s for PR detection).
+      - uses: argocd-update
+        as: argocd-verify
+        if: ${{ outputs.promotion.prNumber != "" }}
+        retry:
+          errorThreshold: 60
+          timeout: 10m0s
+        config:
+          apps:
+          - name: "pr-${{ outputs.promotion.prNumber }}-test-tasmota-monitor"
+            sources:
+            - repoURL: "${{ vars.gitRepo }}"
+              desiredRevision: "${{ outputs.promotion.commit }}"
+      # Auto-merge the PR after successful verification
+      # Only runs if argocd-update succeeded — prevents merging on failed deployments
+      - uses: git-merge-pr
+        as: merge-pr
+        if: ${{ outputs.promotion.prNumber != "" && status("argocd-verify") == "Succeeded" }}
+        retry:
+          errorThreshold: 3
+        config:
+          repoURL: "${{ vars.gitRepo }}"
+          prNumber: ${{ outputs.promotion.prNumber }}
+      # Delete the source branch after merge
+      # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
+      # First, get the PR details to find the head branch name.
+      - uses: http
+        as: get-pr
+        if: ${{ outputs.promotion.prNumber != "" && status("merge-pr") == "Succeeded" }}
+        retry:
+          errorThreshold: 3
+        config:
+          method: GET
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${{ outputs.promotion.prNumber }}"
+          headers:
+          - name: Authorization
+            value: "Bearer ${{ secret('kargo-github-pat').password }}"
+          - name: Accept
+            value: "application/vnd.github.v3+json"
+          successExpression: "response.status == 200"
+          outputs:
+          - name: headRef
+            fromExpression: "response.body.head.ref"
+      - uses: http
+        as: delete-branch
+        if: ${{ outputs.promotion.prNumber != "" && status("get-pr") == "Succeeded" && outputs['get-pr'].headRef != "" }}
+        retry:
+          errorThreshold: 3
+        config:
+          method: DELETE
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${{ outputs['get-pr'].headRef }}"
+          headers:
+          - name: Authorization
+            value: "Bearer ${{ secret('kargo-github-pat').password }}"
+          - name: Accept
+            value: "application/vnd.github.v3+json"
+          successExpression: "response.status == 204 || response.status == 422"
+---
+# Source: application-generator/templates/stage-ephemeral.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
   name: test-victoria-metrics-scott
   namespace: homelab-apps
 spec:
