@@ -36,17 +36,17 @@ spec:
       # Copy config manifests into config-generator chart
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/platform"
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
       - uses: copy
         config:
-          inPath: "{% vars.path_src %}/{{ dir $path }}/config"
-          outPath: "{% vars.path_src %}/charts/config-generator/config/application"
+          inPath: "${% vars.path_src %}/{{ dir $path }}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
       # Render the config files from templates
       - uses: helm-template
         config:
           releaseName: config-generator
-          path: "{% vars.path_src %}/charts/config-generator"
+          path: "${% vars.path_src %}/charts/config-generator"
           outLayout: flat
           outPath: /tmp/values.yaml
           setValues:
@@ -62,8 +62,8 @@ spec:
           namespace: "{{ $env_name }}-{{ $app.namespace | default $app.name }}"
           buildDependencies: true
           includeCRDs: true
-          path: "{% vars.path_src %}/{{ dir $path }}"
-          outPath: "{% vars.path_out %}/deploy/{{ $app.name }}"
+          path: "${% vars.path_src %}/{{ dir $path }}"
+          outPath: "${% vars.path_out %}/deploy/{{ $app.name }}"
           valuesFiles:
           - /tmp/values.yaml
       - task:
@@ -82,40 +82,40 @@ spec:
       # ApplicationSet polling delay (up to 60s for PR detection).
       - uses: argocd-update
         as: argocd-verify
-        if: "{% outputs.promotion.prNumber != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" %}"
         retry:
           errorThreshold: 60
           timeout: 10m0s
         config:
           apps:
-          - name: "pr-{% outputs.promotion.prNumber %}-{{ $env_name }}-{{ $app.name }}"
+          - name: "pr-${% outputs.promotion.prNumber %}-{{ $env_name }}-{{ $app.name }}"
             sources:
-            - repoURL: "{% vars.gitRepo %}"
-              desiredRevision: "{% outputs.promotion.commit %}"
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
       # Auto-merge the PR after successful verification
       # Only runs if argocd-update succeeded — prevents merging on failed deployments
       - uses: git-merge-pr
         as: merge-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
-          repoURL: "{% vars.gitRepo %}"
-          prNumber: "{% outputs.promotion.prNumber %}"
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
       # Delete the source branch after merge
       # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
       # First, get the PR details to find the head branch name.
       - uses: http
         as: get-pr
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
         retry:
           errorThreshold: 3
         config:
           method: GET
-          url: "https://api.github.com/repos/{{ $.Values.repo.orgName }}/{{ $.Values.repo.repoName }}/pulls/{% outputs.promotion.prNumber %}"
+          url: "https://api.github.com/repos/{{ $.Values.repo.orgName }}/{{ $.Values.repo.repoName }}/pulls/${% outputs.promotion.prNumber %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 200"
@@ -124,15 +124,15 @@ spec:
             fromExpression: "response.body.head.ref"
       - uses: http
         as: delete-branch
-        if: "{% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
         retry:
           errorThreshold: 3
         config:
           method: DELETE
-          url: "https://api.github.com/repos/{{ $.Values.repo.orgName }}/{{ $.Values.repo.repoName }}/git/refs/heads/{% outputs['get-pr'].headRef %}"
+          url: "https://api.github.com/repos/{{ $.Values.repo.orgName }}/{{ $.Values.repo.repoName }}/git/refs/heads/${% outputs['get-pr'].headRef %}"
           headers:
           - name: Authorization
-            value: "Bearer {% secret('kargo-github-pat').password %}"
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
           - name: Accept
             value: "application/vnd.github.v3+json"
           successExpression: "response.status == 204 || response.status == 422"
