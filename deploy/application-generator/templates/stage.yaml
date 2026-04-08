@@ -70,6 +70,8 @@ spec:
         vars:
         - name: asPR
           value: "true"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: env/prod/frigate
       - uses: argocd-update
@@ -151,6 +153,8 @@ spec:
         vars:
         - name: asPR
           value: "true"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: env/prod/grafana-scott
       - uses: argocd-update
@@ -232,6 +236,8 @@ spec:
         vars:
         - name: asPR
           value: "true"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: env/prod/grafana-taylor
       - uses: argocd-update
@@ -313,6 +319,8 @@ spec:
         vars:
         - name: asPR
           value: "true"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: env/prod/home-assistant
       - uses: argocd-update
@@ -394,6 +402,8 @@ spec:
         vars:
         - name: asPR
           value: "true"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: env/prod/influxdb-scott
       - uses: argocd-update
@@ -475,6 +485,8 @@ spec:
         vars:
         - name: asPR
           value: "true"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: env/prod/kargo-config
       - uses: argocd-update
@@ -556,6 +568,8 @@ spec:
         vars:
         - name: asPR
           value: "true"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: env/prod/mosquitto-taylor
       - uses: argocd-update
@@ -637,6 +651,8 @@ spec:
         vars:
         - name: asPR
           value: "true"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: env/prod/mosquitto
       - uses: argocd-update
@@ -725,6 +741,8 @@ spec:
         vars:
         - name: asPR
           value: "true"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: env/prod/tank-monitor
       - uses: argocd-update
@@ -813,6 +831,8 @@ spec:
         vars:
         - name: asPR
           value: "true"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: env/prod/tasmota-monitor
       - uses: argocd-update
@@ -894,6 +914,8 @@ spec:
         vars:
         - name: asPR
           value: "true"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: env/prod/victoria-metrics-scott
       - uses: argocd-update
@@ -975,6 +997,8 @@ spec:
         vars:
         - name: asPR
           value: "true"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: env/prod/victoria-metrics-taylor
       - uses: argocd-update
