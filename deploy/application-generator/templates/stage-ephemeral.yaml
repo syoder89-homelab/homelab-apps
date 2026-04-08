@@ -94,6 +94,8 @@ spec:
           value: "true"
         - name: waitForPR
           value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: "env/test/frigate"
       # Verify the ephemeral deployment via ArgoCD
@@ -252,6 +254,8 @@ spec:
           value: "true"
         - name: waitForPR
           value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: "env/test/grafana-scott"
       # Verify the ephemeral deployment via ArgoCD
@@ -410,6 +414,8 @@ spec:
           value: "true"
         - name: waitForPR
           value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: "env/test/grafana-taylor"
       # Verify the ephemeral deployment via ArgoCD
@@ -568,6 +574,8 @@ spec:
           value: "true"
         - name: waitForPR
           value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: "env/test/home-assistant"
       # Verify the ephemeral deployment via ArgoCD
@@ -726,6 +734,8 @@ spec:
           value: "true"
         - name: waitForPR
           value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: "env/test/influxdb-scott"
       # Verify the ephemeral deployment via ArgoCD
@@ -884,6 +894,8 @@ spec:
           value: "true"
         - name: waitForPR
           value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: "env/test/kargo-config"
       # Verify the ephemeral deployment via ArgoCD
@@ -1042,6 +1054,8 @@ spec:
           value: "true"
         - name: waitForPR
           value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: "env/test/mosquitto-taylor"
       # Verify the ephemeral deployment via ArgoCD
@@ -1200,6 +1214,8 @@ spec:
           value: "true"
         - name: waitForPR
           value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: "env/test/mosquitto"
       # Verify the ephemeral deployment via ArgoCD
@@ -1358,6 +1374,8 @@ spec:
           value: "true"
         - name: waitForPR
           value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: "env/test/tank-monitor"
       # Verify the ephemeral deployment via ArgoCD
@@ -1516,6 +1534,8 @@ spec:
           value: "true"
         - name: waitForPR
           value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: "env/test/tasmota-monitor"
       # Verify the ephemeral deployment via ArgoCD
@@ -1674,6 +1694,8 @@ spec:
           value: "true"
         - name: waitForPR
           value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: "env/test/victoria-metrics-scott"
       # Verify the ephemeral deployment via ArgoCD
@@ -1832,6 +1854,8 @@ spec:
           value: "true"
         - name: waitForPR
           value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: "env/test/victoria-metrics-taylor"
       # Verify the ephemeral deployment via ArgoCD
