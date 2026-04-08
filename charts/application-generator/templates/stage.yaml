@@ -98,6 +98,8 @@ spec:
         vars:
         - name: asPR
           value: "{{ $env.asPR }}"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: {{ $env.targetBranchPrefix }}/{{ $app.name }}
       - uses: argocd-update

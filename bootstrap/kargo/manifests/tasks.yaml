@@ -52,6 +52,8 @@ spec:
     value: ./src
   - name: path_out
     value: ./out
+  - name: commitMessage
+    value: ""
   - name: asPR
     value: "false"
   - name: waitForPR
@@ -62,7 +64,7 @@ spec:
       as: commit
       config:
         path: ${{ vars.path_out }}
-        message: "${{ commitFrom(vars.gitRepo)?.Message ?? 'Update' }} [skip ci]"
+        message: "${{ vars.commitMessage != '' ? 'Promote to ' + ctx.stage + ': ' + vars.commitMessage + ' [skip ci]' : 'Promote to ' + ctx.stage + ' [skip ci]' }}"
     - uses: git-push
       if: ${{ vars.asPR != "true" && status("commit") == 'Succeeded' }}
       config:

@@ -64,6 +64,8 @@ spec:
         vars:
         - name: asPR
           value: "true"
+        - name: commitMessage
+          value: "${{ commitFrom(vars.gitRepo)?.Message ?? '' }}"
       - uses: argocd-update
         config:
           apps:

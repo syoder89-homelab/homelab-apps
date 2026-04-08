@@ -98,6 +98,8 @@ spec:
           value: "{{ $env.asPR }}"
         - name: waitForPR
           value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
           value: "{{ $env.targetBranchPrefix }}/{{ $app.name }}"
       # Verify the ephemeral deployment via ArgoCD
