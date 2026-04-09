@@ -40,24 +40,14 @@ data:
         barn_front:
           - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.204:554/cam/realmonitor?channel=1&subtype=0
           #- "ffmpeg:barn_front#video=vp9"
-        barn_front_sub2:
-          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.204:554/cam/realmonitor?channel=1&subtype=2
         house_front:
           - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.109:554/cam/realmonitor?channel=1&subtype=0
-        house_front_sub2:
-          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.109:554/cam/realmonitor?channel=1&subtype=2
         house_south:
           - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.101:554/cam/realmonitor?channel=1&subtype=0
-        house_south_sub2:
-          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.101:554/cam/realmonitor?channel=1&subtype=2
         house_west:
           - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.163:554/cam/realmonitor?channel=1&subtype=0
-        house_west_sub2:
-          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.163:554/cam/realmonitor?channel=1&subtype=2
         indoor1:
           - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.171:554/cam/realmonitor?channel=1&subtype=0
-        indoor1_sub2:
-          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.171:554/cam/realmonitor?channel=1&subtype=1
     objects:
       #mask:
       #  - 0,336,808,285,827,343,0,509
@@ -145,11 +135,11 @@ data:
           contour_area: 60
         ffmpeg:
           inputs:
-            - path: rtsp://127.0.0.1:8554/barn_front
+            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.204:554/cam/realmonitor?channel=1&subtype=0
               input_args: preset-rtsp-generic
               roles:
                 - record
-            - path: rtsp://127.0.0.1:8554/barn_front_sub2
+            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.204:554/cam/realmonitor?channel=1&subtype=2
               input_args: preset-rtsp-generic
               roles:
                 - detect
@@ -213,11 +203,11 @@ data:
         #     - 1920,220,1920,379,421,150,506,61
         ffmpeg:
           inputs:
-            - path: rtsp://127.0.0.1:8554/house_front
+            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.109:554/cam/realmonitor?channel=1&subtype=0
               input_args: preset-rtsp-generic
               roles:
                 - record
-            - path: rtsp://127.0.0.1:8554/house_front_sub2
+            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.109:554/cam/realmonitor?channel=1&subtype=2
               input_args: preset-rtsp-generic
               roles:
                 - detect
@@ -251,11 +241,11 @@ data:
           enabled: true
         ffmpeg:
           inputs:
-            - path: rtsp://127.0.0.1:8554/house_south
+            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.101:554/cam/realmonitor?channel=1&subtype=0
               input_args: preset-rtsp-generic
               roles:
                 - record
-            - path: rtsp://127.0.0.1:8554/house_south_sub2
+            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.101:554/cam/realmonitor?channel=1&subtype=2
               input_args: preset-rtsp-generic
               roles:
                 - detect
@@ -278,11 +268,11 @@ data:
           enabled: true
         ffmpeg:
           inputs:
-            - path: rtsp://127.0.0.1:8554/house_west
+            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.163:554/cam/realmonitor?channel=1&subtype=0
               input_args: preset-rtsp-generic
               roles:
                 - record
-            - path: rtsp://127.0.0.1:8554/house_west_sub2
+            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.163:554/cam/realmonitor?channel=1&subtype=2
               input_args: preset-rtsp-generic
               roles:
                 - detect
@@ -310,11 +300,11 @@ data:
           enabled: true
         ffmpeg:
           inputs:
-            - path: rtsp://127.0.0.1:8554/indoor1
+            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.171:554/cam/realmonitor?channel=1&subtype=0
               input_args: preset-rtsp-generic
               roles:
                 - record
-            - path: rtsp://127.0.0.1:8554/indoor1_sub2
+            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.171:554/cam/realmonitor?channel=1&subtype=1
               input_args: preset-rtsp-generic
               roles:
                 - detect

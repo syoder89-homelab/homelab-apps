@@ -25,7 +25,7 @@ spec:
         app.kubernetes.io/name: frigate
         app.kubernetes.io/instance: frigate
       annotations:
-        checksum/configmap: 7cf523326dc2e2d912f3841e8845951d4d339c611a63bd7a48e8a580e9531513
+        checksum/configmap: f9ece7c66101b078087b4206a61925cf92a271d4d51dfbb30e1f1073cc0e1eb3
     spec:
       initContainers:
         - name: copy-config
