@@ -25,7 +25,7 @@ spec:
         app.kubernetes.io/name: frigate
         app.kubernetes.io/instance: frigate
       annotations:
-        checksum/configmap: 1757238ff975248d1728ef05b2e0105fe30045928e9ab1d5427dd4f8465bb71d
+        checksum/configmap: 7cf523326dc2e2d912f3841e8845951d4d339c611a63bd7a48e8a580e9531513
     spec:
       initContainers:
         - name: copy-config
@@ -97,6 +97,8 @@ spec:
               mountPath: /dev/shm
             - name: tmp
               mountPath: /tmp
+            - mountPath: /dev/dri
+              name: dri
           resources:
             limits:
               cpu: 3
@@ -125,3 +127,6 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
+        - hostPath:
+            path: /dev/dri
+          name: dri
