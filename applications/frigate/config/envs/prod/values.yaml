@@ -29,6 +29,13 @@ frigate:
       skipuninstall: true
   coral:
     enabled: true
+  extraVolumes:
+    - name: dri
+      hostPath:
+        path: /dev/dri
+  extraVolumeMounts:
+    - name: dri
+      mountPath: /dev/dri
   config: |
     #auth:
     #  reset_admin_password: true
@@ -102,12 +109,12 @@ frigate:
         retain:
           days: 30
           mode: motion
-    #ffmpeg:
-    #  hwaccel_args: preset-vaapi
+    ffmpeg:
+      hwaccel_args: preset-vaapi
     birdseye:
       enabled: false
       mode: continuous
-      restream: true
+      restream: false
     cameras:
       # Define at least one camera
       barn_front:
