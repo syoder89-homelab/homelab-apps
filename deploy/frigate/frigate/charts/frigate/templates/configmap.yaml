@@ -321,4 +321,4 @@ data:
         detect:
           width: 640
           height: 480
-    version: 0.14
+    version: 0.17

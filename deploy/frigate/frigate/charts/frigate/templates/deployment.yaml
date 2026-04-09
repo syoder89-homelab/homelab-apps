@@ -25,7 +25,7 @@ spec:
         app.kubernetes.io/name: frigate
         app.kubernetes.io/instance: frigate
       annotations:
-        checksum/configmap: 211213620dce346e2582cec1db70618081c40c880c28e22629c621bd521031c9
+        checksum/configmap: 1757238ff975248d1728ef05b2e0105fe30045928e9ab1d5427dd4f8465bb71d
     spec:
       initContainers:
         - name: copy-config
@@ -38,7 +38,7 @@ spec:
              name: config-yml
       containers:
         - name: frigate
-          image: "ghcr.io/blakeblackshear/frigate:0.16.4"
+          image: "ghcr.io/blakeblackshear/frigate:0.17.1"
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: true
