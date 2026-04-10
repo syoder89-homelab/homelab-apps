@@ -26,6 +26,9 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
       containers:
       - name: stock-ticker
         image: us-central1-docker.pkg.dev/personal-356214/stock-ticker/stock-ticker:20260410-b3091f6
