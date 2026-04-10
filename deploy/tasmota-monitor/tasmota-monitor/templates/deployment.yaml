@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: tasmota-monitor
-        image: us-central1-docker.pkg.dev/personal-356214/tasmota-monitor/tasmota-monitor:20260407-5b11dca
+        image: us-central1-docker.pkg.dev/personal-356214/tasmota-monitor/tasmota-monitor:20260410-9128f06
         imagePullPolicy: IfNotPresent
         env:
         - name: SENSOR
