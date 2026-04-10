@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: tank-monitor
-        image: us-central1-docker.pkg.dev/personal-356214/tank-monitor/tank-monitor:20260407-12701ef
+        image: us-central1-docker.pkg.dev/personal-356214/tank-monitor/tank-monitor:20260410-4209f63
         imagePullPolicy: IfNotPresent
         env:
         - name: SENSOR
