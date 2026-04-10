@@ -1,0 +1,13 @@
+apiVersion: v2
+name: stock-ticker
+description: Umbrella Helm chart for stock-ticker - Alpha Vantage stock price API
+namespace: stock-ticker
+type: application
+version: "0.1.0"
+appVersion: "latest"
+
+imageSubscriptions:
+- repoURL: us-central1-docker.pkg.dev/personal-356214/stock-ticker/stock-ticker
+  allowTags: ^[0-9]{8}-[0-9a-f]{7}$
+  discoveryLimit: 10
+  valuesKey: image.tag

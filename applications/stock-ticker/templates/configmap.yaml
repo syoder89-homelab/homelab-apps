@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+data:
+  SYMBOL: {{ .Values.symbol | quote }}
+  NDAYS: {{ .Values.ndays | quote }}
+  {{- if .Values.otlpEndpoint }}
+  OTLP_ENDPOINT: {{ .Values.otlpEndpoint | quote }}
+  {{- end }}

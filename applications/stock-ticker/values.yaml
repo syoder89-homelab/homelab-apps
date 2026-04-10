@@ -1,0 +1,21 @@
+image:
+  repository: us-central1-docker.pkg.dev/personal-356214/stock-ticker/stock-ticker
+  tag: latest
+
+symbol: MSFT
+ndays: "7"
+apiCredentialsItemName: stock-ticker-api-credentials
+otlpEndpoint: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  host: stock-ticker.example.com
+  path: /
+  pathType: Prefix
+  tls: []

@@ -1,0 +1,9 @@
+image:
+  repository: us-central1-docker.pkg.dev/personal-356214/stock-ticker/stock-ticker
+  tag: "20260410-b3091f6"
+
+service:
+  type: LoadBalancer
+
+ingress:
+  enabled: false
