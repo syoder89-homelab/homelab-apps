@@ -475,6 +475,65 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
+  name: ephemeral-test-stock-ticker
+  namespace: argocd
+  annotations:
+    kargo.akuity.io/authorized-stage: homelab-apps:test-stock-ticker
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - pullRequest:
+      github:
+        # The GitHub organization or user.
+        owner: syoder89-homelab
+        # The Github repository
+        repo: homelab-apps
+        tokenRef:
+          secretName: argocd-github-pat
+          key: token
+      filters:
+      - targetBranchMatch: "^env/test/stock-ticker$"
+      requeueAfterSeconds: 60
+      values:
+        appName: "pr-{{ .number }}-test-stock-ticker"
+        #appNamespace: "pr-{{ .number }}-stock-ticker"
+        # Kargo helm-template needs to know the namespace ahead of time to render properly so we cannot use PR number here
+        appNamespace: "test-stock-ticker"
+  template:
+    metadata:
+      name: "{{ .values.appName }}"
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: homelab-apps:test-stock-ticker
+    spec:
+      destination:
+        name: in-cluster
+        namespace: "{{ .values.appNamespace }}"
+      project: apps
+      source:
+        directory:
+          recurse: true
+        path: deploy/
+        repoURL: https://github.com/syoder89-homelab/homelab-apps
+        targetRevision: "{{ .head_sha }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        managedNamespaceMetadata:
+          labels:
+            argocd.argoproj.io/instance: "{{ .values.appName }}"
+          annotations:
+            argocd.argoproj.io/tracking-id: >-
+              {{ .values.appName }}:apps/Namespace:{{ .values.appNamespace }}/{{ .values.appNamespace }}
+        syncOptions:
+        - CreateNamespace=true
+---
+# Source: application-generator/templates/applicationset.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
   name: ephemeral-test-tank-monitor
   namespace: argocd
   annotations:

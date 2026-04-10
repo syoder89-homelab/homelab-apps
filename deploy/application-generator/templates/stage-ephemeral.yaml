@@ -1283,6 +1283,166 @@ spec:
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
+  name: test-stock-ticker
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: stock-ticker
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/test/stock-ticker
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      # TODO
+      # We want to test an update from old to new and since this is an ephemeral environment we need to first deploy the old version
+      # Open a PR with the original deployment manifests and let the ArgoCD PR generator handle the ephemeral deployment
+      # - task:
+      #     name: prepare-workdir 
+      #   vars:
+      #   - name: clearPath
+      #     value: "false"
+      # - task:
+      #     name: push-manifests
+      #   as: promotion-orig
+      #   vars:
+      #   - name: asPR
+      #     value: "true"
+      #   - name: targetBranch
+      #     value: env/test/stock-ticker
+      # - uses: argocd-update
+      #   config:
+      #     apps:
+      #     - name: test-stock-ticker
+      #       sources:
+      #       - repoURL: "${% vars.gitRepo %}"
+      #         desiredRevision: "${% outputs.promotion-orig.commit %}"
+      - task:
+          name: prepare-workdir 
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
+      - uses: copy
+        config:
+          inPath: "${% vars.path_src %}/applications/stock-ticker/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: "${% vars.path_src %}/charts/config-generator"
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: envName
+              value: test
+            - key: envType
+              value: test
+            - key: appName
+              value: stock-ticker
+          #valuesFiles:
+          #- "${% vars.path_src %}/config/test/stock-ticker-values.yaml"
+          #- "${% vars.path_src %}/applications/stock-ticker/values/test.yaml"
+      - uses: helm-template
+        config:
+          releaseName: "test-stock-ticker"
+          namespace: "test-stock-ticker"
+          buildDependencies: true
+          includeCRDs: true
+          path: "${% vars.path_src %}/applications/stock-ticker"
+          outPath: "${% vars.path_out %}/deploy/stock-ticker"
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: waitForPR
+          value: "false"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
+        - name: targetBranch
+          value: "env/test/stock-ticker"
+      # Verify the ephemeral deployment via ArgoCD
+      # High errorThreshold (60) ensures retries span the full timeout window,
+      # since each "app not found" check is near-instant during the
+      # ApplicationSet polling delay (up to 60s for PR detection).
+      - uses: argocd-update
+        as: argocd-verify
+        if: "${% outputs.promotion.prNumber != \"\" %}"
+        retry:
+          errorThreshold: 60
+          timeout: 10m0s
+        config:
+          apps:
+          - name: "pr-${% outputs.promotion.prNumber %}-test-stock-ticker"
+            sources:
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
+      # Auto-merge the PR after successful verification
+      # Only runs if argocd-update succeeded — prevents merging on failed deployments
+      - uses: git-merge-pr
+        as: merge-pr
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"argocd-verify\") == \"Succeeded\" %}"
+        retry:
+          errorThreshold: 3
+        config:
+          repoURL: "${% vars.gitRepo %}"
+          prNumber: "${% outputs.promotion.prNumber %}"
+      # Delete the source branch after merge
+      # git-merge-pr doesn't support branch deletion natively, so we call the GitHub API.
+      # First, get the PR details to find the head branch name.
+      - uses: http
+        as: get-pr
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"merge-pr\") == \"Succeeded\" %}"
+        retry:
+          errorThreshold: 3
+        config:
+          method: GET
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/pulls/${% outputs.promotion.prNumber %}"
+          headers:
+          - name: Authorization
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
+          - name: Accept
+            value: "application/vnd.github.v3+json"
+          successExpression: "response.status == 200"
+          outputs:
+          - name: headRef
+            fromExpression: "response.body.head.ref"
+      - uses: http
+        as: delete-branch
+        if: "${% outputs.promotion.prNumber != \"\" && status(\"get-pr\") == \"Succeeded\" && outputs['get-pr'].headRef != \"\" %}"
+        retry:
+          errorThreshold: 3
+        config:
+          method: DELETE
+          url: "https://api.github.com/repos/syoder89-homelab/homelab-apps/git/refs/heads/${% outputs['get-pr'].headRef %}"
+          headers:
+          - name: Authorization
+            value: "Bearer ${% secret('kargo-github-pat').password %}"
+          - name: Accept
+            value: "application/vnd.github.v3+json"
+          successExpression: "response.status == 204 || response.status == 422"
+---
+# Source: application-generator/templates/stage-ephemeral.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
   name: test-tank-monitor
   namespace: homelab-apps
 spec:
