@@ -155,6 +155,32 @@ spec:
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Warehouse
 metadata:
+  name: stock-ticker
+  namespace: homelab-apps
+spec:
+  subscriptions:
+  - git:
+      branch: main
+      commitSelectionStrategy: NewestFromBranch
+      discoveryLimit: 10
+      strictSemvers: true
+      repoURL: https://github.com/syoder89-homelab/homelab-apps.git
+      includePaths:
+      - applications/stock-ticker
+      # Alternate config strategy
+      #- stages/**/stock-ticker-values.yaml
+  - image:
+      repoURL: us-central1-docker.pkg.dev/personal-356214/stock-ticker/stock-ticker
+      imageSelectionStrategy: NewestBuild
+      tagSelectionStrategy: NewestBuild
+      strictSemvers: false
+      allowTags: ^[0-9]{8}-[0-9a-f]{7}$
+      discoveryLimit: 10
+---
+# Source: application-generator/templates/warehouse.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
   name: tank-monitor
   namespace: homelab-apps
 spec:

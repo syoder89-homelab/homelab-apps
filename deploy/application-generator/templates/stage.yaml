@@ -667,6 +667,96 @@ spec:
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
 metadata:
+  name: prod-stock-ticker
+  namespace: homelab-apps
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: stock-ticker
+    sources:
+      stages:
+      - test-stock-ticker
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/syoder89-homelab/homelab-apps
+      - name: targetBranch
+        value: env/prod/stock-ticker
+      - name: path_src
+        value: ./src
+      - name: path_out
+        value: ./out
+      steps:
+      - task:
+          name: prepare-workdir
+      # Inject promoted image tag(s) into env-specific config before rendering
+      - uses: yaml-update
+        config:
+          path: "${% vars.path_src %}/applications/stock-ticker/config/envs/prod/values.yaml"
+          updates:
+          - key: image.tag
+            value: '${% imageFrom("us-central1-docker.pkg.dev/personal-356214/stock-ticker/stock-ticker").Tag %}'
+      # The config-generator chart needs access to the config manifests
+      # Copy config manifests into config-generator chart
+      - uses: copy
+        config:
+          inPath: "${% vars.path_src %}/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/platform"
+      - uses: copy
+        config:
+          inPath: "${% vars.path_src %}/applications/stock-ticker/config"
+          outPath: "${% vars.path_src %}/charts/config-generator/config/application"
+      # Render the config files from templates
+      - uses: helm-template
+        config:
+          releaseName: config-generator
+          path: "${% vars.path_src %}/charts/config-generator"
+          outLayout: flat
+          outPath: /tmp/values.yaml
+          setValues:
+            - key: envName
+              value: prod
+            - key: envType
+              value: prod
+            - key: appName
+              value: stock-ticker
+          #valuesFiles:
+          #- "${% vars.path_src %}/config/prod/stock-ticker-values.yaml"
+          #- "${% vars.path_src %}/applications/stock-ticker/values/prod.yaml"
+      - uses: helm-template
+        config:
+          releaseName: stock-ticker
+          namespace: stock-ticker
+          buildDependencies: true
+          includeCRDs: true
+          path: "${% vars.path_src %}/applications/stock-ticker"
+          outPath: "${% vars.path_out %}/deploy/stock-ticker"
+          valuesFiles:
+          - /tmp/values.yaml
+      - task:
+          name: push-manifests
+        as: promotion
+        vars:
+        - name: asPR
+          value: "true"
+        - name: commitMessage
+          value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
+        - name: targetBranch
+          value: env/prod/stock-ticker
+      - uses: argocd-update
+        config:
+          apps:
+          - name: prod-stock-ticker
+            sources:
+            - repoURL: "${% vars.gitRepo %}"
+              desiredRevision: "${% outputs.promotion.commit %}"
+---
+# Source: application-generator/templates/stage.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
   name: prod-tank-monitor
   namespace: homelab-apps
 spec:
