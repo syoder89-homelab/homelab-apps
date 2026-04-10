@@ -1,0 +1,21 @@
+---
+# Source: stock-ticker/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-stock-ticker
+  namespace: test-stock-ticker
+  labels:
+    app: test-stock-ticker
+spec:
+  rules:
+  - host: "stock-ticker.example.com"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: test-stock-ticker
+            port:
+              number: 8080

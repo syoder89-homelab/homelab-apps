@@ -1,0 +1,75 @@
+---
+# Source: stock-ticker/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-stock-ticker
+  namespace: test-stock-ticker
+  labels:
+    app: test-stock-ticker
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: test-stock-ticker
+  template:
+    metadata:
+      labels:
+        app: test-stock-ticker
+      annotations:
+        checksum/config: f04dd6fd85f6a1e1a20f0f9b59acc2a6ba9cf9ddb8fd7a33ccd40d8dd80eb3a2
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+      - name: test-stock-ticker
+        image: us-central1-docker.pkg.dev/personal-356214/stock-ticker/stock-ticker:latest
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+        envFrom:
+        - configMapRef:
+            name: test-stock-ticker
+        env:
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: stock-ticker-api-credentials
+              key: credential
+        - name: GOMEMLIMIT
+          valueFrom:
+            resourceFieldRef:
+              resource: requests.memory
+        ports:
+        - name: http
+          containerPort: 8080
+        startupProbe:
+          httpGet:
+            path: /startupz
+            port: http
+          failureThreshold: 30
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          periodSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: http
+          periodSeconds: 10
+          failureThreshold: 3
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            memory: 64Mi

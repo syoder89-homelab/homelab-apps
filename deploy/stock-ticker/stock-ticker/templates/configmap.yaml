@@ -1,0 +1,12 @@
+---
+# Source: stock-ticker/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-stock-ticker
+  namespace: test-stock-ticker
+  labels:
+    app: test-stock-ticker
+data:
+  SYMBOL: "MSFT"
+  NDAYS: "7"
