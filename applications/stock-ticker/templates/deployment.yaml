@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
+  annotations:
+    operator.1password.io/auto-restart: "true"
   labels:
     app: {{ .Release.Name }}
 spec:
