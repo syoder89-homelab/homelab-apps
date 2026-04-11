@@ -5,6 +5,8 @@ kind: Deployment
 metadata:
   name: stock-ticker
   namespace: stock-ticker
+  annotations:
+    operator.1password.io/auto-restart: "true"
   labels:
     app: stock-ticker
 spec:
@@ -31,7 +33,7 @@ spec:
         fsGroup: 65532
       containers:
       - name: stock-ticker
-        image: us-central1-docker.pkg.dev/personal-356214/stock-ticker/stock-ticker:20260410-1e8246b
+        image: us-central1-docker.pkg.dev/personal-356214/stock-ticker/stock-ticker:20260411-4195d9c
         imagePullPolicy: IfNotPresent
         securityContext:
           readOnlyRootFilesystem: true
