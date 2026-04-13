@@ -4,7 +4,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: stock-ticker
-  namespace: stock-ticker
   annotations:
     operator.1password.io/auto-restart: "true"
   labels:
@@ -24,7 +23,7 @@ spec:
       labels:
         app: stock-ticker
       annotations:
-        checksum/config: 04d52f7e99aac8a57b397c78145b7f812c13f6a1423c517e326722ba9d5ae5c1
+        checksum/config: c93611ae54534f0efed266fe73d1dbc6e3e6c06045d30a59fae3b382a8b04d7b
     spec:
       securityContext:
         runAsNonRoot: true
@@ -73,8 +72,8 @@ spec:
           periodSeconds: 10
           failureThreshold: 3
         resources:
-          requests:
-            cpu: 10m
-            memory: 32Mi
           limits:
-            memory: 64Mi
+            memory: 62Mi
+          requests:
+            cpu: 8m
+            memory: 30Mi
