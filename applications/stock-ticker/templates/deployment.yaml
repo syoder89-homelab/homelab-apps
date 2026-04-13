@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
   annotations:
     operator.1password.io/auto-restart: "true"
   labels:
@@ -71,8 +70,5 @@ spec:
           periodSeconds: 10
           failureThreshold: 3
         resources:
-          requests:
-            cpu: 10m
-            memory: 32Mi
-          limits:
-            memory: 64Mi
+          {{- toYaml .Values.resources | nindent 10 }}
+
