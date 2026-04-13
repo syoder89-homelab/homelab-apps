@@ -32,7 +32,7 @@ spec:
         fsGroup: 65532
       containers:
       - name: stock-ticker
-        image: us-central1-docker.pkg.dev/personal-356214/stock-ticker/stock-ticker:20260413-ad6b993
+        image: us-central1-docker.pkg.dev/personal-356214/stock-ticker/stock-ticker:20260413-1de37b4
         imagePullPolicy: IfNotPresent
         securityContext:
           readOnlyRootFilesystem: true
