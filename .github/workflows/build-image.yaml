@@ -1,0 +1,101 @@
+name: Build and Push Image
+
+on:
+  push:
+    branches: [main]
+    paths: ["images/**"]
+  pull_request:
+    paths: ["images/**"]
+  workflow_dispatch:
+    inputs:
+      image:
+        description: "Image directory under images/ (e.g. frigate-coral-models)"
+        required: true
+        type: string
+
+jobs:
+  # Discover which images changed (or use manual input)
+  detect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      images: ${{ steps.set.outputs.images }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect changed images
+        id: set
+        run: |
+          if [[ -n "${{ inputs.image }}" ]]; then
+            echo 'images=["${{ inputs.image }}"]' >> "$GITHUB_OUTPUT"
+          else
+            # Find image dirs with changes in this push/PR
+            changed=$(git diff --name-only ${{ github.event.before || 'HEAD~1' }} HEAD -- images/ \
+              | cut -d/ -f2 | sort -u | jq -R -s -c 'split("\n") | map(select(length > 0))')
+            echo "images=${changed}" >> "$GITHUB_OUTPUT"
+          fi
+
+  # PR: build-only validation (no push, no secrets)
+  validate:
+    if: github.event_name == 'pull_request'
+    needs: detect
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        image: ${{ fromJson(needs.detect.outputs.images) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+
+      - name: Build (validation only)
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
+        with:
+          context: images/${{ matrix.image }}
+          push: false
+
+  # Push to main: build and push to GHCR
+  build-and-push:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: detect
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        image: ${{ fromJson(needs.detect.outputs.images) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+
+      - name: Log in to GHCR
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=
+            type=raw,value=v1.0,enable=${{ matrix.image == 'frigate-coral-models' }}
+
+      - name: Build and push
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
+        with:
+          context: images/${{ matrix.image }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
