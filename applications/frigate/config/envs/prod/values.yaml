@@ -29,14 +29,19 @@ frigate:
       skipuninstall: true
   coral:
     enabled: true
+  extraInitContainers:
+    - name: load-coral-models
+      image: ghcr.io/syoder89-homelab/frigate-coral-models:v1.0
+      command: ["cp", "-r", "/models/.", "/target-models/"]
+      volumeMounts:
+        - name: coral-models
+          mountPath: /target-models
   extraVolumes:
     - name: dri
       hostPath:
         path: /dev/dri
     - name: coral-models
-      image:
-        reference: ghcr.io/syoder89-homelab/frigate-coral-models:v1.0
-        pullPolicy: IfNotPresent
+      emptyDir: {}
   extraVolumeMounts:
     - name: dri
       mountPath: /dev/dri
