@@ -169,6 +169,7 @@ frigate:
               roles:
                 - detect
         detect:
+          enabled: true
           width: 1920
           height: 832
         review:
@@ -237,6 +238,7 @@ frigate:
               roles:
                 - detect
         detect:
+          enabled: true
           width: 1280
           height: 720
         review:
@@ -275,6 +277,7 @@ frigate:
               roles:
                 - detect
         detect:
+          enabled: true
           width: 1920
           height: 832
       house_west:
@@ -302,6 +305,7 @@ frigate:
               roles:
                 - detect
         detect:
+          enabled: true
           width: 1920
           height: 832
       indoor1:
@@ -334,6 +338,7 @@ frigate:
               roles:
                 - detect
         detect:
+          enabled: true
           width: 640
           height: 480
     version: 0.17
