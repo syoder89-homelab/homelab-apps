@@ -36,6 +36,16 @@ spec:
              name: config
            - mountPath: /static-config
              name: config-yml
+        - command:
+          - cp
+          - -r
+          - /models/.
+          - /target-models/
+          image: ghcr.io/syoder89-homelab/frigate-coral-models:v1.0
+          name: load-coral-models
+          volumeMounts:
+          - mountPath: /target-models
+            name: coral-models
       containers:
         - name: frigate
           image: "ghcr.io/blakeblackshear/frigate:0.17.1"
@@ -133,7 +143,5 @@ spec:
         - hostPath:
             path: /dev/dri
           name: dri
-        - image:
-            pullPolicy: IfNotPresent
-            reference: ghcr.io/syoder89-homelab/frigate-coral-models:v1.0
+        - emptyDir: {}
           name: coral-models
