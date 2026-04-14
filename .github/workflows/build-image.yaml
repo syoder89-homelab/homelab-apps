@@ -23,6 +23,8 @@ jobs:
       images: ${{ steps.set.outputs.images }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Detect changed images
         id: set
@@ -30,8 +32,13 @@ jobs:
           if [[ -n "${{ inputs.image }}" ]]; then
             echo 'images=["${{ inputs.image }}"]' >> "$GITHUB_OUTPUT"
           else
-            # Find image dirs with changes in this push/PR
-            changed=$(git diff --name-only ${{ github.event.before || 'HEAD~1' }} HEAD -- images/ \
+            # For PRs, compare against the base branch; for pushes, compare against previous commit
+            if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+              base="${{ github.event.pull_request.base.sha }}"
+            else
+              base="HEAD~1"
+            fi
+            changed=$(git diff --name-only "$base" HEAD -- images/ \
               | cut -d/ -f2 | sort -u | jq -R -s -c 'split("\n") | map(select(length > 0))')
             echo "images=${changed}" >> "$GITHUB_OUTPUT"
           fi
