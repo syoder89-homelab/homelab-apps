@@ -9,5 +9,5 @@ RUN curl -fSL -o /tmp/yolov9-s-relu6-best_320_int8_edgetpu.tflite \
       "https://raw.githubusercontent.com/dbro/frigate-detector-edgetpu-yolo9/refs/heads/main/labels-coco17.txt"
 
 FROM scratch
-COPY --from=download /tmp/yolov9-s-relu6-best_320_int8_edgetpu.tflite /models/yolov9-s-relu6-best_320_int8_edgetpu.tflite
-COPY --from=download /tmp/labels-coco17.txt /models/labels-coco17.txt
+COPY --from=download /tmp/yolov9-s-relu6-best_320_int8_edgetpu.tflite /yolov9-s-relu6-best_320_int8_edgetpu.tflite
+COPY --from=download /tmp/labels-coco17.txt /labels-coco17.txt
