@@ -134,8 +134,9 @@ data:
           #  - 977,536,1251,536,1229,364,985,309
           mask:
             - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
-          threshold: 30
-          contour_area: 30
+          threshold: 50
+          contour_area: 10
+          improve_contrast: false
         ffmpeg:
           inputs:
             - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.204:554/cam/realmonitor?channel=1&subtype=0
@@ -166,8 +167,9 @@ data:
           #   - 1920,220,1920,379,421,150,506,61
           mask:
             - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
-          threshold: 30
-          contour_area: 30
+          threshold: 50
+          contour_area: 10
+          improve_contrast: false
         mqtt:
           enabled: true
           required_zones:
@@ -235,8 +237,9 @@ data:
           #   - 1920,220,1920,379,421,150,506,61
           mask:
             - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
-          threshold: 30
-          contour_area: 30
+          threshold: 50
+          contour_area: 10
+          improve_contrast: false
         objects:
           filters:
             car:
@@ -268,8 +271,9 @@ data:
           #   - 1920,220,1920,379,421,150,506,61
           mask:
             - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
-          threshold: 30
-          contour_area: 30
+          threshold: 50
+          contour_area: 10
+          improve_contrast: false
         mqtt:
           enabled: true
         ffmpeg:
@@ -301,8 +305,9 @@ data:
           #   - 1920,220,1920,379,421,150,506,61
           mask:
             - 0.7,0.029,0.972,0.029,0.969,0.079,0.697,0.081
-          threshold: 30
-          contour_area: 30
+          threshold: 50
+          contour_area: 10
+          improve_contrast: false
         mqtt:
           enabled: true
         ffmpeg:
