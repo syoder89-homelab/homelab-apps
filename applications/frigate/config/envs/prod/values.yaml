@@ -172,7 +172,7 @@ frigate:
           mask:
             - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
           threshold: 30
-          contour_area: 10
+          contour_area: 30
         ffmpeg:
           inputs:
             - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.204:554/cam/realmonitor?channel=1&subtype=0
@@ -204,7 +204,7 @@ frigate:
           mask:
             - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
           threshold: 30
-          contour_area: 10
+          contour_area: 30
         mqtt:
           enabled: true
           required_zones:
@@ -273,7 +273,7 @@ frigate:
           mask:
             - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
           threshold: 30
-          contour_area: 10
+          contour_area: 30
         objects:
           filters:
             car:
@@ -306,7 +306,7 @@ frigate:
           mask:
             - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
           threshold: 30
-          contour_area: 10
+          contour_area: 30
         mqtt:
           enabled: true
         ffmpeg:
@@ -339,7 +339,7 @@ frigate:
           mask:
             - 0.7,0.029,0.972,0.029,0.969,0.079,0.697,0.081
           threshold: 30
-          contour_area: 10
+          contour_area: 30
         mqtt:
           enabled: true
         ffmpeg:
