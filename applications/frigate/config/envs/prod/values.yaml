@@ -342,7 +342,7 @@ frigate:
           #   - 1920,220,1920,379,421,150,506,61
           mask:
             - 0.7,0.029,0.972,0.029,0.969,0.079,0.697,0.081
-          threshold: 50
+          threshold: 30
           contour_area: 10
           improve_contrast: false
         mqtt:
