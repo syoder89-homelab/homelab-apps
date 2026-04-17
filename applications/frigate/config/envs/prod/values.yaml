@@ -55,23 +55,23 @@ frigate:
       host: mosquitto.mosquitto
       port: 1883
     detectors:
-      #ov:
-      #  type: openvino
-      #  device: AUTO
-      #  model:
-      #    path: /openvino-model/ssdlite_mobilenet_v2.xml
-      coral:
-        type: edgetpu
-        device: usb
-    model:
-      #path: /models/yolov9-s-relu6-best_320_int8_edgetpu.tflite
-      path: /models/yolov9-s-relu6-tpumax_512_int8_edgetpu.tflite
-      width: 512
-      height: 512
-      input_tensor: nhwc
-      input_pixel_format: rgb
-      model_type: yolo-generic
-      labelmap_path: /models/labels-coco17.txt
+      ov:
+        type: openvino
+        device: GPU
+        model:
+          path: /openvino-model/ssdlite_mobilenet_v2.xml
+      #coral:
+      #  type: edgetpu
+      #  device: usb
+    #model:
+    #  #path: /models/yolov9-s-relu6-best_320_int8_edgetpu.tflite
+    #  path: /models/yolov9-s-relu6-tpumax_512_int8_edgetpu.tflite
+    #  width: 512
+    #  height: 512
+    #  input_tensor: nhwc
+    #  input_pixel_format: rgb
+    #  model_type: yolo-generic
+    #  labelmap_path: /models/labels-coco17.txt
     go2rtc:
       # -threads 2 -hwaccel_flags allow_profile_mismatch -hwaccel vaapi -hwaccel_device /dev/dri/renderD128 -hwaccel_output_format vaapi
       #ffmpeg:
