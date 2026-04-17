@@ -57,7 +57,7 @@ frigate:
     detectors:
       ov:
         type: openvino
-        device: GPU
+        device: CPU
       #coral:
       #  type: edgetpu
       #  device: usb
