@@ -25,7 +25,12 @@ data:
       #  type: edgetpu
       #  device: usb
     model:
+      width: 300
+      height: 300
+      input_tensor: nhwc
+      input_pixel_format: bgr
       path: /openvino-model/ssdlite_mobilenet_v2.xml
+      labelmap_path: /openvino-model/coco_91cl_bkgr.txt
     #model:
     #  #path: /models/yolov9-s-relu6-best_320_int8_edgetpu.tflite
     #  path: /models/yolov9-s-relu6-tpumax_512_int8_edgetpu.tflite
