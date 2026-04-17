@@ -69,7 +69,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "true"
+          value: "false"
         - name: commitMessage
           value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
@@ -152,7 +152,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "true"
+          value: "false"
         - name: commitMessage
           value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
@@ -235,7 +235,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "true"
+          value: "false"
         - name: commitMessage
           value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
@@ -318,7 +318,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "true"
+          value: "false"
         - name: commitMessage
           value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
@@ -401,7 +401,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "true"
+          value: "false"
         - name: commitMessage
           value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
@@ -484,7 +484,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "true"
+          value: "false"
         - name: commitMessage
           value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
@@ -567,7 +567,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "true"
+          value: "false"
         - name: commitMessage
           value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
@@ -650,7 +650,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "true"
+          value: "false"
         - name: commitMessage
           value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
@@ -740,7 +740,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "true"
+          value: "false"
         - name: commitMessage
           value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
@@ -830,7 +830,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "true"
+          value: "false"
         - name: commitMessage
           value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
@@ -920,7 +920,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "true"
+          value: "false"
         - name: commitMessage
           value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
@@ -1003,7 +1003,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "true"
+          value: "false"
         - name: commitMessage
           value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
@@ -1086,7 +1086,7 @@ spec:
         as: promotion
         vars:
         - name: asPR
-          value: "true"
+          value: "false"
         - name: commitMessage
           value: "${% commitFrom(vars.gitRepo)?.Message ?? '' %}"
         - name: targetBranch
