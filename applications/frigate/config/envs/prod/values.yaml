@@ -177,7 +177,7 @@ frigate:
           mask:
             - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
           threshold: 50
-          contour_area: 10
+          contour_area: 20
           improve_contrast: false
         ffmpeg:
           inputs:
@@ -210,7 +210,7 @@ frigate:
           mask:
             - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
           threshold: 50
-          contour_area: 10
+          contour_area: 20
           improve_contrast: false
         mqtt:
           enabled: true
@@ -280,7 +280,7 @@ frigate:
           mask:
             - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
           threshold: 50
-          contour_area: 10
+          contour_area: 20
           improve_contrast: false
         objects:
           filters:
@@ -314,7 +314,7 @@ frigate:
           mask:
             - 0.747,0.036,0.962,0.031,0.963,0.086,0.745,0.091
           threshold: 50
-          contour_area: 10
+          contour_area: 20
           improve_contrast: false
         mqtt:
           enabled: true
@@ -348,7 +348,7 @@ frigate:
           mask:
             - 0.7,0.029,0.972,0.029,0.969,0.079,0.697,0.081
           threshold: 30
-          contour_area: 10
+          contour_area: 20
           improve_contrast: false
         mqtt:
           enabled: true
