@@ -20,12 +20,12 @@ data:
     detectors:
       ov:
         type: openvino
-        device: CPU
-        model:
-          path: /openvino-model/ssdlite_mobilenet_v2.xml
+        device: GPU
       #coral:
       #  type: edgetpu
       #  device: usb
+    model:
+      path: /openvino-model/ssdlite_mobilenet_v2.xml
     #model:
     #  #path: /models/yolov9-s-relu6-best_320_int8_edgetpu.tflite
     #  path: /models/yolov9-s-relu6-tpumax_512_int8_edgetpu.tflite
