@@ -57,7 +57,7 @@ frigate:
     detectors:
       ov:
         type: openvino
-        device: GPU
+        device: CPU
         model:
           path: /openvino-model/ssdlite_mobilenet_v2.xml
       #coral:
