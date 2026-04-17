@@ -5,7 +5,7 @@ envs:
       # direct: true
       stages:
       - staging-{{ .app.name }}
-    asPR: true
+    asPR: false
     isEphemeral: false
     targetBranchPrefix: env/prod
     envType: prod
