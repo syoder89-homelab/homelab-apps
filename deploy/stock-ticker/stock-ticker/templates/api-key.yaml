@@ -1,5 +1,5 @@
 ---
-# Source: stock-ticker/templates/secret.yaml
+# Source: stock-ticker/templates/api-key.yaml
 apiVersion: onepassword.com/v1
 kind: OnePasswordItem
 metadata:

@@ -4,7 +4,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: test-stock-ticker
-  namespace: test-stock-ticker
   labels:
     app: test-stock-ticker
 spec:
