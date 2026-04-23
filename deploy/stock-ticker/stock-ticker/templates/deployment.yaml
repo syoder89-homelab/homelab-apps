@@ -4,7 +4,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: test-stock-ticker
-  namespace: test-stock-ticker
+  annotations:
+    operator.1password.io/auto-restart: "true"
   labels:
     app: test-stock-ticker
 spec:
@@ -12,7 +13,7 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 1
+      maxUnavailable: 0
       maxSurge: 1
   selector:
     matchLabels:
@@ -22,10 +23,13 @@ spec:
       labels:
         app: test-stock-ticker
       annotations:
-        checksum/config: f04dd6fd85f6a1e1a20f0f9b59acc2a6ba9cf9ddb8fd7a33ccd40d8dd80eb3a2
+        checksum/config: 542c0acbc2f41c28cd53560bca8b735344d93bcfe1dede047648dcfa59033f3b
     spec:
       securityContext:
         runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
       containers:
       - name: test-stock-ticker
         image: us-central1-docker.pkg.dev/personal-356214/stock-ticker/stock-ticker:latest
@@ -68,8 +72,8 @@ spec:
           periodSeconds: 10
           failureThreshold: 3
         resources:
-          requests:
-            cpu: 10m
-            memory: 32Mi
           limits:
-            memory: 64Mi
+            memory: 32Mi
+          requests:
+            cpu: 8m
+            memory: 32Mi
