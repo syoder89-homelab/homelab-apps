@@ -4,12 +4,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: home-assistant-codeserver
+  namespace: home-assistant
   labels:
-    helm.sh/chart: home-assistant-0.3.44
-    app.kubernetes.io/name: home-assistant
     app.kubernetes.io/instance: home-assistant
-    app.kubernetes.io/version: "2026.2.2"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: home-assistant
+    app.kubernetes.io/version: 2026.5.4
+    helm.sh/chart: home-assistant-0.3.61
 spec:
   type: LoadBalancer
   ports:
