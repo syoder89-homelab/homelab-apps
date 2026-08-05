@@ -55,7 +55,7 @@ data:
         house_west:
           - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.163:554/cam/realmonitor?channel=1&subtype=0
         indoor1:
-          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.171:554/cam/realmonitor?channel=1&subtype=0
+          - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@cam-indoor1.lan:554/cam/realmonitor?channel=1&subtype=0
     objects:
       #mask:
       #  - 0,336,808,285,827,343,0,509
@@ -317,11 +317,11 @@ data:
           enabled: true
         ffmpeg:
           inputs:
-            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.171:554/cam/realmonitor?channel=1&subtype=0
+            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@cam-indoor1.lan:554/cam/realmonitor?channel=1&subtype=0
               input_args: preset-rtsp-generic
               roles:
                 - record
-            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@172.20.0.171:554/cam/realmonitor?channel=1&subtype=1
+            - path: rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@cam-indoor1.lan:554/cam/realmonitor?channel=1&subtype=1
               input_args: preset-rtsp-generic
               roles:
                 - detect
