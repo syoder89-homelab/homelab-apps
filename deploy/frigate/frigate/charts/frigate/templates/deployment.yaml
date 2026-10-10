@@ -24,18 +24,8 @@ spec:
       labels:
         app.kubernetes.io/name: frigate
         app.kubernetes.io/instance: frigate
-      annotations:
-        checksum/configmap: eba85e02936ed8c69ddf2e2dcd3da42ebcc191d1a6ebae53e515dec99bb442b4
     spec:
       initContainers:
-        - name: copy-config
-          image: busybox:1.28
-          command: ["/bin/sh", "-c", "mv /config/config.yml /config/config.yml.old; cat /static-config/config.yml > /config/config.yml"]
-          volumeMounts:
-           - mountPath: /config
-             name: config
-           - mountPath: /static-config
-             name: config-yml
         - command:
           - cp
           - -r
@@ -120,9 +110,6 @@ spec:
               cpu: 1
               memory: 8Gi
       volumes:
-        - name: config-yml
-          configMap:
-            name: frigate
         - name: config
           persistentVolumeClaim:
             claimName: frigate-config
