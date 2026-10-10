@@ -1,6 +1,6 @@
 frigate:
   image:
-    tag: "0.17.1"
+    tag: "0.18.0"
   service:
     type: LoadBalancer
   # -- set environment variables from Secret(s)

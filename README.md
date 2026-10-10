@@ -107,7 +107,7 @@ Global and environment-specific configuration:
 
 | Application | Purpose | Version |
 |---|---|---|
-| **Frigate** | Video NVR and camera management | 0.14.1 |
+| **Frigate** | Video NVR and camera management | 0.18.0 |
 | **Grafana** | Metrics visualization and dashboards | 10.5.15 |
 | **InfluxDB** | Time-series database for metrics | 4.12.5 |
 | **Victoria Metrics** | Metrics storage and querying | 0.31.0 |
