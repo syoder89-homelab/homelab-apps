@@ -21,31 +21,12 @@ First, add the repo if you haven't already done so:
 helm repo add blakeblackshear https://blakeblackshear.github.io/blakeshome-charts/
 ```
 
-#### Minimum Config
+#### Configuration
 
-At minimum, you'll need to define the following Frigate configuration properties. For information, see the [Docs](https://docs.frigate.video/configuration/index).
-
-```yaml
-# values.yaml
-config: |
-  mqtt:
-    host: "mqtt.example.com"
-    port: 1883
-    user: admin
-    password: "<your_mqtt_password>"
-  cameras:
-    # Define at least one camera
-    back:
-      ffmpeg:
-        inputs:
-          - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
-            roles:
-              - detect
-              - rtmp
-      detect:
-        width: 1280
-        height: 720
-```
+This chart does not manage Frigate's configuration. Frigate reads `/config/config.yml` from the config
+persistent volume; edit it in the Frigate UI (Settings) or place a `config.yml` on the volume. If no file
+exists, Frigate writes a default one on first start. Reference secrets as `{FRIGATE_*}` placeholders
+(provided through `env` / `envFromSecrets`). For information, see the [Docs](https://docs.frigate.video/configuration/index).
 
 #### Install Chart
 

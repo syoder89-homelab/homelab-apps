@@ -20,31 +20,12 @@ First, add the repo if you haven't already done so:
 helm repo add blakeblackshear https://blakeblackshear.github.io/blakeshome-charts/
 ```
 
-#### Minimum Config
+#### Configuration
 
-At minimum, you'll need to define the following Frigate configuration properties. For information, see the [Docs](https://docs.frigate.video/configuration/index).
-
-```yaml
-# values.yaml
-config: |
-  mqtt:
-    host: "mqtt.example.com"
-    port: 1883
-    user: admin
-    password: "<your_mqtt_password>"
-  cameras:
-    # Define at least one camera
-    back:
-      ffmpeg:
-        inputs:
-          - path: rtsp://viewer:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
-            roles:
-              - detect
-              - rtmp
-      detect:
-        width: 1280
-        height: 720
-```
+This chart does not manage Frigate's configuration. Frigate reads `/config/config.yml` from the config
+persistent volume; edit it in the Frigate UI (Settings) or place a `config.yml` on the volume. If no file
+exists, Frigate writes a default one on first start. Reference secrets as `{FRIGATE_*}` placeholders
+(provided through `env` / `envFromSecrets`). For information, see the [Docs](https://docs.frigate.video/configuration/index).
 
 #### Install Chart
 
@@ -72,7 +53,6 @@ helm upgrade --install \
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Set Pod affinity rules |
-| config | string | `"mqtt:\n  # Required: host name\n  host: mqtt.server.com\n  # Optional: port (default: shown below)\n  port: 1883\n  # Optional: topic prefix (default: shown below)\n  # WARNING: must be unique if you are running multiple instances\n  topic_prefix: frigate\n  # Optional: client id (default: shown below)\n  # WARNING: must be unique if you are running multiple instances\n  client_id: frigate\n  # Optional: user\n  user: mqtt_user\n  # Optional: password\n  # NOTE: Environment variables that begin with 'FRIGATE_' may be referenced in {}.\n  #       eg. password: '{FRIGATE_MQTT_PASSWORD}'\n  password: password\n  # Optional: interval in seconds for publishing stats (default: shown below)\n  stats_interval: 60\n\ndetectors:\n  # coral:\n  #   type: edgetpu\n  #   device: usb\n  cpu1:\n    type: cpu\n\n# cameras:\n#   # Name of your camera\n#   front_door:\n#     ffmpeg:\n#       inputs:\n#         - path: rtsp://{FRIGATE_RSTP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2\n#           roles:\n#             - detect\n#             - rtmp\n#     width: 1280\n#     height: 720\n#     fps: 5\n"` | frigate configuration - see [Docs](https://docs.frigate.video/configuration/index) for more info |
 | coral.enabled | bool | `false` | enables the use of a Coral device |
 | coral.hostPath | string | `"/dev/bus/usb"` | path on the host to which to mount the Coral device |
 | env | object | `{}` | additional ENV variables to set. Prefix with FRIGATE_ to target Frigate configuration values |

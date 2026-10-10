@@ -18,9 +18,8 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "frigate.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-      annotations:
-        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       {{- if .Values.podAnnotations }}
+      annotations:
         {{- range $key, $value := .Values.podAnnotations }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
@@ -33,16 +32,8 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      initContainers:
-        - name: copy-config
-          image: busybox:1.28
-          command: ["/bin/sh", "-c", "mv /config/config.yml /config/config.yml.old; cat /static-config/config.yml > /config/config.yml"]
-          volumeMounts:
-           - mountPath: /config
-             name: config
-           - mountPath: /static-config
-             name: config-yml
       {{- if .Values.extraInitContainers }}
+      initContainers:
         {{- toYaml .Values.extraInitContainers | nindent 8 }}
       {{- end }}
       containers:
@@ -149,9 +140,6 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
             {{- end }}
       volumes:
-        - name: config-yml
-          configMap:
-            name: {{ template "frigate.fullname" . }}
         - name: config
         {{- if .Values.persistence.config.enabled }}
           persistentVolumeClaim:
