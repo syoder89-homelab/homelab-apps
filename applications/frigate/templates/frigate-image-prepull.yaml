@@ -1,0 +1,63 @@
+{{- /*
+Pre-pulls the Frigate image onto the node before ArgoCD syncs the Deployment.
+The Deployment uses strategy Recreate (Coral USB + RWO PVCs), so without this the
+old pod is stopped before the new (very large) image is downloaded.
+Uses argocd.argoproj.io hooks because ArgoCD syncs pre-rendered manifests from the
+env branch, where helm.sh/hook annotations are not interpreted.
+*/ -}}
+{{- $image := .Values.frigate.image | default dict }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-image-prepull
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: frigate-image-prepull
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 1800
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: frigate-image-prepull
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      restartPolicy: Never
+      {{- with .Values.frigate.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.frigate.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      # Prefer the node already running Frigate so the image is cached where the
+      # replacement pod will start. Preferred (not required) so a first install,
+      # with no Frigate pod yet, does not leave this hook Pending.
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: frigate
+                    app.kubernetes.io/instance: {{ .Release.Name }}
+      containers:
+        - name: prepull
+          image: "{{ $image.repository | default "ghcr.io/blakeblackshear/frigate" }}:{{ $image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ $image.pullPolicy | default "IfNotPresent" }}
+          command: ["/bin/sh", "-c", "exit 0"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
