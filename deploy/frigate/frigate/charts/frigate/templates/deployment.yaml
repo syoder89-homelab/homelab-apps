@@ -48,7 +48,7 @@ spec:
             name: coral-models
       containers:
         - name: frigate
-          image: "ghcr.io/blakeblackshear/frigate:0.17.1"
+          image: "ghcr.io/blakeblackshear/frigate:0.18.0"
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: true
