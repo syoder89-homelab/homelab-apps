@@ -9,8 +9,8 @@ metadata:
     app.kubernetes.io/instance: test-home-assistant
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: home-assistant
-    app.kubernetes.io/version: 2026.5.4
-    helm.sh/chart: home-assistant-0.3.61
+    app.kubernetes.io/version: 2026.10.1
+    helm.sh/chart: home-assistant-0.3.86
 spec:
   serviceName: test-home-assistant
   replicas: 1
@@ -24,8 +24,8 @@ spec:
         app.kubernetes.io/instance: test-home-assistant
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: home-assistant
-        app.kubernetes.io/version: 2026.5.4
-        helm.sh/chart: home-assistant-0.3.61
+        app.kubernetes.io/version: 2026.10.1
+        helm.sh/chart: home-assistant-0.3.86
       annotations:
     spec:
       serviceAccountName: test-home-assistant
@@ -35,7 +35,7 @@ spec:
         - name: home-assistant
           securityContext:
             {}
-          image: "ghcr.io/home-assistant/home-assistant:2026.5.4"
+          image: "ghcr.io/home-assistant/home-assistant:2026.10.1"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -81,7 +81,7 @@ spec:
               secretKeyRef:
                 name: home-assistant-codeserver-credentials
                 key: password
-          image: "ghcr.io/coder/code-server:4.111.0"
+          image: "ghcr.io/coder/code-server:4.141.0"
           imagePullPolicy: "IfNotPresent"
           ports:
           - containerPort: 12321

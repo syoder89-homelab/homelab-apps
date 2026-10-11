@@ -9,8 +9,8 @@ metadata:
     app.kubernetes.io/instance: test-home-assistant
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: home-assistant
-    app.kubernetes.io/version: 2026.5.4
-    helm.sh/chart: home-assistant-0.3.61
+    app.kubernetes.io/version: 2026.10.1
+    helm.sh/chart: home-assistant-0.3.86
   annotations:
     "helm.sh/hook": test
 spec:
