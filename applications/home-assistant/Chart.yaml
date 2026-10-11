@@ -3,7 +3,7 @@ name: home-assistant
 description: An Umbrella Helm chart for deploying Home Assistant
 type: application
 version: "0.3.86"
-appVersion: "0.3.86"
+appVersion: "2026.10.1"  # Home Assistant release shipped by chart 0.3.86; used by the image prepull Job
 dependencies:
   - name: home-assistant
     version: "0.3.86"

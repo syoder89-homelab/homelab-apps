@@ -1,0 +1,66 @@
+{{- /*
+Pre-pulls the Home Assistant image onto the node before ArgoCD syncs the StatefulSet.
+The StatefulSet has a single replica on an RWO PVC, so the old pod is stopped before the
+new pod starts; without this the image download happens inside that downtime window.
+Uses argocd.argoproj.io hooks because ArgoCD syncs pre-rendered manifests from the
+env branch, where helm.sh/hook annotations are not interpreted.
+The tag falls back to this chart's appVersion, which must be kept equal to the Home
+Assistant release shipped by the dependency chart (see Chart.yaml).
+*/ -}}
+{{- $ha := index .Values "home-assistant" | default dict }}
+{{- $image := $ha.image | default dict }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-image-prepull
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: home-assistant-image-prepull
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 1800
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: home-assistant-image-prepull
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      restartPolicy: Never
+      {{- with $ha.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $ha.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      # Prefer the node already running Home Assistant so the image is cached where the
+      # replacement pod will start. Preferred (not required) so a first install,
+      # with no Home Assistant pod yet, does not leave this hook Pending.
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: home-assistant
+                    app.kubernetes.io/instance: {{ .Release.Name }}
+      containers:
+        - name: prepull
+          image: "{{ $image.repository | default "ghcr.io/home-assistant/home-assistant" }}:{{ $image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ $image.pullPolicy | default "IfNotPresent" }}
+          command: ["/bin/sh", "-c", "exit 0"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
