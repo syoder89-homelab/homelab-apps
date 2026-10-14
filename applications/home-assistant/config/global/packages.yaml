@@ -1,0 +1,9 @@
+home-assistant:
+  additionalVolumes:
+    - name: packages
+      configMap:
+        name: home-assistant-packages
+  additionalMounts:
+    - name: packages
+      mountPath: /config/packages
+      readOnly: true
