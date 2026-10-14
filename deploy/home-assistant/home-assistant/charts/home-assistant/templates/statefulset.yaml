@@ -62,6 +62,9 @@ spec:
           volumeMounts:
           - mountPath: /config
             name: test-home-assistant
+          - mountPath: /config/packages
+            name: packages
+            readOnly: true
         - name: codeserver
           securityContext:
             {}
@@ -91,6 +94,9 @@ spec:
           - mountPath: /config
             name: test-home-assistant
       volumes:
+      - configMap:
+          name: home-assistant-packages
+        name: packages
   volumeClaimTemplates:
   - metadata:
       name: test-home-assistant
