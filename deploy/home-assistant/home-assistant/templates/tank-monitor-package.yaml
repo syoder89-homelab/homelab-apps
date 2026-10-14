@@ -47,3 +47,18 @@ data:
             value_template: >-
               {% set r = value_json.data.result %}
               {{ (r[0].value[1] | float(0) | round(1)) if r | length > 0 else none }}
+      - resource: http://victoria-metrics-victoria-metrics-single-server.taylor-monitoring:8428/api/v1/query
+        scan_interval: 300
+        params:
+          # Net drop over the last 24h of hourly-smoothed tank level (smoothing hides sensor jitter;
+          # clamped at 0 when rain refills the tanks)
+          query: 'clamp_min(2 * (3.1415927 * 1485961 / 3785411.784) * (avg_over_time(distance{sensor="taylor_water_tank_level1"}[1h]) - avg_over_time(distance{sensor="taylor_water_tank_level1"}[1h] offset 24h)), 0)'
+        sensor:
+          - name: Water Used 24h
+            unique_id: taylor_water_used_24h
+            unit_of_measurement: gal
+            state_class: measurement
+            icon: mdi:water-minus
+            value_template: >-
+              {% set r = value_json.data.result %}
+              {{ (r[0].value[1] | float(0) | round(0)) if r | length > 0 else none }}
