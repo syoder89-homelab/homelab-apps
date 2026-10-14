@@ -21,3 +21,29 @@ data:
             value_template: >-
               {% set r = value_json.data.result %}
               {{ (r[0].value[1] | float(0) | round(0)) if r | length > 0 else none }}
+      - resource: http://victoria-metrics-victoria-metrics-single-server.taylor-monitoring:8428/api/v1/query
+        scan_interval: 60
+        params:
+          query: 'voltage{sensor="taylor_water_uv"}'
+        sensor:
+          - name: Water UV Voltage
+            unique_id: taylor_water_uv_voltage
+            unit_of_measurement: V
+            device_class: voltage
+            state_class: measurement
+            value_template: >-
+              {% set r = value_json.data.result %}
+              {{ (r[0].value[1] | float(0) | round(1)) if r | length > 0 else none }}
+      - resource: http://victoria-metrics-victoria-metrics-single-server.taylor-monitoring:8428/api/v1/query
+        scan_interval: 60
+        params:
+          query: 'temperature{sensor="taylor_water_tank_level1"}'
+        sensor:
+          - name: Pumphouse Temperature
+            unique_id: taylor_pumphouse_temperature
+            unit_of_measurement: °F
+            device_class: temperature
+            state_class: measurement
+            value_template: >-
+              {% set r = value_json.data.result %}
+              {{ (r[0].value[1] | float(0) | round(1)) if r | length > 0 else none }}
