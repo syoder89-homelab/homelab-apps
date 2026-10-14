@@ -1,0 +1,23 @@
+---
+# Source: home-assistant/templates/tank-monitor-package.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: home-assistant-packages
+data:
+  tank_monitor.yaml: |
+    # Taylor rainwater tank data, polled from VictoriaMetrics (same query as the Grafana gauge)
+    rest:
+      - resource: http://victoria-metrics-victoria-metrics-single-server.taylor-monitoring:8428/api/v1/query
+        scan_interval: 60
+        params:
+          query: '2*(3726 - ((3.1415927 * 1485961 * distance{sensor="taylor_water_tank_level1"}) / 3785411.784) - 250)'
+        sensor:
+          - name: Water Tank Remaining
+            unique_id: taylor_water_tank_remaining
+            unit_of_measurement: gal
+            state_class: measurement
+            icon: mdi:water
+            value_template: >-
+              {% set r = value_json.data.result %}
+              {{ (r[0].value[1] | float(0) | round(0)) if r | length > 0 else none }}

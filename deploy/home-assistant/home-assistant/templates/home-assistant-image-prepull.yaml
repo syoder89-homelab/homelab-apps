@@ -1,0 +1,49 @@
+---
+# Source: home-assistant/templates/home-assistant-image-prepull.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: home-assistant-image-prepull
+  namespace: home-assistant
+  labels:
+    app.kubernetes.io/name: home-assistant-image-prepull
+    app.kubernetes.io/instance: home-assistant
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 1800
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: home-assistant-image-prepull
+        app.kubernetes.io/instance: home-assistant
+    spec:
+      restartPolicy: Never
+      # Prefer the node already running Home Assistant so the image is cached where the
+      # replacement pod will start. Preferred (not required) so a first install,
+      # with no Home Assistant pod yet, does not leave this hook Pending.
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: home-assistant
+                    app.kubernetes.io/instance: home-assistant
+      containers:
+        - name: prepull
+          image: "ghcr.io/home-assistant/home-assistant:2026.10.1"
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c", "exit 0"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
